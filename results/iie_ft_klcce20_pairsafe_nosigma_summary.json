@@ -1,0 +1,268 @@
+{
+ "row": "iie_ft_klcce20_pairsafe_nosigma",
+ "per_fold": [
+  {
+   "fold": 0,
+   "n": 200,
+   "CC": 0.8531428107088483,
+   "SIM": 0.7742875701032415,
+   "KLD": 0.1958616107837054
+  },
+  {
+   "fold": 1,
+   "n": 200,
+   "CC": 0.851963360701187,
+   "SIM": 0.7728878240336655,
+   "KLD": 0.19940438372750782
+  },
+  {
+   "fold": 2,
+   "n": 200,
+   "CC": 0.8470923580392288,
+   "SIM": 0.7709183014430167,
+   "KLD": 0.2023605929846967
+  },
+  {
+   "fold": 3,
+   "n": 200,
+   "CC": 0.8551862314056067,
+   "SIM": 0.7756528270006413,
+   "KLD": 0.19532408606363205
+  },
+  {
+   "fold": 4,
+   "n": 200,
+   "CC": 0.8567979790135553,
+   "SIM": 0.7787735523111787,
+   "KLD": 0.19037572473116718
+  }
+ ],
+ "CC_mean": 0.8528365479736852,
+ "CC_sd_over_folds": 0.0033186117275995175,
+ "CC_sd_over_folds_ddof1": 0.0037103207069202684,
+ "CC_mean_over_images": 0.8528365479736852,
+ "SIM_mean": 0.7745040149783488,
+ "SIM_sd_over_folds": 0.002648206231021027,
+ "SIM_sd_over_folds_ddof1": 0.0029607845755007644,
+ "SIM_mean_over_images": 0.7745040149783488,
+ "KLD_mean": 0.19666527965814182,
+ "KLD_sd_over_folds": 0.004048270497078322,
+ "KLD_sd_over_folds_ddof1": 0.004526104011386996,
+ "KLD_mean_over_images": 0.1966652796581418,
+ "n_images": 1000,
+ "variant": "no extra post-hoc finalizer (IIE's own learned blur only)",
+ "calibration_maps": {
+  "prior_maps": 800,
+  "sigma_selection_maps": 0,
+  "note": "sigma-selection maps are a subset of the training maps"
+ },
+ "training_maps": 800,
+ "sigma_per_fold": null,
+ "sigma_curve_train_per_fold": null,
+ "split_file": "splits/kfold_seed0_pairsafe.json",
+ "fold_sizes": [
+  200,
+  200,
+  200,
+  200,
+  200
+ ],
+ "trainable_params_trained": 3059160,
+ "trained_parameters": "all DeepGaze IIE readouts: 4 backbones x 30 components (saliency network + fixation-selection network + finalizer sigma and centre-bias weight); backbones frozen",
+ "features": "released DeepGaze IIE backbones on PIL-bilinear 384x384 input, cached at the 12x12 readout grid (float32; bit-exact, logs/iie_verify_cache.json); training forward = stacked re-implementation of the released readouts (logs/iie_verify_stacked_*.json); evaluation = released module code path after writing back the trained parameters",
+ "recipe": "our kfold_train_eval.py loss KL(g64||p64) + (1 - CC(p64,g64)) (weights 1, 1) on the 64x64 loss grid; p64 = IIE density exactly sum-pooled 6x6 from 384; Adam lr 0.001, batch 8, 20 epochs",
+ "centre_prior": "per fold, log(to_prob(sum of the training folds' min-subtracted 384 maps)) + 1e-8 (as ft_deepgaze_iie_indomain.py), DeepGaze's centre-bias input",
+ "shuffle": "published stream: np.random.default_rng(0), permutation(1000) consumed, then in-place shuffle of the fold's training list each epoch, continuing across folds",
+ "training_maps_per_fold": [
+  800,
+  800,
+  800,
+  800,
+  800
+ ],
+ "steps_per_fold": [
+  2000,
+  2000,
+  2000,
+  2000,
+  2000
+ ],
+ "t_train_s_per_fold": [
+  1070.408703804016,
+  1073.3395178318024,
+  1067.8976559638977,
+  523.0580480098724,
+  1208.8402938842773
+ ],
+ "t_eval_s_per_fold": [
+  118.5503420829773,
+  113.7833399772644,
+  103.3385112285614,
+  70.89003396034241,
+  150.5316939353943
+ ],
+ "wall_clock_s_total": 5500.638140678406,
+ "epoch_mean_loss_per_fold": {
+  "0": [
+   0.4016802079975605,
+   0.3309784689545631,
+   0.29735415235161783,
+   0.27287252351641655,
+   0.2504400810599327,
+   0.2286802388727665,
+   0.20770799070596696,
+   0.18684274986386298,
+   0.1659588012099266,
+   0.14634951934218407,
+   0.12795572012662887,
+   0.11172209307551384,
+   0.09699156321585178,
+   0.08415375731885433,
+   0.0732404049858451,
+   0.06398968882858753,
+   0.0561832170933485,
+   0.049299312308430675,
+   0.04367336582392454,
+   0.03913177063688636
+  ],
+  "1": [
+   0.4033251783251762,
+   0.328200581073761,
+   0.2965202875435352,
+   0.27231070801615714,
+   0.25004912689328196,
+   0.2291772785782814,
+   0.20764992594718934,
+   0.1869823308289051,
+   0.16585106447339057,
+   0.14505271427333355,
+   0.12660218946635723,
+   0.11012027770280838,
+   0.09544115737080575,
+   0.0829036906734109,
+   0.07178187396377325,
+   0.06244886562228203,
+   0.054841000400483605,
+   0.048245661146938804,
+   0.04270727600902319,
+   0.03831123013049364
+  ],
+  "2": [
+   0.4036773520708084,
+   0.3271409709751606,
+   0.2929598170518875,
+   0.26818005174398424,
+   0.24686434715986252,
+   0.2256925232708454,
+   0.20420262902975084,
+   0.183671413064003,
+   0.16274658352136612,
+   0.14277266532182695,
+   0.12451871201395988,
+   0.10798207312822342,
+   0.09348486572504043,
+   0.08066780228167772,
+   0.06987486887723207,
+   0.06075638711452484,
+   0.053395178727805616,
+   0.046838123500347134,
+   0.04159869505092502,
+   0.037311840392649176
+  ],
+  "3": [
+   0.404617126584053,
+   0.3313057687878609,
+   0.2971654137969017,
+   0.2721160936355591,
+   0.25072376236319543,
+   0.22932241156697272,
+   0.20762444660067558,
+   0.1860597037523985,
+   0.16513863794505595,
+   0.14525280125439166,
+   0.12622489266097545,
+   0.10984907694160938,
+   0.09561007268726826,
+   0.08305215127766133,
+   0.07211220424622297,
+   0.06295150302350522,
+   0.05486298233270645,
+   0.04841096498072148,
+   0.04283160388469696,
+   0.038300872053951024
+  ],
+  "4": [
+   0.40682105302810667,
+   0.33311294376850126,
+   0.2997405943274498,
+   0.2732036615908146,
+   0.251381469219923,
+   0.2295612609386444,
+   0.20839883148670196,
+   0.1873081800341606,
+   0.1659726870059967,
+   0.1461819488555193,
+   0.12798065692186356,
+   0.11049865208566188,
+   0.09570256151258945,
+   0.08290256768465042,
+   0.07189281273633241,
+   0.0626001587510109,
+   0.05477279603481293,
+   0.048226098679006096,
+   0.04291101701557636,
+   0.038592689502984286
+  ]
+ },
+ "device_per_fold": [
+  "cpu",
+  "cpu",
+  "cpu",
+  "mps",
+  "cpu"
+ ],
+ "custom_finalmix_backward_per_fold": [
+  true,
+  true,
+  true,
+  true,
+  true
+ ],
+ "command": "python -I scripts/iie/ft_kfold.py --row iie_ft_klcce20_pairsafe --split splits/kfold_seed0_pairsafe.json --loss klcc64 --epochs 20 --primary sigma --device mps --aggregate_only --note pair-safe seed-0 5-fold split (near-duplicate components kept in one fold); inner-validation-selected recipe (our loss, 20 epochs); pool workers, FinalMix custom backward",
+ "note": "pair-safe seed-0 5-fold split (near-duplicate components kept in one fold); inner-validation-selected recipe (our loss, 20 epochs); pool workers, FinalMix custom backward",
+ "pool_worker_note": "folds may have been trained by pool_worker.py workers (same settings); see device_per_fold",
+ "native_resolution": "DeepGaze IIE predicts at its input resolution (384 x 384), so native and unified scores are identical",
+ "published_scoring_min_subtracted_gt": {
+  "per_fold": [
+   {
+    "CC": 0.8531428107088485,
+    "SIM": 0.7742875701032415,
+    "KLD": 0.19586161078370545
+   },
+   {
+    "CC": 0.851963360701187,
+    "SIM": 0.7728808166771838,
+    "KLD": 0.1994033465699256
+   },
+   {
+    "CC": 0.8470923580392287,
+    "SIM": 0.7709183014430167,
+    "KLD": 0.2023605929846967
+   },
+   {
+    "CC": 0.8551862314056067,
+    "SIM": 0.7756528270006413,
+    "KLD": 0.19532408606363205
+   },
+   {
+    "CC": 0.8567979790135553,
+    "SIM": 0.7787735523111787,
+    "KLD": 0.19037572473116718
+   }
+  ],
+  "CC_mean": 0.852836547973685,
+  "CC_sd": 0.0033186117275995583,
+  "SIM_mean": 0.7745026135070524,
+  "KLD_mean": 0.19666507222662538
+ }
+}

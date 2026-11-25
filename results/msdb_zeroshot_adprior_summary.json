@@ -1,0 +1,119 @@
+{
+ "row": "msdb_zeroshot_adprior",
+ "n_images": 1000,
+ "per_fold": [
+  {
+   "CC": 0.7739785398364165,
+   "SIM": 0.7054044287787852,
+   "KLD": 0.313007391397391,
+   "CC_512": 0.7737497984473005,
+   "SIM_512": 0.7052381916949928,
+   "KLD_512": 0.3124361343873064,
+   "fold": 0,
+   "n": 200
+  },
+  {
+   "CC": 0.7816928617156109,
+   "SIM": 0.7115804786500565,
+   "KLD": 0.30395564607675707,
+   "CC_512": 0.7814520700310663,
+   "SIM_512": 0.7114086516045124,
+   "KLD_512": 0.303367051368857,
+   "fold": 1,
+   "n": 200
+  },
+  {
+   "CC": 0.7761904886781039,
+   "SIM": 0.7151318174853245,
+   "KLD": 0.2953266348475714,
+   "CC_512": 0.7759528851997031,
+   "SIM_512": 0.7149684493007509,
+   "KLD_512": 0.2947910238818264,
+   "fold": 2,
+   "n": 200
+  },
+  {
+   "CC": 0.7830856188420232,
+   "SIM": 0.7088108033590033,
+   "KLD": 0.30798898835187416,
+   "CC_512": 0.7828583928100034,
+   "SIM_512": 0.7086395713114426,
+   "KLD_512": 0.307345160540276,
+   "fold": 3,
+   "n": 200
+  },
+  {
+   "CC": 0.7722120012923174,
+   "SIM": 0.7124658242591844,
+   "KLD": 0.30163855323850347,
+   "CC_512": 0.7719848582967601,
+   "SIM_512": 0.7122962299932357,
+   "KLD_512": 0.3010340671531359,
+   "fold": 4,
+   "n": 200
+  }
+ ],
+ "CC_mean": 0.7774319020728944,
+ "CC_sd_folds_ddof1": 0.004765356033250628,
+ "CC_sd_folds_ddof0": 0.0042622640109348615,
+ "CC_mean_images": 0.7774319020728945,
+ "SIM_mean": 0.7106786705064707,
+ "SIM_sd_folds_ddof1": 0.003712958657243515,
+ "SIM_sd_folds_ddof0": 0.0033209711820971367,
+ "SIM_mean_images": 0.7106786705064707,
+ "KLD_mean": 0.3043834427824194,
+ "KLD_sd_folds_ddof1": 0.006654240136286894,
+ "KLD_sd_folds_ddof0": 0.005951733313337983,
+ "KLD_mean_images": 0.3043834427824194,
+ "CC_512_mean": 0.7771996009569666,
+ "CC_512_sd_folds_ddof1": 0.004763255110989088,
+ "CC_512_sd_folds_ddof0": 0.004260384888937962,
+ "CC_512_mean_images": 0.7771996009569666,
+ "SIM_512_mean": 0.7105102187809869,
+ "SIM_512_sd_folds_ddof1": 0.0037137053096196696,
+ "SIM_512_sd_folds_ddof0": 0.003321639008284594,
+ "SIM_512_mean_images": 0.7105102187809869,
+ "KLD_512_mean": 0.30379468746628036,
+ "KLD_512_sd_folds_ddof1": 0.006636081656845142,
+ "KLD_512_sd_folds_ddof0": 0.005935491875578068,
+ "KLD_512_mean_images": 0.3037946874662803,
+ "calibration_maps": "500 ADD1000 maps per prior half (the complementary half); none from the test image",
+ "training_maps": 0,
+ "trainable_params": 0,
+ "protocol": "DeepGazeMSDB released weights, generalisation mode (dataset=None), pixel_per_dva 21.7, 512x512 input; ADD1000 2-fold log-density centre prior (fit on even-index half of the numerically sorted ids at 512, applied to the odd half, and vice versa) exactly as eval_deepgaze_msdb.py. No post-hoc sigma. per_fold = grouping of the same per-image scores by the shared 5-fold split (the prior halves are the published A/B halves, not the 5 folds).",
+ "wall_clock_s": 20.98467493057251,
+ "command": "cd scripts/msdb && python -I score_zeroshot.py",
+ "scoring": "CC/SIM/KLD on 384x384 (GT PIL-bilinear to 384, clip+sum); prediction = MSDB 512 density (nearest 2x upsample of its 256 map, as the package) resized to 384 with torch bilinear (align_corners=False); *_512 = native 512 grid vs GT PIL-bilinear to 512 (published protocol)",
+ "validation_vs_published": {
+  "published_summary_512": {
+   "CC": 0.7772111953758443,
+   "SIM": 0.7105107455132272,
+   "KLD": 0.3037882953509874
+  },
+  "stored_per_image_mean_512": {
+   "CC": 0.7772111953758448,
+   "SIM": 0.7105107455132268,
+   "KLD": 0.30378829535098706
+  },
+  "ours_mean_512": {
+   "CC": 0.7771996009569666,
+   "SIM": 0.7105102187809869,
+   "KLD": 0.3037946874662803
+  },
+  "per_image_abs_diff_vs_stored_512": {
+   "CC": {
+    "mean": 0.00028590167287411653,
+    "max": 0.0023594488323721574
+   },
+   "SIM": {
+    "mean": 0.00016346922201946067,
+    "max": 0.000955023016831813
+   },
+   "KLD": {
+    "mean": 0.000272254757390376,
+    "max": 0.0019651544135088628
+   }
+  },
+  "note": "stored per-image values come from the published CPU run (float64 normaliser buffers, full model). Ours: frozen features computed once (cache pass), fp32 scale mix -> released saliency network in fp32 -> re-implemented finalizer; differences reflect MPS vs CPU arithmetic and buffer cast only."
+ }
+}

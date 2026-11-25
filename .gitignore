@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+.DS_Store
+.mps_lock/
+# created by the scripts at run time
+cache/
+runs/
+logs/*
+!logs/.gitkeep
+# not redistributed (see data/README.md and third_party/README.md)
+data/*
+!data/README.md
+third_party/*
+!third_party/README.md

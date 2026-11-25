@@ -1,0 +1,11 @@
+{
+ "description": "What the public ADD1000 release and the dataset authors' public repositories contain (checked 23 Nov 2026 by reading the repositories). Read by scripts/stats/build_facts.py for the facts dataset.telsp_availability and dataset.released_content.",
+ "liang_group_repos": {
+  "https://github.com/lscumt/ADD1000": "data zips + README only",
+  "https://github.com/lscumt/fast-fixation-prediction": "code for Liang et al. JVCIR 2023 'Fast saliency prediction based on multi-channels activation optimization' (Keras/TF, EfficientNet); FAST.zip is 19,927 bytes so no weights; config is SALICON-sized (10k/5k), not ad-specific",
+  "https://github.com/lscumt/EAID": "README + 'five attributes score.xls' only",
+  "https://github.com/lscumt/EE-AO": "one 'Note' item, no code",
+  "TEL-SP": "the JVCIR 2021 ADD1000 paper's own model (generic saliency extractor + textual-prior module + fusion); no public code, weights or predicted maps found"
+ },
+ "add1000_metadata": "no brand/campaign/category labels. 8 upload folders of 125 ids each (5-8 split A/B 60/65) look content-mixed in a contact sheet (adidas, Huawei, landscape in folder 1) so they are id chunks, not attribute groups. The README names 8 affective attributes but ships no per-image labels. The paper says gaze order, durations, scanpaths, pupil were recorded; only density maps are released."
+}

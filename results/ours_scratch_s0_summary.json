@@ -1,0 +1,163 @@
+{
+ "row": "ours_scratch_s0",
+ "kind": "kfold",
+ "init": "scratch",
+ "seed": 0,
+ "mode": "full",
+ "n": null,
+ "r": null,
+ "folds_file": "splits/kfold_seed0.json",
+ "per_fold": [
+  {
+   "fold": 0,
+   "n": 200,
+   "CC": 0.9010515516988788,
+   "SIM": 0.8053298963992381,
+   "KLD": 0.14713332833193904
+  },
+  {
+   "fold": 1,
+   "n": 200,
+   "CC": 0.901205322627188,
+   "SIM": 0.805678686842977,
+   "KLD": 0.14872086286925637
+  },
+  {
+   "fold": 2,
+   "n": 200,
+   "CC": 0.8927204674524344,
+   "SIM": 0.8016428230573137,
+   "KLD": 0.15272147323615362
+  },
+  {
+   "fold": 3,
+   "n": 200,
+   "CC": 0.8976641692854261,
+   "SIM": 0.8054644412162368,
+   "KLD": 0.15061153237223873
+  },
+  {
+   "fold": 4,
+   "n": 200,
+   "CC": 0.8946804003776002,
+   "SIM": 0.807652630874218,
+   "KLD": 0.14541541761403315
+  }
+ ],
+ "mean_CC": 0.8974643822883056,
+ "sd_CC_ddof0": 0.0033810535959248635,
+ "sd_CC_ddof1": 0.0037801328380290505,
+ "pooled_image_mean_CC": 0.8974643822883055,
+ "mean_SIM": 0.8051536956779968,
+ "sd_SIM_ddof0": 0.0019480312564527633,
+ "sd_SIM_ddof1": 0.0021779651558613525,
+ "pooled_image_mean_SIM": 0.8051536956779967,
+ "mean_KLD": 0.14892052288472418,
+ "sd_KLD_ddof0": 0.0025622813315794714,
+ "sd_KLD_ddof1": 0.0028647176174451884,
+ "pooled_image_mean_KLD": 0.14892052288472418,
+ "folds_detail": [
+  {
+   "fold": 0,
+   "n_train": 800,
+   "n_test": 200,
+   "warm_load": {},
+   "start_sigma": 0,
+   "start_CC": -0.12144563792044885,
+   "start_SIM": 0.4507588870499816,
+   "start_KLD": 0.9257294314344123,
+   "sigma": 4,
+   "CC": 0.9010515516988788,
+   "SIM": 0.8053298963992381,
+   "KLD": 0.14713332833193904,
+   "wall_s": 193.9646818637848
+  },
+  {
+   "fold": 1,
+   "n_train": 800,
+   "n_test": 200,
+   "warm_load": {},
+   "start_sigma": 12,
+   "start_CC": 0.11792211327568974,
+   "start_SIM": 0.44919831180545117,
+   "start_KLD": 0.9351649808928088,
+   "sigma": 4,
+   "CC": 0.901205322627188,
+   "SIM": 0.805678686842977,
+   "KLD": 0.14872086286925637,
+   "wall_s": 216.09052109718323
+  },
+  {
+   "fold": 2,
+   "n_train": 800,
+   "n_test": 200,
+   "warm_load": {},
+   "start_sigma": 0,
+   "start_CC": -0.013539341377385132,
+   "start_SIM": 0.4567989037700945,
+   "start_KLD": 0.9080606560346086,
+   "sigma": 4,
+   "CC": 0.8927204674524344,
+   "SIM": 0.8016428230573137,
+   "KLD": 0.15272147323615362,
+   "wall_s": 208.14387392997742
+  },
+  {
+   "fold": 3,
+   "n_train": 800,
+   "n_test": 200,
+   "warm_load": {},
+   "start_sigma": 12,
+   "start_CC": 0.19233474320718166,
+   "start_SIM": 0.45885656286484106,
+   "start_KLD": 0.9036957012142721,
+   "sigma": 4,
+   "CC": 0.8976641692854261,
+   "SIM": 0.8054644412162368,
+   "KLD": 0.15061153237223873,
+   "wall_s": 198.29167675971985
+  },
+  {
+   "fold": 4,
+   "n_train": 800,
+   "n_test": 200,
+   "warm_load": {},
+   "start_sigma": 0,
+   "start_CC": -0.1721531588675081,
+   "start_SIM": 0.46735364023426124,
+   "start_KLD": 0.8742493162803464,
+   "sigma": 4,
+   "CC": 0.8946804003776002,
+   "SIM": 0.807652630874218,
+   "KLD": 0.14541541761403315,
+   "wall_s": 184.99797105789185
+  }
+ ],
+ "calibration_and_training_data": {
+  "sigma_selection_maps_per_fold": 200,
+  "sigma_selection_maps_are_subset_of_training_maps": true,
+  "train_weight_maps_per_fold": 800,
+  "centre_prior": "learned 16x16 centre-bias logit map, trained jointly with the readout on the same training maps (no separately fitted prior)",
+  "warm_start_source": "random init"
+ },
+ "trainable_params": 3721089,
+ "protocol": {
+  "backbone": "frozen facebook/dinov2-base, 448x448 input, patch tokens cached fp16 (cache/ours)",
+  "epochs": 60,
+  "lr": 0.0003,
+  "batch": 16,
+  "optimizer": "AdamW wd 1e-4",
+  "loss": "KL + (1 - CC) at 64x64",
+  "finalizer": "Gaussian sigma from {0,2,4,6,8,10,12} chosen by mean CC on training images",
+  "scoring": "unified: 384x384, GT bilinear to 384, clip at 0 and divide by sum; CC/SIM/KLD (eps 1e-8)",
+  "native_resolution": "the readout's 32x32 logits are bilinearly upsampled to 384 inside the model, so the native score is the 384 score",
+  "init_seed_rule": "torch.manual_seed(1000*seed + fold) [curves: 1000*n + r]; data-order rng default_rng(fold + 1000*seed) [curves: default_rng(r)]",
+  "gt_note": "training targets use the published load_gt (min subtracted); evaluation GT uses the unified clip/sum rule (differs from the published scorer only for SIM/KLD on the 1 map whose resized minimum is above 0)"
+ },
+ "wall_clock_s": 1013.6350231170654,
+ "feature_load_s": 12.120985269546509,
+ "device": "mps",
+ "torch": "2.12.0",
+ "machine": "macOS-26.6.2-arm64-arm-64bit",
+ "command": "python -I scripts/ours/run_row.py --row ours_scratch_s0 --kind kfold --init scratch --seed 0 --device mps"
+}

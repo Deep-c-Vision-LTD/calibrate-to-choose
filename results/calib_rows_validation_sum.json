@@ -1,0 +1,6 @@
+{
+ "part": "sum",
+ "validation_protocol_grid_max_abs_diff": 0.0,
+ "command": "python -I scripts/revision/calib_rows.py --part sum --threads 2",
+ "wall_s": 218.0264708995819
+}

@@ -1,0 +1,45 @@
+{
+ "model": "DeepGazeMSDB (deepgaze_pytorch, pretrained=True)",
+ "total_params_instantiated": 451641181,
+ "saliency_network_params": 26460,
+ "finalizer_params_all_datasets": 15,
+ "clip_rn50x64_visual_params": 365034176,
+ "clip_rn50x64_visual_params_executed_to_layer4.2.conv2": 360829632,
+ "dinov2_vitb14_params": 86580480,
+ "dinov2_vitb14_params_executed_to_block10": 79489536,
+ "features_module_params_incl_scale_weights": 451614706,
+ "trainable_params_msdb_adapt_head": 26463,
+ "trainable_params_msdb_adapt_dsp": 13,
+ "scales": {
+  "pixel_per_dva_scales": 5,
+  "size_scales": 5,
+  "resolutions_pixel_per_dva": [
+   5.0,
+   10.0,
+   17.5,
+   24.0,
+   30.0
+  ],
+  "resolutions_size": [
+   128,
+   256,
+   512,
+   768,
+   1024
+  ]
+ },
+ "measured": {
+  "full_model_cpu_float64_buffers_s_per_img_512": 19.224184489250185,
+  "full_model_mps_float32_s_per_img_512": 5.768249487876892,
+  "timing_note_full_model": "10 images, batch 1, 512x512 input, this Mac while other jobs shared the CPU; includes the 10-scale multi-scale backbone and the head",
+  "feature_cache_pass_mps_total_s": 3561,
+  "feature_cache_pass_mps_s_per_img": 3.561,
+  "msdb_adapt_train_s_per_fold_mean": 409.5332869052887,
+  "msdb_adapt_device": "mps",
+  "msdb_adapt_dsp_train_s_per_fold_mean": 564.9996688842773,
+  "msdb_adapt_dsp_device": "cpu",
+  "train_note": "head training = 60 epochs over the fold's 800 training images from cached frozen features (batch 16, AdamW); excludes the one-off feature-cache pass"
+ },
+ "wall_clock_s": 14.258319854736328,
+ "command": "cd scripts/msdb && python -I cost_msdb.py"
+}

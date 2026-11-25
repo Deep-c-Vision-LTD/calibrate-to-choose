@@ -1,0 +1,8 @@
+{
+ "part": "msdb",
+ "validation_protocol_grid_max_abs_diff": 0.0,
+ "command": "python -I scripts/revision/calib_rows.py --part msdb --threads 2 --tpl official",
+ "wall_s": 944.6760101318359,
+ "template_file": "cache/revision/deepgaze_template/centerbias_mit1003.npy",
+ "template": "official DeepGaze centerbias_mit1003.npy (v1.0.0 release)"
+}

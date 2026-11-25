@@ -1,0 +1,125 @@
+{
+ "per_fold": [
+  {
+   "fold": 0,
+   "n": 200,
+   "CC": 0.7118454875097794,
+   "SIM": 0.65366476071962,
+   "KLD": 0.44716183212772465
+  },
+  {
+   "fold": 1,
+   "n": 200,
+   "CC": 0.7192536297371689,
+   "SIM": 0.6619910883015996,
+   "KLD": 0.42077982733521396
+  },
+  {
+   "fold": 2,
+   "n": 200,
+   "CC": 0.7102114804391902,
+   "SIM": 0.6610239574843735,
+   "KLD": 0.4302889613146026
+  },
+  {
+   "fold": 3,
+   "n": 200,
+   "CC": 0.7079221171847601,
+   "SIM": 0.6558466144591429,
+   "KLD": 0.4369825876497856
+  },
+  {
+   "fold": 4,
+   "n": 200,
+   "CC": 0.7059381469405234,
+   "SIM": 0.6573081714103098,
+   "KLD": 0.4380008621867241
+  }
+ ],
+ "CC_mean": 0.7110341723622844,
+ "CC_sd_folds": 0.004572721210255725,
+ "CC_sd_folds_ddof1": 0.005112457734143454,
+ "CC_mean_over_images": 0.7110341723622844,
+ "SIM_mean": 0.6579669184750092,
+ "SIM_sd_folds": 0.003129780454447871,
+ "SIM_sd_folds_ddof1": 0.003499200925397812,
+ "SIM_mean_over_images": 0.6579669184750091,
+ "KLD_mean": 0.43464281412281014,
+ "KLD_sd_folds": 0.008770578951392754,
+ "KLD_sd_folds_ddof1": 0.00980580536867151,
+ "KLD_mean_over_images": 0.4346428141228102,
+ "row": "sum_zeroshot_t3",
+ "token": 3,
+ "token_meaning": "user interface",
+ "native256": {
+  "per_fold": [
+   {
+    "fold": 0,
+    "n": 200,
+    "CC": 0.7115938582763698,
+    "SIM": 0.6535284146013618,
+    "KLD": 0.4486883182195874
+   },
+   {
+    "fold": 1,
+    "n": 200,
+    "CC": 0.7190280378741768,
+    "SIM": 0.6618696449801855,
+    "KLD": 0.42218014101186796
+   },
+   {
+    "fold": 2,
+    "n": 200,
+    "CC": 0.7099850298086972,
+    "SIM": 0.6608969388826496,
+    "KLD": 0.43166815459670604
+   },
+   {
+    "fold": 3,
+    "n": 200,
+    "CC": 0.7076924114650844,
+    "SIM": 0.6557170292456379,
+    "KLD": 0.4384116380926524
+   },
+   {
+    "fold": 4,
+    "n": 200,
+    "CC": 0.7057217272425053,
+    "SIM": 0.6571743718842987,
+    "KLD": 0.43951800409301695
+   }
+  ],
+  "CC_mean": 0.7108042129333667,
+  "CC_sd_folds": 0.0045703581170926846,
+  "CC_sd_folds_ddof1": 0.005109815715668593,
+  "CC_mean_over_images": 0.7108042129333667,
+  "SIM_mean": 0.6578372799188268,
+  "SIM_sd_folds": 0.0031344125850442887,
+  "SIM_sd_folds_ddof1": 0.003504379804844935,
+  "SIM_mean_over_images": 0.6578372799188268,
+  "KLD_mean": 0.4360932512027661,
+  "KLD_sd_folds": 0.00881924802288421,
+  "KLD_sd_folds_ddof1": 0.009860219044799858,
+  "KLD_mean_over_images": 0.43609325120276604
+ },
+ "published_SPL_overall_mean": {
+  "CC": 0.7110342309253882,
+  "SIM": 0.6579669582333466,
+  "KLD": 0.43464271507806784
+ },
+ "reproduction_abs_diff_overall": {
+  "CC": 5.856310381080476e-08,
+  "SIM": 3.9758337511131003e-08,
+  "KLD": 9.90447423521168e-08
+ },
+ "calibration_maps_used": 0,
+ "training_maps_used": 0,
+ "protocol": "ADD1000 seed-0 5-fold split (splits/kfold_seed0.json); CC/SIM/KLD on 384x384; GT = PNG map resized bilinearly (PIL) to 384; prediction resized bilinearly (PIL mode F) from SUM's native 256x256 output; probability maps = clip at 0 and divide by sum; EPS 1e-8; zero-shot: released weights, no ADD1000 data used",
+ "params_total": 57501196,
+ "inference_wallclock_s_all_tokens_1000_imgs": 6024.48677110672,
+ "inference_s_per_image_4_tokens": 6.02448677110672,
+ "inference_device": "cpu",
+ "scan_impl": "pure-PyTorch chunked selective scan (verified vs CUDA-kernel stored outputs, |dCC|<3e-7)",
+ "command_inference": "python -I scripts/sum/infer_zeroshot.py --scripts scripts/sum --code third_party/SUM/code --weights third_party/SUM/weights --data ADD1000/flat --split splits/kfold_seed0.json --out_dir cache/sum_maps --device cpu --threads 6",
+ "command_scoring": "python -I scripts/sum/score_zeroshot_calibrated.py --scripts scripts/sum --data data/ADD1000/flat --split splits/kfold_seed0.json --maps cache/sum_maps --results results"
+}

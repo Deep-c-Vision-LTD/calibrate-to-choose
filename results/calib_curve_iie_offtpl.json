@@ -1,0 +1,211 @@
+{
+ "model": "iie",
+ "rule": "fold-0 test (200 images); subsets = splits/curve_subsets_seed0.json train_ids (n = 800 once: the pool); prior (MSDB, IIE) or token (SUM) from the n maps; blur from the grid 0..32 (step 2) chosen by mean CC on the first min(n, 200) of the n maps; no weights trained; n = 0: zero-shot (MIT1003 template for MSDB and IIE, token 2 for SUM)",
+ "grid": [
+  0,
+  2,
+  4,
+  6,
+  8,
+  10,
+  12,
+  14,
+  16,
+  18,
+  20,
+  22,
+  24,
+  26,
+  28,
+  30,
+  32
+ ],
+ "by_n": {
+  "0": {
+   "CC": 0.7243266689845317,
+   "SIM": 0.6621728774617486,
+   "KLD": 0.4888172753378147
+  },
+  "25": {
+   "CC": 0.7488460898405921,
+   "SIM": 0.6963541430034356,
+   "KLD": 0.3661698629526577,
+   "CC_sd_resamples_ddof1": 0.007861302056842706,
+   "runs": [
+    {
+     "resample": 0,
+     "sigma": 10,
+     "token": null,
+     "CC": 0.7472365178045837,
+     "SIM": 0.6956904782646219,
+     "KLD": 0.3673392818818104
+    },
+    {
+     "resample": 1,
+     "sigma": 8,
+     "token": null,
+     "CC": 0.7419141434459692,
+     "SIM": 0.6889936120824791,
+     "KLD": 0.3836461697945887
+    },
+    {
+     "resample": 2,
+     "sigma": 12,
+     "token": null,
+     "CC": 0.7573876082712233,
+     "SIM": 0.7043783386632058,
+     "KLD": 0.34752413718157393
+    }
+   ]
+  },
+  "50": {
+   "CC": 0.7495061771817638,
+   "SIM": 0.698138910569884,
+   "KLD": 0.3665135014190919,
+   "CC_sd_resamples_ddof1": 0.00447298853160653,
+   "runs": [
+    {
+     "resample": 0,
+     "sigma": 10,
+     "token": null,
+     "CC": 0.7545942802356927,
+     "SIM": 0.7011358884778364,
+     "KLD": 0.35810201964128147
+    },
+    {
+     "resample": 1,
+     "sigma": 12,
+     "token": null,
+     "CC": 0.7477309116382392,
+     "SIM": 0.6966662378374684,
+     "KLD": 0.3713859040045563
+    },
+    {
+     "resample": 2,
+     "sigma": 10,
+     "token": null,
+     "CC": 0.7461933396713597,
+     "SIM": 0.6966146053943469,
+     "KLD": 0.37005258061143786
+    }
+   ]
+  },
+  "100": {
+   "CC": 0.7530595306044504,
+   "SIM": 0.7000326139273406,
+   "KLD": 0.35865463747075116,
+   "CC_sd_resamples_ddof1": 0.0027172417320373127,
+   "runs": [
+    {
+     "resample": 0,
+     "sigma": 10,
+     "token": null,
+     "CC": 0.7560705488380557,
+     "SIM": 0.7015966067036615,
+     "KLD": 0.35468467877403415
+    },
+    {
+     "resample": 1,
+     "sigma": 10,
+     "token": null,
+     "CC": 0.7523180434297393,
+     "SIM": 0.6998631166092989,
+     "KLD": 0.3592125819599182
+    },
+    {
+     "resample": 2,
+     "sigma": 10,
+     "token": null,
+     "CC": 0.7507899995455561,
+     "SIM": 0.6986381184690612,
+     "KLD": 0.3620666516783011
+    }
+   ]
+  },
+  "200": {
+   "CC": 0.7557524351999092,
+   "SIM": 0.7019909466247082,
+   "KLD": 0.354424454069372,
+   "CC_sd_resamples_ddof1": 0.0009416177414331057,
+   "runs": [
+    {
+     "resample": 0,
+     "sigma": 10,
+     "token": null,
+     "CC": 0.7554377767931421,
+     "SIM": 0.7018871932064448,
+     "KLD": 0.3536856251891198
+    },
+    {
+     "resample": 1,
+     "sigma": 10,
+     "token": null,
+     "CC": 0.7550084395249776,
+     "SIM": 0.7016063829044099,
+     "KLD": 0.3555531104852861
+    },
+    {
+     "resample": 2,
+     "sigma": 10,
+     "token": null,
+     "CC": 0.7568110892816078,
+     "SIM": 0.7024792637632699,
+     "KLD": 0.3540346265337101
+    }
+   ]
+  },
+  "400": {
+   "CC": 0.7554470828452869,
+   "SIM": 0.7019035217850611,
+   "KLD": 0.3531755631851658,
+   "CC_sd_resamples_ddof1": 0.0013005109578730109,
+   "runs": [
+    {
+     "resample": 0,
+     "sigma": 10,
+     "token": null,
+     "CC": 0.7541479184283666,
+     "SIM": 0.7008928224256517,
+     "KLD": 0.3573771090521203
+    },
+    {
+     "resample": 1,
+     "sigma": 10,
+     "token": null,
+     "CC": 0.7567489361744506,
+     "SIM": 0.7030783255633564,
+     "KLD": 0.34886204979827956
+    },
+    {
+     "resample": 2,
+     "sigma": 10,
+     "token": null,
+     "CC": 0.7554443939330436,
+     "SIM": 0.7017394173661752,
+     "KLD": 0.35328753070509755
+    }
+   ]
+  },
+  "800": {
+   "CC": 0.7559830390950566,
+   "SIM": 0.7012252372886212,
+   "KLD": 0.3556528798399943,
+   "CC_sd_resamples_ddof1": null,
+   "runs": [
+    {
+     "resample": 0,
+     "sigma": 8,
+     "token": null,
+     "CC": 0.7559830390950566,
+     "SIM": 0.7012252372886212,
+     "KLD": 0.3556528798399943
+    }
+   ]
+  }
+ },
+ "command": "python -I scripts/revision/calib_rows.py --part iie --threads 2 --tpl official",
+ "wall_s": 5194.393856048584,
+ "template_file": "cache/revision/deepgaze_template/centerbias_mit1003.npy",
+ "template": "official DeepGaze centerbias_mit1003.npy (v1.0.0 release)",
+ "file_suffix": "_offtpl"
+}

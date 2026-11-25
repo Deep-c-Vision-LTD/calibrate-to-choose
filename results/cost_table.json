@@ -1,0 +1,690 @@
+{
+ "description": "Measured costs for the KBS letter (replaces the unmeasured '50x' statement).",
+ "machine": "Apple M4 Pro (14 CPU cores, 20 GPU cores), 48 GB RAM, macOS 26.6, torch 2.12.0; no CUDA GPU available, so 'GPU' numbers are Apple-silicon MPS numbers",
+ "conventions": {
+  "GFLOPs": "2 x MACs of convolution and matmul ops only (aten.convolution, mm, addmm, bmm, baddbmm; attention via the SDPA math backend), torch.utils.flop_counter.FlopCounterMode, one batch-1 forward at the model's protocol input size; element-wise ops, normalisation, interpolation, pooling and SUM's selective scan excluded (scan estimate listed separately)",
+  "latency": "median of timed batch-1 forward passes after 3 warm-up passes (CPU: 30 runs, MSDB 20; MPS: same), float32, preprocessed input tensor already in memory (image decoding/resizing excluded); CPU with torch.set_num_threads(6); MPS timed with torch.mps.synchronize()",
+  "memory": "CPU: peak process RSS sampled every 2 ms during the timed passes (includes weights); MPS: tensor allocation after loading (weights) and the maximum driver allocation seen after passes (the caching allocator keeps freed blocks, so it approximates the peak working set)",
+  "our_finalizer": "our post-hoc Gaussian finalizer (scipy gaussian_filter, sigma 4, 384x384, CPU) is timed separately and also added to our latency; DeepGaze IIE/MSDB include their learned blur inside the forward pass"
+ },
+ "inference": {
+  "ours": {
+   "name": "Ours: frozen DINOv2-base (448) + ASPP readout",
+   "input": "448x448",
+   "cpu_latency_median_s": 0.12204727088101208,
+   "cpu_latency_iqr_s": [
+    0.12182881217449903,
+    0.12250940641388297
+   ],
+   "cpu_latency_min_s": 0.12138570891693234,
+   "cpu_runs": 30,
+   "cpu_warmup": 3,
+   "cpu_threads": 6,
+   "params_total": 90301569,
+   "params_backbone_frozen": 86580480,
+   "params_trainable_in_our_adaptation_row": 3721089,
+   "GFLOPs": 221.187117056,
+   "GFLOPs_by_op": {
+    "aten.convolution": 8.340832256,
+    "aten.addmm": 174.1160448,
+    "aten.bmm": 38.73024
+   },
+   "cpu_peak_rss_GB": 1.216522216796875,
+   "cpu_peak_rss_increment_over_loaded_model_GB": 0.4131927490234375,
+   "cpu_rss_loaded_model_GB": 0.8033294677734375,
+   "finalizer_sigma4_scipy_cpu_s": 0.0014218329451978207,
+   "cpu_latency_incl_finalizer_median_s": 0.1234691038262099,
+   "GFLOPs_backbone": 213.771128832,
+   "GFLOPs_readout": 7.415988224000017,
+   "mps_latency_median_s": 0.0740665621124208,
+   "mps_latency_iqr_s": [
+    0.073924177326262,
+    0.07415409362874925
+   ],
+   "mps_latency_min_s": 0.07358108414337039,
+   "mps_runs": 30,
+   "mps_warmup": 3,
+   "mps_allocated_weights_GB": 0.336406946182251,
+   "mps_driver_allocated_max_GB": 1.483154296875,
+   "mps_latency_incl_finalizer_median_s": 0.07548143714666367
+  },
+  "iie": {
+   "name": "DeepGaze IIE (released, 4 backbones x 30 readout components)",
+   "input": "384x384",
+   "cpu_latency_median_s": 0.7218687920831144,
+   "cpu_latency_iqr_s": [
+    0.7161798538872972,
+    0.7245840728282928
+   ],
+   "cpu_latency_min_s": 0.7084813751280308,
+   "cpu_runs": 30,
+   "cpu_warmup": 3,
+   "cpu_threads": 6,
+   "params_total": 104048808,
+   "params_backbone_frozen": 100989648,
+   "params_trainable_in_our_adaptation_row": 3059160,
+   "GFLOPs": 23.816175744,
+   "GFLOPs_by_op": {
+    "aten.convolution": 23.800047744,
+    "aten.addmm": 0.016128
+   },
+   "cpu_peak_rss_GB": 1.2235107421875,
+   "cpu_peak_rss_increment_over_loaded_model_GB": 0.071868896484375,
+   "cpu_rss_loaded_model_GB": 1.151641845703125,
+   "note": "IIE computes features on the image downsampled by 2 (192x192 backbone input)",
+   "mps_latency_median_s": 0.3909771875478327,
+   "mps_latency_iqr_s": [
+    0.38913857319857925,
+    0.3926779687171802
+   ],
+   "mps_latency_min_s": 0.3846009997650981,
+   "mps_runs": 30,
+   "mps_warmup": 3,
+   "mps_allocated_weights_GB": 0.3900773525238037,
+   "mps_driver_allocated_max_GB": 1.4872283935546875
+  },
+  "msdb": {
+   "name": "DeepGaze MSDB (released, CLIP-RN50x64 + DINOv2-B/14, 10 scales)",
+   "input": "512x512, pixel_per_dva 21.7, dataset=None",
+   "cpu_latency_median_s": 7.510176646057516,
+   "cpu_latency_iqr_s": [
+    7.489343958790414,
+    7.525892385165207
+   ],
+   "cpu_latency_min_s": 7.456109541933984,
+   "cpu_runs": 20,
+   "cpu_warmup": 3,
+   "cpu_threads": 6,
+   "params_total": 451641181,
+   "params_backbone_frozen": 451614706,
+   "params_trainable_in_our_adaptation_row": 26463,
+   "params_trainable_note": "msdb_adapt: saliency network 26,460 + 3 single-dataset finalizer scalars; msdb_adapt_dsp: 13",
+   "GFLOPs": 12256.161374976,
+   "GFLOPs_by_op": {
+    "aten.convolution": 7651.499520768,
+    "aten.addmm": 2699.732975616,
+    "aten.bmm": 1904.928878592
+   },
+   "cpu_peak_rss_GB": 9.195709228515625,
+   "cpu_peak_rss_increment_over_loaded_model_GB": 5.75079345703125,
+   "cpu_rss_loaded_model_GB": 3.444915771484375,
+   "params_executed_estimate": 440345628,
+   "params_executed_note": "CLIP-RN50x64 visual up to layer4.2.conv2 + DINOv2-B/14 up to block 10 + saliency network (msdb_costs.json); unexecuted layers are instantiated",
+   "float64_buffers_cast_to_float32": 4,
+   "mps_latency_median_s": 2.959361041430384,
+   "mps_latency_iqr_s": [
+    2.9290471458807588,
+    2.979496125248261
+   ],
+   "mps_latency_min_s": 2.8617824157699943,
+   "mps_runs": 20,
+   "mps_warmup": 3,
+   "mps_allocated_weights_GB": 1.6840758323669434,
+   "mps_driver_allocated_max_GB": 7.527313232421875
+  },
+  "sum": {
+   "name": "SUM (released, VMamba U-Net, token 2)",
+   "input": "256x256",
+   "cpu_latency_median_s": 1.2849033961538225,
+   "cpu_latency_iqr_s": [
+    1.2815493958769366,
+    1.2912159591214731
+   ],
+   "cpu_latency_min_s": 1.2758765001781285,
+   "cpu_runs": 30,
+   "cpu_warmup": 3,
+   "cpu_threads": 6,
+   "params_total": 57501196,
+   "params_backbone_frozen": 57464259,
+   "params_trainable_in_our_adaptation_row": 36937,
+   "params_trainable_note": "sum_ft_head: SUM's own output head (final_up + final_conv) only",
+   "GFLOPs": 26.420397568,
+   "GFLOPs_by_op": {
+    "aten.convolution": 0.221380608,
+    "aten.mm": 19.327352832,
+    "aten.bmm": 6.870269952,
+    "aten.addmm": 0.001394176
+   },
+   "cpu_peak_rss_GB": 2.2899932861328125,
+   "cpu_peak_rss_increment_over_loaded_model_GB": 1.7632293701171875,
+   "cpu_rss_loaded_model_GB": 0.526763916015625,
+   "selective_scan_GFLOPs_estimate_not_in_total": 4.572463328,
+   "GFLOPs_incl_scan_estimate": 30.992860896,
+   "note": "CPU/MPS latency uses a pure-PyTorch chunked selective scan (no CUDA kernel), so it overstates SUM's latency on a GPU with the compiled kernel",
+   "mps_latency_median_s": 0.45756714534945786,
+   "mps_latency_iqr_s": [
+    0.45663650054484606,
+    0.46050126082263887
+   ],
+   "mps_latency_min_s": 0.4549671672284603,
+   "mps_runs": 30,
+   "mps_warmup": 3,
+   "mps_allocated_weights_GB": 0.21421217918395996,
+   "mps_driver_allocated_max_GB": 2.2995758056640625
+  }
+ },
+ "ratios_vs_ours": {
+  "iie": {
+   "GFLOPs_vs_ours": 0.10767433502001943,
+   "cpu_latency_vs_ours": 5.914665578936936,
+   "cpu_latency_vs_ours_incl_finalizer": 5.846554074768273,
+   "mps_latency_vs_ours": 5.278727355461618,
+   "mps_latency_vs_ours_incl_finalizer": 5.179779324923919,
+   "params_total_vs_ours": 1.1522369893705833,
+   "params_trainable_vs_ours": 0.8221141714159484,
+   "cpu_peak_rss_vs_ours": 1.0057446755136341
+  },
+  "msdb": {
+   "GFLOPs_vs_ours": 55.41082834346538,
+   "cpu_latency_vs_ours": 61.53498223962284,
+   "cpu_latency_vs_ours_incl_finalizer": 60.82636395116738,
+   "mps_latency_vs_ours": 39.95542599828737,
+   "mps_latency_vs_ours_incl_finalizer": 39.206474509490576,
+   "params_total_vs_ours": 5.001476563491383,
+   "params_trainable_vs_ours": 0.007111627805731064,
+   "cpu_peak_rss_vs_ours": 7.559014625090937
+  },
+  "sum": {
+   "GFLOPs_vs_ours": 0.11944817546182357,
+   "cpu_latency_vs_ours": 10.52791583849931,
+   "cpu_latency_vs_ours_incl_finalizer": 10.40667953630246,
+   "mps_latency_vs_ours": 6.177782960345136,
+   "mps_latency_vs_ours_incl_finalizer": 6.061982424372569,
+   "params_total_vs_ours": 0.6367685150631215,
+   "params_trainable_vs_ours": 0.009926395203124676,
+   "cpu_peak_rss_vs_ours": 1.8824097534054136
+  }
+ },
+ "training_adaptation": [
+  {
+   "row": "ours_scratch_s0",
+   "model": "ours",
+   "trainable_params": 3721089,
+   "device": "mps",
+   "train_s_per_fold": [
+    193.9646818637848,
+    216.09052109718323,
+    208.14387392997742,
+    198.29167675971985,
+    184.99797105789185
+   ],
+   "train_s_per_fold_median": 198.29167675971985,
+   "train_s_total_5_folds": 1001.4887247085571,
+   "row_wall_clock_s_total": 1013.6350231170654,
+   "what_the_time_covers": "per fold: 60-epoch readout training on cached features + sigma selection + test scoring",
+   "recipe": "AdamW 3e-4, wd 1e-4, batch 16, 60 epochs, KL+(1-CC) on 64x64",
+   "note": "MPS run held the shared MPS lock (no other MPS job); CPU shared with other tracks"
+  },
+  {
+   "row": "ours_scratch_s1",
+   "model": "ours",
+   "trainable_params": 3721089,
+   "device": "mps",
+   "train_s_per_fold": [
+    165.7291178703308,
+    164.14821696281433,
+    164.83504986763,
+    163.14352679252625,
+    161.6384391784668
+   ],
+   "train_s_per_fold_median": 164.14821696281433,
+   "train_s_total_5_folds": 819.4943506717682,
+   "row_wall_clock_s_total": 824.7028648853302,
+   "what_the_time_covers": "per fold: 60-epoch readout training on cached features + sigma selection + test scoring",
+   "recipe": "AdamW 3e-4, wd 1e-4, batch 16, 60 epochs, KL+(1-CC) on 64x64",
+   "note": "MPS run held the shared MPS lock (no other MPS job); CPU shared with other tracks"
+  },
+  {
+   "row": "ours_scratch_s2",
+   "model": "ours",
+   "trainable_params": 3721089,
+   "device": "mps",
+   "train_s_per_fold": [
+    164.50754714012146,
+    162.55134797096252,
+    163.21020698547363,
+    163.69111013412476,
+    163.4291729927063
+   ],
+   "train_s_per_fold_median": 163.4291729927063,
+   "train_s_total_5_folds": 817.3893852233887,
+   "row_wall_clock_s_total": 822.6622807979584,
+   "what_the_time_covers": "per fold: 60-epoch readout training on cached features + sigma selection + test scoring",
+   "recipe": "AdamW 3e-4, wd 1e-4, batch 16, 60 epochs, KL+(1-CC) on 64x64",
+   "note": "MPS run held the shared MPS lock (no other MPS job); CPU shared with other tracks"
+  },
+  {
+   "row": "ours_warm_s0",
+   "model": "ours",
+   "trainable_params": 3721089,
+   "device": "mps",
+   "train_s_per_fold": [
+    181.6097321510315,
+    185.09288668632507,
+    183.55631375312805,
+    189.90486073493958,
+    196.988933801651
+   ],
+   "train_s_per_fold_median": 185.09288668632507,
+   "train_s_total_5_folds": 937.1527271270752,
+   "row_wall_clock_s_total": 949.2100560665131,
+   "what_the_time_covers": "per fold: 60-epoch readout training on cached features + sigma selection + test scoring",
+   "recipe": "AdamW 3e-4, wd 1e-4, batch 16, 60 epochs, KL+(1-CC) on 64x64",
+   "note": "MPS run held the shared MPS lock (no other MPS job); CPU shared with other tracks"
+  },
+  {
+   "row": "ours_warm_s1",
+   "model": "ours",
+   "trainable_params": 3721089,
+   "device": "mps",
+   "train_s_per_fold": [
+    165.26043272018433,
+    163.3900899887085,
+    163.89887118339539,
+    165.43848299980164,
+    165.40744709968567
+   ],
+   "train_s_per_fold_median": 165.26043272018433,
+   "train_s_total_5_folds": 823.3953239917755,
+   "row_wall_clock_s_total": 828.6072828769684,
+   "what_the_time_covers": "per fold: 60-epoch readout training on cached features + sigma selection + test scoring",
+   "recipe": "AdamW 3e-4, wd 1e-4, batch 16, 60 epochs, KL+(1-CC) on 64x64",
+   "note": "MPS run held the shared MPS lock (no other MPS job); CPU shared with other tracks"
+  },
+  {
+   "row": "ours_warm_s2",
+   "model": "ours",
+   "trainable_params": 3721089,
+   "device": "mps",
+   "train_s_per_fold": [
+    165.27868270874023,
+    163.46276831626892,
+    163.74182510375977,
+    162.8096866607666,
+    153.24362707138062
+   ],
+   "train_s_per_fold_median": 163.46276831626892,
+   "train_s_total_5_folds": 808.5365898609161,
+   "row_wall_clock_s_total": 813.806734085083,
+   "what_the_time_covers": "per fold: 60-epoch readout training on cached features + sigma selection + test scoring",
+   "recipe": "AdamW 3e-4, wd 1e-4, batch 16, 60 epochs, KL+(1-CC) on 64x64",
+   "note": "MPS run held the shared MPS lock (no other MPS job); CPU shared with other tracks"
+  },
+  {
+   "row": "ours_grouped",
+   "model": "ours",
+   "trainable_params": 3721089,
+   "device": "mps",
+   "train_s_per_fold": [
+    161.62605714797974,
+    170.8234179019928,
+    164.93499517440796,
+    154.7974898815155,
+    150.89385604858398
+   ],
+   "train_s_per_fold_median": 161.62605714797974,
+   "train_s_total_5_folds": 803.07581615448,
+   "row_wall_clock_s_total": 807.4700889587402,
+   "what_the_time_covers": "per fold: 60-epoch readout training on cached features + sigma selection + test scoring",
+   "recipe": "AdamW 3e-4, wd 1e-4, batch 16, 60 epochs, KL+(1-CC) on 64x64",
+   "note": "MPS run held the shared MPS lock (no other MPS job); CPU shared with other tracks"
+  },
+  {
+   "row": "ours_pairsafe",
+   "model": "ours",
+   "trainable_params": 3721089,
+   "device": "mps",
+   "train_s_per_fold": [
+    190.66335487365723,
+    185.98553276062012,
+    187.245050907135,
+    193.7312650680542,
+    197.25306010246277
+   ],
+   "train_s_per_fold_median": 190.66335487365723,
+   "train_s_total_5_folds": 954.8782637119293,
+   "row_wall_clock_s_total": 968.2656018733978,
+   "what_the_time_covers": "per fold: 60-epoch readout training on cached features + sigma selection + test scoring",
+   "recipe": "AdamW 3e-4, wd 1e-4, batch 16, 60 epochs, KL+(1-CC) on 64x64",
+   "note": "MPS run held the shared MPS lock (no other MPS job); CPU shared with other tracks"
+  },
+  {
+   "row": "iie_ft_kl",
+   "model": "iie",
+   "trainable_params": 3059160,
+   "device": "cpu",
+   "train_s_per_fold": [
+    1291.856461763382,
+    1249.5525619983673,
+    1740.1044340133667,
+    1308.7809410095215,
+    1305.221792936325
+   ],
+   "train_s_per_fold_median": 1305.221792936325,
+   "train_s_total_5_folds": 6895.5161917209625,
+   "row_wall_clock_s_total": 7801.371835947037,
+   "what_the_time_covers": "per fold: readout training only (evaluation excluded)",
+   "recipe": "published ft_deepgaze_iie_indomain.py recipe: KL(g||p) on 384 grid (g = min-subtracted sum-normalised bilinear-384 GT), Adam lr 0.001, batch 8, 20 epochs",
+   "note": "measured under contention (several CPU pool workers and other tracks running at once); devices mixed across folds; the _sigma / _nosigma companions share these trainings"
+  },
+  {
+   "row": "iie_ft_klcc",
+   "model": "iie",
+   "trainable_params": 3059160,
+   "device": [
+    "cpu",
+    "mps",
+    "cpu",
+    "cpu",
+    "cpu"
+   ],
+   "train_s_per_fold": [
+    4159.4679889678955,
+    1540.0,
+    4075.11798286438,
+    4074.5286152362823,
+    3710.2963931560516
+   ],
+   "train_s_per_fold_median": 4074.5286152362823,
+   "train_s_total_5_folds": 17559.41098022461,
+   "row_wall_clock_s_total": 18330.614391326904,
+   "what_the_time_covers": "per fold: readout training only (evaluation excluded)",
+   "recipe": "our kfold_train_eval.py loss KL(g64||p64) + (1 - CC(p64,g64)) (weights 1, 1) on the 64x64 loss grid; p64 = IIE density exactly sum-pooled 6x6 from 384; Adam lr 0.001, batch 8, 60 epochs",
+   "note": "measured under contention (several CPU pool workers and other tracks running at once); devices mixed across folds; the _sigma / _nosigma companions share these trainings"
+  },
+  {
+   "row": "iie_ft_klcc_e20",
+   "model": "iie",
+   "trainable_params": 3059160,
+   "device": [
+    "cpu",
+    "mps",
+    "mps",
+    "cpu",
+    "cpu"
+   ],
+   "train_s_per_fold": [
+    1237.7193620204926,
+    537.8859980106354,
+    514.962898015976,
+    1228.843605041504,
+    1220.6275660991669
+   ],
+   "train_s_per_fold_median": 1220.6275660991669,
+   "train_s_total_5_folds": 4740.039429187775,
+   "row_wall_clock_s_total": 5340.278668880463,
+   "what_the_time_covers": "per fold: readout training only (evaluation excluded)",
+   "recipe": "our kfold_train_eval.py loss KL(g64||p64) + (1 - CC(p64,g64)) (weights 1, 1) on the 64x64 loss grid; p64 = IIE density exactly sum-pooled 6x6 from 384; Adam lr 0.001, batch 8, 20 epochs",
+   "note": "measured under contention (several CPU pool workers and other tracks running at once); devices mixed across folds; the _sigma / _nosigma companions share these trainings"
+  },
+  {
+   "row": "iie_ft_klcc_grouped",
+   "model": "iie",
+   "trainable_params": 3059160,
+   "device": [
+    "cpu",
+    "cpu",
+    "cpu",
+    "cpu",
+    "cpu"
+   ],
+   "train_s_per_fold": [
+    4498.387633085251,
+    4508.902652025223,
+    4502.410638093948,
+    4552.04708814621,
+    4901.79567527771
+   ],
+   "train_s_per_fold_median": 4508.902652025223,
+   "train_s_total_5_folds": 22963.54368662834,
+   "row_wall_clock_s_total": 23972.71492123604,
+   "what_the_time_covers": "per fold: readout training only (evaluation excluded)",
+   "recipe": "our kfold_train_eval.py loss KL(g64||p64) + (1 - CC(p64,g64)) (weights 1, 1) on the 64x64 loss grid; p64 = IIE density exactly sum-pooled 6x6 from 384; Adam lr 0.001, batch 8, 60 epochs",
+   "note": "measured under contention (several CPU pool workers and other tracks running at once); devices mixed across folds; the _sigma / _nosigma companions share these trainings"
+  },
+  {
+   "row": "iie_ft_klcc_pairsafe",
+   "model": "iie",
+   "trainable_params": 3059160,
+   "device": [
+    "cpu",
+    "cpu",
+    "cpu",
+    "cpu",
+    "cpu"
+   ],
+   "train_s_per_fold": [
+    4811.640272855759,
+    4794.508222818375,
+    4834.856419086456,
+    4779.950946092606,
+    3479.7468638420105
+   ],
+   "train_s_per_fold_median": 4794.508222818375,
+   "train_s_total_5_folds": 22700.702724695206,
+   "row_wall_clock_s_total": 23253.567502260208,
+   "what_the_time_covers": "per fold: readout training only (evaluation excluded)",
+   "recipe": "our kfold_train_eval.py loss KL(g64||p64) + (1 - CC(p64,g64)) (weights 1, 1) on the 64x64 loss grid; p64 = IIE density exactly sum-pooled 6x6 from 384; Adam lr 0.001, batch 8, 60 epochs",
+   "note": "measured under contention (several CPU pool workers and other tracks running at once); devices mixed across folds; the _sigma / _nosigma companions share these trainings"
+  },
+  {
+   "row": "iie_ft_klcce20_grouped",
+   "model": "iie",
+   "trainable_params": 3059160,
+   "device": [
+    "cpu",
+    "cpu",
+    "cpu",
+    "cpu",
+    "cpu"
+   ],
+   "train_s_per_fold": [
+    1220.485123872757,
+    1218.1043019294739,
+    1208.7426307201385,
+    1076.6362318992615,
+    1075.048063993454
+   ],
+   "train_s_per_fold_median": 1208.7426307201385,
+   "train_s_total_5_folds": 5799.016352415085,
+   "row_wall_clock_s_total": 6451.74859046936,
+   "what_the_time_covers": "per fold: readout training only (evaluation excluded)",
+   "recipe": "our kfold_train_eval.py loss KL(g64||p64) + (1 - CC(p64,g64)) (weights 1, 1) on the 64x64 loss grid; p64 = IIE density exactly sum-pooled 6x6 from 384; Adam lr 0.001, batch 8, 20 epochs",
+   "note": "measured under contention (several CPU pool workers and other tracks running at once); devices mixed across folds; the _sigma / _nosigma companions share these trainings"
+  },
+  {
+   "row": "iie_ft_klcce20_pairsafe",
+   "model": "iie",
+   "trainable_params": 3059160,
+   "device": [
+    "cpu",
+    "cpu",
+    "cpu",
+    "mps",
+    "cpu"
+   ],
+   "train_s_per_fold": [
+    1070.408703804016,
+    1073.3395178318024,
+    1067.8976559638977,
+    523.0580480098724,
+    1208.8402938842773
+   ],
+   "train_s_per_fold_median": 1070.408703804016,
+   "train_s_total_5_folds": 4943.544219493866,
+   "row_wall_clock_s_total": 5500.638140678406,
+   "what_the_time_covers": "per fold: readout training only (evaluation excluded)",
+   "recipe": "our kfold_train_eval.py loss KL(g64||p64) + (1 - CC(p64,g64)) (weights 1, 1) on the 64x64 loss grid; p64 = IIE density exactly sum-pooled 6x6 from 384; Adam lr 0.001, batch 8, 20 epochs",
+   "note": "measured under contention (several CPU pool workers and other tracks running at once); devices mixed across folds; the _sigma / _nosigma companions share these trainings"
+  },
+  {
+   "row": "msdb_adapt_s0",
+   "model": "msdb",
+   "trainable_params": 26463,
+   "device": "mps",
+   "train_s_per_fold": [
+    458.18543887138367,
+    408.2006950378418,
+    393.18531918525696,
+    396.9706382751465,
+    391.1243431568146
+   ],
+   "train_s_per_fold_median": 396.9706382751465,
+   "train_s_total_5_folds": 2047.6664345264435,
+   "row_wall_clock_s_total": 5197.45827293396,
+   "what_the_time_covers": "per fold: head training from cached frozen features (60 epochs); excludes the one-off feature cache",
+   "recipe": "AdamW 0.0003, wd 0.0001, batch 16, 60 epochs, KL + (1 - CC)",
+   "note": "row_wall_clock_s_total covers all seeds/folds of the row and evaluation"
+  },
+  {
+   "row": "msdb_adapt_kl",
+   "model": "msdb",
+   "trainable_params": 26463,
+   "device": "cpu",
+   "train_s_per_fold": [
+    1898.9079229831696,
+    1733.6146759986877,
+    2345.743149995804,
+    2239.572766304016,
+    3039.6026408672333
+   ],
+   "train_s_per_fold_median": 2239.572766304016,
+   "train_s_total_5_folds": 11257.44115614891,
+   "row_wall_clock_s_total": 11501.27081990242,
+   "what_the_time_covers": "per fold: head training from cached frozen features (60 epochs); excludes the one-off feature cache",
+   "recipe": "AdamW 0.0003, wd 0.0001, batch 16, 60 epochs, KL",
+   "note": ""
+  },
+  {
+   "row": "msdb_adapt_dsp",
+   "model": "msdb",
+   "trainable_params": 13,
+   "device": "cpu",
+   "train_s_per_fold": [
+    390.86936116218567,
+    494.25657892227173,
+    597.8473200798035,
+    666.7569561004639,
+    675.268128156662
+   ],
+   "train_s_per_fold_median": 597.8473200798035,
+   "train_s_total_5_folds": 2824.9983444213867,
+   "row_wall_clock_s_total": 2960.8626430034637,
+   "what_the_time_covers": "per fold: head training from cached frozen features (60 epochs); excludes the one-off feature cache",
+   "recipe": "AdamW 0.01, wd 0.0001, batch 16, 60 epochs, KL + (1 - CC)",
+   "note": ""
+  },
+  {
+   "row": "msdb_adapt_grouped",
+   "model": "msdb",
+   "trainable_params": 26463,
+   "device": "mps",
+   "train_s_per_fold": [
+    398.84457898139954,
+    392.13534808158875,
+    422.06070709228516,
+    406.51076006889343,
+    403.5103030204773
+   ],
+   "train_s_per_fold_median": 403.5103030204773,
+   "train_s_total_5_folds": 2023.0616972446442,
+   "row_wall_clock_s_total": 2769.9677040576935,
+   "what_the_time_covers": "per fold: head training from cached frozen features (60 epochs); excludes the one-off feature cache",
+   "recipe": "AdamW 0.0003, wd 0.0001, batch 16, 60 epochs, KL + (1 - CC)",
+   "note": ""
+  },
+  {
+   "row": "msdb_adapt_pairsafe",
+   "model": "msdb",
+   "trainable_params": 26463,
+   "device": "mps",
+   "train_s_per_fold": [
+    392.9113857746124,
+    402.772381067276,
+    405.1889171600342,
+    391.7122299671173,
+    385.9523630142212
+   ],
+   "train_s_per_fold_median": 392.9113857746124,
+   "train_s_total_5_folds": 1978.537276983261,
+   "row_wall_clock_s_total": 3157.648649930954,
+   "what_the_time_covers": "per fold: head training from cached frozen features (60 epochs); excludes the one-off feature cache",
+   "recipe": "AdamW 0.0003, wd 0.0001, batch 16, 60 epochs, KL + (1 - CC)",
+   "note": ""
+  },
+  {
+   "row": "sum_ft_head",
+   "model": "sum",
+   "trainable_params": 36937,
+   "device": "cpu",
+   "train_s_per_fold": [
+    44.3105902671814,
+    39.05186986923218,
+    41.315746545791626,
+    42.4032723903656,
+    37.397783041000366
+   ],
+   "train_s_per_fold_median": 41.315746545791626,
+   "train_s_total_5_folds": 204.47926211357117,
+   "row_wall_clock_s_total": 239.49188208580017,
+   "what_the_time_covers": "per fold: output-head training on cached decoder features (8 epochs)",
+   "recipe": "{\"optimizer\": \"Adam\", \"lr\": 0.0001, \"scheduler\": \"StepLR(4, 0.1)\", \"batch\": 16, \"epochs\": 8, \"early_stopping\": false, \"seed\": 0}",
+   "note": "head-only stand-in for SUM fine-tuning; full fine-tuning was not run"
+  },
+  {
+   "row": "sum_ft_head_klcc",
+   "model": "sum",
+   "trainable_params": 36937,
+   "device": "cpu",
+   "train_s_per_fold": [
+    32.974714517593384,
+    33.19201159477234,
+    33.64581871032715,
+    32.601868629455566,
+    32.63165211677551
+   ],
+   "train_s_per_fold_median": 32.974714517593384,
+   "train_s_total_5_folds": 165.04606556892395,
+   "row_wall_clock_s_total": 198.16290998458862,
+   "what_the_time_covers": "per fold: output-head training on cached decoder features (8 epochs)",
+   "recipe": "{\"optimizer\": \"Adam\", \"lr\": 0.0001, \"scheduler\": \"StepLR(4, 0.1)\", \"batch\": 16, \"epochs\": 8, \"early_stopping\": false, \"seed\": 0}",
+   "note": "head-only stand-in for SUM fine-tuning; full fine-tuning was not run"
+  }
+ ],
+ "one_off_feature_cache": {
+  "ours_feature_cache": {
+   "s_total": 129.3870289325714,
+   "device": "cpu (6 threads)",
+   "images": 1000,
+   "what": "DINOv2-base 448 forward for all 1000 images (patch tokens fp16)",
+   "s_per_image": 0.12938702893257142
+  },
+  "iie_feature_cache": {
+   "s_total": 2300,
+   "device": "cpu",
+   "images": 1000,
+   "what": "4 IIE backbones on 384 input, features at the 12x12 readout grid (float32)",
+   "source": "logs/iie_cache_features.log ('done 2300s'); CPU shared with other jobs",
+   "s_per_image": 2.3
+  },
+  "msdb_feature_cache": {
+   "s_total": 3561,
+   "device": "mps",
+   "images": 1000,
+   "what": "10-scale CLIP-RN50x64 + DINOv2-B/14 backbone, fp16 scale mix (21 GB)",
+   "source": "msdb_costs.json",
+   "s_per_image": 3.561
+  },
+  "sum_decoder_cache": {
+   "s_total": 1987.5965330600739,
+   "device": "cpu (6 threads)",
+   "images": 1000,
+   "what": "SUM encoder + decoder up to the output head (pure-PyTorch scan)",
+   "source": "cache/sum_dec/dec_meta.json",
+   "s_per_image": 1.9875965330600738
+  }
+ },
+ "training_caveat": "Training wall-clock values are read from the row summaries. They were measured while other tracks shared the machine (CPU pool workers, one MPS job at a time under the shared lock), on mixed devices, so they are indicative only; ours and msdb_adapt ran on MPS with the lock, IIE folds ran on CPU or MPS under heavy CPU contention, SUM head rows on CPU.",
+ "wall_clock_s": 0.007588863372802734,
+ "command": "python -I scripts/compile/cost_table.py (after scripts/compile/run_cost.sh)"
+}

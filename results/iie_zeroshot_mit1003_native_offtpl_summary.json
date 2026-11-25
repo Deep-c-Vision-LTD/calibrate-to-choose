@@ -1,0 +1,71 @@
+{
+ "row": "iie_zeroshot_mit1003_native_offtpl",
+ "per_fold": [
+  {
+   "fold": 0,
+   "n": 200,
+   "CC": 0.7617927261709688,
+   "SIM": 0.6782837151795819,
+   "KLD": 0.40997258901419725
+  },
+  {
+   "fold": 1,
+   "n": 200,
+   "CC": 0.7751074604960452,
+   "SIM": 0.6866780946449722,
+   "KLD": 0.39295948252919516
+  },
+  {
+   "fold": 2,
+   "n": 200,
+   "CC": 0.7707904509451003,
+   "SIM": 0.6913182549800623,
+   "KLD": 0.38151858716805687
+  },
+  {
+   "fold": 3,
+   "n": 200,
+   "CC": 0.7754597482273258,
+   "SIM": 0.6884802106426513,
+   "KLD": 0.3887583755207122
+  },
+  {
+   "fold": 4,
+   "n": 200,
+   "CC": 0.761025664689966,
+   "SIM": 0.6848791001236417,
+   "KLD": 0.3909208861970954
+  }
+ ],
+ "CC_mean": 0.7688352101058813,
+ "CC_sd_over_folds": 0.006287037085869235,
+ "CC_sd_over_folds_ddof1": 0.007029121150532896,
+ "CC_mean_over_images": 0.7688352101058812,
+ "SIM_mean": 0.685927875114182,
+ "SIM_sd_over_folds": 0.004374163947071074,
+ "SIM_sd_over_folds_ddof1": 0.004890463965189857,
+ "SIM_mean_over_images": 0.685927875114182,
+ "KLD_mean": 0.3928259840858514,
+ "KLD_sd_over_folds": 0.009402722423475398,
+ "KLD_sd_over_folds_ddof1": 0.010512563256226275,
+ "KLD_mean_over_images": 0.39282598408585134,
+ "n_images": 1000,
+ "calibration_maps": 0,
+ "training_maps": 0,
+ "protocol": "zero-shot DeepGaze IIE, released weights, native image resolution (no resize), MIT1003 centre-bias template (official DeepGaze centerbias_mit1003.npy (v1.0.0 release), cache/revision/deepgaze_template/centerbias_mit1003.npy) zoomed (order 0) to the image and logsumexp-renormalised as in the DeepGaze README; density resized to 384 (torch bilinear) and scored on the 384 grid against bilinear-384 GT; no post-hoc blur; no ADD1000 data",
+ "image_size_range_WH": [
+  [
+   260,
+   263
+  ],
+  [
+   1418,
+   987
+  ]
+ ],
+ "threads": 2,
+ "wall_s_this_run": 4459.098842144012,
+ "template_file": "cache/revision/deepgaze_template/centerbias_mit1003.npy",
+ "file_suffix": "_offtpl",
+ "command": "python -I scripts/revision/iie_native_zeroshot.py --threads 2 --tpl official"
+}

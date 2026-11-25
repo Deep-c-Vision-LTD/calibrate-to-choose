@@ -1,0 +1,54 @@
+{
+ "row": "iie_zeroshot_mit1003",
+ "n_images": 1000,
+ "per_fold": [
+  {
+   "CC": 0.7243266689845317,
+   "SIM": 0.6621728774617486,
+   "KLD": 0.48881727533781466,
+   "fold": 0
+  },
+  {
+   "CC": 0.7430095781232083,
+   "SIM": 0.6774590214479342,
+   "KLD": 0.44882337239795356,
+   "fold": 1
+  },
+  {
+   "CC": 0.7341531472316032,
+   "SIM": 0.6735521350974105,
+   "KLD": 0.45388275743297357,
+   "fold": 2
+  },
+  {
+   "CC": 0.7268858852631581,
+   "SIM": 0.665450419358367,
+   "KLD": 0.4675310307330319,
+   "fold": 3
+  },
+  {
+   "CC": 0.7294015073472905,
+   "SIM": 0.6684536630305299,
+   "KLD": 0.4669003669493407,
+   "fold": 4
+  }
+ ],
+ "CC_mean": 0.7315553573899584,
+ "CC_sd_folds_ddof1": 0.00735942695933898,
+ "CC_mean_over_images": 0.7315553573899584,
+ "SIM_mean": 0.6694176232791981,
+ "SIM_sd_folds_ddof1": 0.0061423232728547725,
+ "SIM_mean_over_images": 0.6694176232791981,
+ "KLD_mean": 0.46519096057022286,
+ "KLD_sd_folds_ddof1": 0.015511077886493486,
+ "KLD_mean_over_images": 0.46519096057022286,
+ "protocol": "zero-shot DeepGaze IIE (released weights), input PIL bilinear 384x384 (backbones see 192x192), MIT1003 centre-bias template (official DeepGaze centerbias_mit1003.npy (v1.0.0 release)) zoomed (order 0) to 384 and logsumexp-renormalised; cached features (forward_cached, exact); no post-hoc blur; no ADD1000 data",
+ "command": "python -I scripts/revision/calib_rows.py --part iie --threads 2 --tpl official",
+ "wall_s_script_so_far": 376.96783995628357,
+ "scoring": "CC/SIM/KLD on 384x384 vs GT PIL-bilinear to 384, clip at 0 and divide by sum",
+ "template_file": "cache/revision/deepgaze_template/centerbias_mit1003.npy",
+ "template": "official DeepGaze centerbias_mit1003.npy (v1.0.0 release)",
+ "file_suffix": "_offtpl",
+ "calibration_maps": 0,
+ "training_maps": 0
+}

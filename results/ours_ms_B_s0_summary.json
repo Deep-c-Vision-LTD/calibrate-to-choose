@@ -1,0 +1,171 @@
+{
+ "row": "ours_ms_B_s0",
+ "kind": "kfold",
+ "init": "scratch",
+ "seed": 0,
+ "mode": "full",
+ "folds_file": "splits/kfold_seed0.json",
+ "per_fold": [
+  {
+   "fold": 0,
+   "n": 200,
+   "CC": 0.9061465431954993,
+   "SIM": 0.8101289028402292,
+   "KLD": 0.14056859193740942
+  },
+  {
+   "fold": 1,
+   "n": 200,
+   "CC": 0.9060964321788774,
+   "SIM": 0.8102125726234846,
+   "KLD": 0.14442631609002457
+  },
+  {
+   "fold": 2,
+   "n": 200,
+   "CC": 0.8987364330700334,
+   "SIM": 0.8057004353273743,
+   "KLD": 0.14717953193842404
+  },
+  {
+   "fold": 3,
+   "n": 200,
+   "CC": 0.9023421545029151,
+   "SIM": 0.8098544893389302,
+   "KLD": 0.14499885642490315
+  },
+  {
+   "fold": 4,
+   "n": 200,
+   "CC": 0.8992698525955664,
+   "SIM": 0.8110533686637177,
+   "KLD": 0.14024728433262532
+  }
+ ],
+ "mean_CC": 0.9025182831085783,
+ "sd_CC_ddof0": 0.0031891420108006454,
+ "sd_CC_ddof1": 0.0035655691630253057,
+ "pooled_image_mean_CC": 0.9025182831085783,
+ "mean_SIM": 0.8093899537587472,
+ "sd_SIM_ddof0": 0.0018877519036366445,
+ "sd_SIM_ddof1": 0.002110570790593085,
+ "pooled_image_mean_SIM": 0.8093899537587472,
+ "mean_KLD": 0.14348411614467732,
+ "sd_KLD_ddof0": 0.0026764019998834487,
+ "sd_KLD_ddof1": 0.002992308403427888,
+ "pooled_image_mean_KLD": 0.1434841161446773,
+ "folds_detail": [
+  {
+   "fold": 0,
+   "n_train": 800,
+   "n_test": 200,
+   "start_sigma": 0,
+   "start_CC": -0.03464719748350941,
+   "sigma": 4,
+   "CC": 0.9061465431954993,
+   "SIM": 0.8101289028402292,
+   "KLD": 0.14056859193740942,
+   "wall_s": 318.39977383613586
+  },
+  {
+   "fold": 1,
+   "n_train": 800,
+   "n_test": 200,
+   "start_sigma": 0,
+   "start_CC": -0.08084910126386369,
+   "sigma": 4,
+   "CC": 0.9060964321788774,
+   "SIM": 0.8102125726234846,
+   "KLD": 0.14442631609002457,
+   "wall_s": 326.2976920604706
+  },
+  {
+   "fold": 2,
+   "n_train": 800,
+   "n_test": 200,
+   "start_sigma": 0,
+   "start_CC": -0.2666772841665697,
+   "sigma": 2,
+   "CC": 0.8987364330700334,
+   "SIM": 0.8057004353273743,
+   "KLD": 0.14717953193842404,
+   "wall_s": 313.7459809780121
+  },
+  {
+   "fold": 3,
+   "n_train": 800,
+   "n_test": 200,
+   "start_sigma": 12,
+   "start_CC": 0.17216586813372017,
+   "sigma": 4,
+   "CC": 0.9023421545029151,
+   "SIM": 0.8098544893389302,
+   "KLD": 0.14499885642490315,
+   "wall_s": 320.12304878234863
+  },
+  {
+   "fold": 4,
+   "n_train": 800,
+   "n_test": 200,
+   "start_sigma": 0,
+   "start_CC": -0.1445798392183464,
+   "sigma": 4,
+   "CC": 0.8992698525955664,
+   "SIM": 0.8110533686637177,
+   "KLD": 0.14024728433262532,
+   "wall_s": 308.5963809490204
+  }
+ ],
+ "calibration_and_training_data": {
+  "sigma_selection_maps_per_fold": 200,
+  "sigma_selection_maps_are_subset_of_training_maps": true,
+  "train_weight_maps_per_fold": 800,
+  "centre_prior": "learned 16x16 centre-bias logit map, trained jointly with the readout on the same training maps",
+  "warm_start_source": "random init"
+ },
+ "trainable_params": 7358337,
+ "features": {
+  "files": [
+   "ours/feats_dinov2b_448_fp16.npy",
+   "trackA/feats_dinov2b_672to32_fp16.npy"
+  ],
+  "shapes": [
+   [
+    1000,
+    768,
+    32,
+    32
+   ],
+   [
+    1000,
+    768,
+    32,
+    32
+   ]
+  ],
+  "in_ch": 1536,
+  "grid": [
+   32,
+   32
+  ],
+  "description": "frozen facebook/dinov2-base at 448 and 672; 672 tokens (48x48) resized to 32x32 (bilinear antialias) and concatenated after the 448 tokens (1536 ch); concat chosen a priori"
+ },
+ "protocol": {
+  "backbone": "frozen facebook/dinov2-base at 448 and 672; 672 tokens (48x48) resized to 32x32 (bilinear antialias) and concatenated after the 448 tokens (1536 ch); concat chosen a priori",
+  "recipe": "scripts/ours kfold v3 (ours_lib.train/select_sigma_subset/score unchanged); only the input features differ",
+  "epochs": 60,
+  "lr": 0.0003,
+  "batch": 16,
+  "optimizer": "AdamW wd 1e-4",
+  "loss": "KL + (1 - CC) at 64x64",
+  "finalizer": "Gaussian sigma from {0,2,4,6,8,10,12} chosen by mean CC on a random 200-image subset of the training fold",
+  "scoring": "unified: 384x384, GT bilinear to 384, clip at 0 and divide by sum; CC/SIM/KLD (eps 1e-8)",
+  "init_seed_rule": "torch.manual_seed(1000*seed + fold); data-order rng default_rng(fold + 1000*seed)"
+ },
+ "wall_clock_s": 1598.464677810669,
+ "feature_load_s": 10.938091039657593,
+ "device": "mps",
+ "torch": "2.12.0",
+ "machine": "macOS-26.6.2-arm64-arm-64bit",
+ "command": "python -I scripts/trackA/run_row_a.py --row ours_ms_B_s0 --feats ours/feats_dinov2b_448_fp16.npy,trackA/feats_dinov2b_672to32_fp16.npy --seed 0 --desc frozen facebook/dinov2-base at 448 and 672; 672 tokens (48x48) resized to 32x32 (bilinear antialias) and concatenated after the 448 tokens (1536 ch); concat chosen a priori --device mps --save-heads"
+}

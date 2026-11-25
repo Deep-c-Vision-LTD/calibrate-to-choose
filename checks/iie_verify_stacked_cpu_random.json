@@ -1,0 +1,14 @@
+{
+ "device": "cpu",
+ "trainable_params_model": 3059160,
+ "trainable_params_stacked": 3059160,
+ "features": "random",
+ "max_abs_logd": 1.9073486328125e-06,
+ "loss": [
+  0.7870607376098633,
+  0.7870604991912842
+ ],
+ "grad_global_rel_err": 1.6519174053426997e-06,
+ "n_grad_elems": 3059160,
+ "write_back_max_abs_logd": 1.9073486328125e-06
+}

@@ -1,0 +1,48 @@
+{
+ "fold": 2,
+ "rule": "highest mean inner-val CC; configs within 0.001 of the best are tied; first tied config in simplicity order; a diverged inner run counts as CC = -inf (amendment M3)",
+ "simplicity_order": [
+  "N0",
+  "N2_lr3e-05",
+  "N4_lr3e-05"
+ ],
+ "inner_val_CC": {
+  "N0": 0.8920153257443939,
+  "N2_lr3e-05": 0.9225495876766339,
+  "N4_lr3e-05": 0.9354719839956674
+ },
+ "inner_val_SIM": {
+  "N0": 0.7987300876212682,
+  "N2_lr3e-05": 0.8297850043193311,
+  "N4_lr3e-05": 0.8455651716390898
+ },
+ "inner_val_KLD": {
+  "N0": 0.15732286937339396,
+  "N2_lr3e-05": 0.1184492400475643,
+  "N4_lr3e-05": 0.10010503186983095
+ },
+ "inner_sigma": {
+  "N0": 4,
+  "N2_lr3e-05": 2,
+  "N4_lr3e-05": 2
+ },
+ "inner_status": {
+  "N0": "ok",
+  "N2_lr3e-05": "ok",
+  "N4_lr3e-05": "ok"
+ },
+ "inner_wall_s": {
+  "N0": 129.57159185409546,
+  "N2_lr3e-05": 1667.5841779708862,
+  "N4_lr3e-05": 2750.658863067627
+ },
+ "best_CC": 0.9354719839956674,
+ "selected": "N4_lr3e-05",
+ "fallback_order": [
+  "N4_lr3e-05",
+  "N2_lr3e-05",
+  "N0"
+ ],
+ "selected_beats_control": true,
+ "selected_minus_control_CC": 0.04345665825127354
+}

@@ -1,0 +1,61 @@
+{
+ "row": "iie_zeroshot_foldprior",
+ "per_fold": [
+  {
+   "fold": 0,
+   "n": 200,
+   "CC": 0.75393895485459,
+   "SIM": 0.6976822345414649,
+   "KLD": 0.3641810959127205
+  },
+  {
+   "fold": 1,
+   "n": 200,
+   "CC": 0.7787391425883513,
+   "SIM": 0.716370450082226,
+   "KLD": 0.32650333140966614
+  },
+  {
+   "fold": 2,
+   "n": 200,
+   "CC": 0.7679083829724792,
+   "SIM": 0.7091931210358985,
+   "KLD": 0.33216262580981565
+  },
+  {
+   "fold": 3,
+   "n": 200,
+   "CC": 0.7682779515312412,
+   "SIM": 0.7031558905881984,
+   "KLD": 0.3411818975240896
+  },
+  {
+   "fold": 4,
+   "n": 200,
+   "CC": 0.763522755293996,
+   "SIM": 0.7056457708294046,
+   "KLD": 0.34168189939551935
+  }
+ ],
+ "CC_mean": 0.7664774374481315,
+ "CC_sd_over_folds": 0.008019757619570942,
+ "CC_sd_over_folds_ddof1": 0.008966361600216263,
+ "CC_mean_over_images": 0.7664774374481315,
+ "SIM_mean": 0.7064094934154385,
+ "SIM_sd_over_folds": 0.0062338349584537345,
+ "SIM_sd_over_folds_ddof1": 0.006969639363808564,
+ "SIM_mean_over_images": 0.7064094934154386,
+ "KLD_mean": 0.34114217001036223,
+ "KLD_sd_over_folds": 0.012853114816617054,
+ "KLD_sd_over_folds_ddof1": 0.014370219226282739,
+ "KLD_mean_over_images": 0.34114217001036223,
+ "n_images": 1000,
+ "protocol": "zero-shot DeepGaze IIE readout + ADD1000 centre prior fit on each 5-fold training split (800 maps; log(to_prob(sum of min-subtracted 384 maps)) + 1e-8, the prior of ft_deepgaze_iie_indomain.py)",
+ "calibration_maps": 800,
+ "training_maps": 0,
+ "trainable_params_trained": 0,
+ "native_resolution": "DeepGaze IIE predicts at its input resolution (384 x 384 here), so the native and unified scores are identical",
+ "wall_clock_s_total_script": 1158.953341960907,
+ "command": "python -I scripts/iie/zeroshot_iie.py --device cpu --threads 6",
+ "wall_clock_s_row": 701.4774701595306
+}

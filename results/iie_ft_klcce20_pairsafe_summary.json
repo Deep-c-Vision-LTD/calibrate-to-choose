@@ -1,0 +1,287 @@
+{
+ "row": "iie_ft_klcce20_pairsafe",
+ "per_fold": [
+  {
+   "fold": 0,
+   "n": 200,
+   "CC": 0.8554658131281405,
+   "SIM": 0.7758801704347286,
+   "KLD": 0.19277900389237634
+  },
+  {
+   "fold": 1,
+   "n": 200,
+   "CC": 0.8541704980399154,
+   "SIM": 0.7745071075056049,
+   "KLD": 0.19622144990407164
+  },
+  {
+   "fold": 2,
+   "n": 200,
+   "CC": 0.8494740948778108,
+   "SIM": 0.7724655976065081,
+   "KLD": 0.19927332498835323
+  },
+  {
+   "fold": 3,
+   "n": 200,
+   "CC": 0.8576600446155161,
+   "SIM": 0.7776006091518647,
+   "KLD": 0.19153889454565362
+  },
+  {
+   "fold": 4,
+   "n": 200,
+   "CC": 0.8590241422944359,
+   "SIM": 0.7804721817954018,
+   "KLD": 0.18706054016206516
+  }
+ ],
+ "CC_mean": 0.8551589185911638,
+ "CC_sd_over_folds": 0.0033040570745943927,
+ "CC_sd_over_folds_ddof1": 0.003694048110166078,
+ "CC_mean_over_images": 0.8551589185911638,
+ "SIM_mean": 0.7761851332988217,
+ "SIM_sd_over_folds": 0.0027249247835545356,
+ "SIM_sd_over_folds_ddof1": 0.0030465585248009215,
+ "SIM_mean_over_images": 0.7761851332988216,
+ "KLD_mean": 0.19337464269850402,
+ "KLD_sd_over_folds": 0.004159120381306003,
+ "KLD_sd_over_folds_ddof1": 0.004650037949602534,
+ "KLD_mean_over_images": 0.19337464269850402,
+ "n_images": 1000,
+ "variant": "plus Gaussian finalizer, sigma selected per fold from [0,2,...,12] by mean CC on 200 training images (np.random.default_rng(fold).choice), scipy gaussian_filter on the 384 density",
+ "calibration_maps": {
+  "prior_maps": 800,
+  "sigma_selection_maps": 200,
+  "note": "sigma-selection maps are a subset of the training maps"
+ },
+ "training_maps": 800,
+ "sigma_per_fold": [
+  4,
+  4,
+  4,
+  4,
+  4
+ ],
+ "sigma_curve_train_per_fold": {
+  "0": {
+   "0": 0.9901140988468069,
+   "2": 0.990456238853427,
+   "4": 0.9906429374268596,
+   "6": 0.9904365303039989,
+   "8": 0.9893699573015824,
+   "10": 0.9870990327461674,
+   "12": 0.9834321776869079
+  },
+  "1": {
+   "0": 0.9900461948611547,
+   "2": 0.9903801708394346,
+   "4": 0.9905076024603409,
+   "6": 0.9901828298177526,
+   "8": 0.9889209706011579,
+   "10": 0.986366435763881,
+   "12": 0.9823249055744884
+  },
+  "2": {
+   "0": 0.9903426783585438,
+   "2": 0.9907197335027397,
+   "4": 0.9909759324542574,
+   "6": 0.9908567890207175,
+   "8": 0.9898687367853072,
+   "10": 0.9876457080154047,
+   "12": 0.9839793116891409
+  },
+  "3": {
+   "0": 0.9896948471855594,
+   "2": 0.9900747642391223,
+   "4": 0.9903568236305699,
+   "6": 0.9902895636944264,
+   "8": 0.9893871497853414,
+   "10": 0.9872890274586601,
+   "12": 0.9837899026721777
+  },
+  "4": {
+   "0": 0.990068440213804,
+   "2": 0.9904342336214192,
+   "4": 0.9906667664083831,
+   "6": 0.9905151872471109,
+   "8": 0.9894904874770536,
+   "10": 0.987229942145399,
+   "12": 0.9835285425512217
+  }
+ },
+ "split_file": "splits/kfold_seed0_pairsafe.json",
+ "fold_sizes": [
+  200,
+  200,
+  200,
+  200,
+  200
+ ],
+ "trainable_params_trained": 3059160,
+ "trained_parameters": "all DeepGaze IIE readouts: 4 backbones x 30 components (saliency network + fixation-selection network + finalizer sigma and centre-bias weight); backbones frozen",
+ "features": "released DeepGaze IIE backbones on PIL-bilinear 384x384 input, cached at the 12x12 readout grid (float32; bit-exact, logs/iie_verify_cache.json); training forward = stacked re-implementation of the released readouts (logs/iie_verify_stacked_*.json); evaluation = released module code path after writing back the trained parameters",
+ "recipe": "our kfold_train_eval.py loss KL(g64||p64) + (1 - CC(p64,g64)) (weights 1, 1) on the 64x64 loss grid; p64 = IIE density exactly sum-pooled 6x6 from 384; Adam lr 0.001, batch 8, 20 epochs",
+ "centre_prior": "per fold, log(to_prob(sum of the training folds' min-subtracted 384 maps)) + 1e-8 (as ft_deepgaze_iie_indomain.py), DeepGaze's centre-bias input",
+ "shuffle": "published stream: np.random.default_rng(0), permutation(1000) consumed, then in-place shuffle of the fold's training list each epoch, continuing across folds",
+ "training_maps_per_fold": [
+  800,
+  800,
+  800,
+  800,
+  800
+ ],
+ "steps_per_fold": [
+  2000,
+  2000,
+  2000,
+  2000,
+  2000
+ ],
+ "t_train_s_per_fold": [
+  1070.408703804016,
+  1073.3395178318024,
+  1067.8976559638977,
+  523.0580480098724,
+  1208.8402938842773
+ ],
+ "t_eval_s_per_fold": [
+  118.5503420829773,
+  113.7833399772644,
+  103.3385112285614,
+  70.89003396034241,
+  150.5316939353943
+ ],
+ "wall_clock_s_total": 5500.638140678406,
+ "epoch_mean_loss_per_fold": {
+  "0": [
+   0.4016802079975605,
+   0.3309784689545631,
+   0.29735415235161783,
+   0.27287252351641655,
+   0.2504400810599327,
+   0.2286802388727665,
+   0.20770799070596696,
+   0.18684274986386298,
+   0.1659588012099266,
+   0.14634951934218407,
+   0.12795572012662887,
+   0.11172209307551384,
+   0.09699156321585178,
+   0.08415375731885433,
+   0.0732404049858451,
+   0.06398968882858753,
+   0.0561832170933485,
+   0.049299312308430675,
+   0.04367336582392454,
+   0.03913177063688636
+  ],
+  "1": [
+   0.4033251783251762,
+   0.328200581073761,
+   0.2965202875435352,
+   0.27231070801615714,
+   0.25004912689328196,
+   0.2291772785782814,
+   0.20764992594718934,
+   0.1869823308289051,
+   0.16585106447339057,
+   0.14505271427333355,
+   0.12660218946635723,
+   0.11012027770280838,
+   0.09544115737080575,
+   0.0829036906734109,
+   0.07178187396377325,
+   0.06244886562228203,
+   0.054841000400483605,
+   0.048245661146938804,
+   0.04270727600902319,
+   0.03831123013049364
+  ],
+  "2": [
+   0.4036773520708084,
+   0.3271409709751606,
+   0.2929598170518875,
+   0.26818005174398424,
+   0.24686434715986252,
+   0.2256925232708454,
+   0.20420262902975084,
+   0.183671413064003,
+   0.16274658352136612,
+   0.14277266532182695,
+   0.12451871201395988,
+   0.10798207312822342,
+   0.09348486572504043,
+   0.08066780228167772,
+   0.06987486887723207,
+   0.06075638711452484,
+   0.053395178727805616,
+   0.046838123500347134,
+   0.04159869505092502,
+   0.037311840392649176
+  ],
+  "3": [
+   0.404617126584053,
+   0.3313057687878609,
+   0.2971654137969017,
+   0.2721160936355591,
+   0.25072376236319543,
+   0.22932241156697272,
+   0.20762444660067558,
+   0.1860597037523985,
+   0.16513863794505595,
+   0.14525280125439166,
+   0.12622489266097545,
+   0.10984907694160938,
+   0.09561007268726826,
+   0.08305215127766133,
+   0.07211220424622297,
+   0.06295150302350522,
+   0.05486298233270645,
+   0.04841096498072148,
+   0.04283160388469696,
+   0.038300872053951024
+  ],
+  "4": [
+   0.40682105302810667,
+   0.33311294376850126,
+   0.2997405943274498,
+   0.2732036615908146,
+   0.251381469219923,
+   0.2295612609386444,
+   0.20839883148670196,
+   0.1873081800341606,
+   0.1659726870059967,
+   0.1461819488555193,
+   0.12798065692186356,
+   0.11049865208566188,
+   0.09570256151258945,
+   0.08290256768465042,
+   0.07189281273633241,
+   0.0626001587510109,
+   0.05477279603481293,
+   0.048226098679006096,
+   0.04291101701557636,
+   0.038592689502984286
+  ]
+ },
+ "device_per_fold": [
+  "cpu",
+  "cpu",
+  "cpu",
+  "mps",
+  "cpu"
+ ],
+ "custom_finalmix_backward_per_fold": [
+  true,
+  true,
+  true,
+  true,
+  true
+ ],
+ "command": "python -I scripts/iie/ft_kfold.py --row iie_ft_klcce20_pairsafe --split splits/kfold_seed0_pairsafe.json --loss klcc64 --epochs 20 --primary sigma --device mps --aggregate_only --note pair-safe seed-0 5-fold split (near-duplicate components kept in one fold); inner-validation-selected recipe (our loss, 20 epochs); pool workers, FinalMix custom backward",
+ "note": "pair-safe seed-0 5-fold split (near-duplicate components kept in one fold); inner-validation-selected recipe (our loss, 20 epochs); pool workers, FinalMix custom backward",
+ "pool_worker_note": "folds may have been trained by pool_worker.py workers (same settings); see device_per_fold",
+ "native_resolution": "DeepGaze IIE predicts at its input resolution (384 x 384), so native and unified scores are identical"
+}

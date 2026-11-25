@@ -1,0 +1,36 @@
+{
+ "title": "Amendment 1 to the ftblocks PLAN (pre-run adversarial review, must-fix M1-M4)",
+ "amended_utc": "2026-11-24T08:51:23Z",
+ "applies_to": {
+  "plan_file": "/Users/hamitsoyel/Downloads/attention_research/kbs_letter/scripts/ftblocks/PLAN.json",
+  "plan_sha256": "328283eb61bde0686e874f453f07d6394b401808e69fe78fd1d10dc728d9d7a9",
+  "plan_frozen_utc": "2026-11-24T08:34:23Z"
+ },
+ "status": "written BEFORE any grid run and before any outer-test score of an ftblocks config exists (cache/ftblocks/runs did not exist; no results/ours_ftblocks_* file existed). PLAN.json itself is not edited.",
+ "unchanged": "grid (fallback mode: N0, N2_lr3e-05, N4_lr3e-05) and its tie-break order, inner split and seeds, training recipe, finalizer, the selection rule and tie 0.001, final retrain on 800 ids scored once, rows, the optional-row trigger, statistics code and the primary Holm family (nested vs the 7 references, kept as frozen: it is a superset of the 4 headline references and therefore more conservative)",
+ "M1_global_row_not_nested": "ours_ftblocks_global is NOT nested: the pooled choice averages every fold's inner-val CC, and fold j's inner-val ids lie in fold j's training ids, which are the test ids of the other folds. Per outer fold k, 117/124/115/124/122 distinct test images of 200 (folds 0-4; 155/160/157/165/163 counted with multiplicity over the 4 other folds) enter the pooled choice. The row is kept as secondary transparency only; its summary status says 'NOT NESTED ... must never be cited as a test result'; its statistics are descriptive only.",
+ "M2_order": "all 15 inner runs (config-major: N0 for folds 0-4, then N2_lr3e-05 for folds 0-4, then N4_lr3e-05 for folds 0-4) run before any final run; then the 5 selections, the pooled choice (runs/pooled_selection.json) and the distill trigger (runs/distill_trigger.json) are written; only then the 5 final runs (one outer-test scoring per fold). Total compute unchanged. Any further cut (e.g. dropping N=4) can therefore be decided and logged before any outer-test score exists.",
+ "M3_divergence_rule": "a non-finite training loss (FloatingPointError in ft_common.train_loop) or non-finite test/val metrics is caught in Runner.run: the run file is written with status 'diverged' (lock released, driver continues; a restart skips it). A diverged inner run counts as CC = -inf for that fold (cannot be selected; a config that diverged in any fold has pooled CC -inf). A diverged final run falls back to the next config by the inner rule (the selection rule re-applied to the remaining non-diverged configs: selection_k*.json 'fallback_order'); the chain is recorded in the row summary. The optional distill row starts from the config actually used in the fold's nested row and uses the same fallback order. Other errors (e.g. out of memory) still stop the driver with the lock released.",
+ "M4_reverify_smoke": "the fold-0 N=0 reproduction and the 20-step N=4/N=2 runs were produced by train_ftblocks.py sha 73af0fa8..., not by the frozen 55486d7a... nor by this amended version; they are re-run with the amended code into cache/ftblocks/smoke_amend1 before the grid starts (N=0 must again reproduce ours_scratch_s0 fold 0 exactly). M3 was also tested: a forced NaN loss on MPS is recorded as 'diverged', the lock is released, a restart skips the run.",
+ "code_sha256": {
+  "ft_common.py": "fbf2559f9c4a5a8266f8ebf7b056dee1fe1087bbbd6d25135000bc3c7d5d3e0c",
+  "train_ftblocks.py": "e1be47ac6320f551ac00b480ad2dea2a52b6e3cf77c4d69ea42d1cf14aa55d4c",
+  "cache_blocks.py": "482c1066a28a01bea41046531936d9dd6557d3410cd48b90a128417bb0ce248b"
+ },
+ "aux_code_sha256": {
+  "stats_ftblocks.py": "a0f26244b1bf1e67585cddc8daec4849342be484e761a3dbaba28a1a058390c9",
+  "overview_ftblocks.py": "2d34003b613563a9e30fa052cb8f1b9515fe57e7cd0e0ccb2ee8fbb693015a8d",
+  "run_all.sh": "2ca79399b6c09af346bd0f50fb7e6ca2fea824945a67a757eb2bb1b41d161503",
+  "bench_ftblocks.py": "161792233e464fa734a527cf65b22ceec78a264485e7071d0e67d59c1fabfc3f",
+  "write_plan.py": "3232916438a8b3db29a189e5c0133d34357da46189ac8060d5241dbc97eb7e8a"
+ },
+ "frozen_code_copy": {
+  "dir": "/Users/hamitsoyel/Downloads/attention_research/kbs_letter/scripts/ftblocks/frozen_20261124T083423Z",
+  "ft_common.py": "fbf2559f9c4a5a8266f8ebf7b056dee1fe1087bbbd6d25135000bc3c7d5d3e0c",
+  "train_ftblocks.py": "55486d7ae552c4088efad33b7e8058f2d8de13ddfc7624b1794e61debcc8f84e",
+  "cache_blocks.py": "482c1066a28a01bea41046531936d9dd6557d3410cd48b90a128417bb0ce248b",
+  "stats_ftblocks.py": "a0f26244b1bf1e67585cddc8daec4849342be484e761a3dbaba28a1a058390c9"
+ },
+ "code_changes": "train_ftblocks.py only (ft_common.py, cache_blocks.py, stats_ftblocks.py unchanged): M2 stage order, M3 diverged-run handling + fallback chain, M1 global status string, a 'pitt-depth' helper stage, a --smoke-dir option, an extra assert that the test ids match inner_splits.json, the amendment sha recorded in every run. New: overview_ftblocks.py (descriptive collection into results/ftblocks_overview.json), run_all.sh (runs the stages in order).",
+ "run_command": "nohup /Users/hamitsoyel/Downloads/attention_research/kbs_letter/scripts/ftblocks/run_all.sh > /Users/hamitsoyel/Downloads/attention_research/kbs_letter/logs/ftblocks_run_all.log 2>&1 &"
+}

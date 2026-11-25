@@ -1,0 +1,482 @@
+{
+ "description": "Track A cost table: reads results/cost_raw/trackA_<variant><tag>_<dev>_p<k>.json (cost_bench_a.py,\nsame protocol as cost_bench.py) and writes results/trackA_cost.json.\n\nBecause the machine was shared with other tracks, every session re-measured B448 (= the existing\n'ours' model of cost_table.json) before and after the variants. Reported per variant:\n  measured median latency (contended, as measured);\n  contention factor of the session = mean(B448 medians of that session) / B448 in cost_table.json;\n  normalised latency = measured / contention factor (an ESTIMATE of the quiet-machine latency,\n  assuming the slowdown is the same for all variants);\n  ratios vs DeepGaze MSDB (cost_table.json numbers) and vs ours (B448).\nGFLOPs and parameters are deterministic and do not depend on contention.\n\n  python -I cost_table_a.py --tag _run1 [--rows-map L448=ours_L448 ...]",
+ "reference_cost_table": {
+  "ours_B448": {
+   "GFLOPs": 221.187117056,
+   "cpu_latency_median_s": 0.12204727088101208,
+   "mps_latency_median_s": 0.0740665621124208
+  },
+  "msdb": {
+   "GFLOPs": 12256.161374976,
+   "cpu_latency_median_s": 7.510176646057516,
+   "mps_latency_median_s": 2.959361041430384,
+   "params_total": 451641181
+  }
+ },
+ "sessions": {
+  "_run1_cpu": {
+   "files": [
+    "trackA_B448_run1_cpu_p1.json",
+    "trackA_L448_run1_cpu_p2.json",
+    "trackA_msB_run1_cpu_p3.json",
+    "trackA_B644_run1_cpu_p4.json",
+    "trackA_Lms_run1_cpu_p5.json",
+    "trackA_B448_run1_cpu_p6.json"
+   ],
+   "B448_medians_s": [
+    0.49574041715823114,
+    0.572494188323617
+   ],
+   "contention_factor_vs_cost_table": 4.376315003894292,
+   "load_note": "machine shared with the distillation track (CPU jobs) during this session"
+  },
+  "_run1_mps": {
+   "files": [
+    "trackA_B448_run1_mps_p1.json",
+    "trackA_L448_run1_mps_p2.json",
+    "trackA_msB_run1_mps_p3.json",
+    "trackA_B644_run1_mps_p4.json",
+    "trackA_Lms_run1_mps_p5.json",
+    "trackA_B448_run1_mps_p6.json"
+   ],
+   "B448_medians_s": [
+    0.08122408366762102,
+    0.08135595847852528
+   ],
+   "contention_factor_vs_cost_table": 1.0975265862844874,
+   "load_note": "machine shared with the distillation track (CPU jobs) during this session"
+  },
+  "_run2_cpu": {
+   "files": [
+    "trackA_B448_run2_cpu_p1.json",
+    "trackA_L448_run2_cpu_p2.json",
+    "trackA_msB_run2_cpu_p3.json",
+    "trackA_B448_run2_cpu_p4.json",
+    "trackA_B644_run2_cpu_p5.json",
+    "trackA_Lms_run2_cpu_p6.json",
+    "trackA_B448_run2_cpu_p7.json"
+   ],
+   "B448_medians_s": [
+    0.2944246258120984,
+    0.33307306258939207,
+    0.2677306046243757
+   ],
+   "contention_factor_vs_cost_table": 2.4450315755077496,
+   "load_note": "machine shared with the distillation track (CPU jobs) during this session"
+  }
+ },
+ "variants": {
+  "B448": {
+   "row": "ours_scratch_s0 (existing)",
+   "backbone": "facebook/dinov2-base",
+   "input_sizes": [
+    448
+   ],
+   "GFLOPs": 221.187117056,
+   "GFLOPs_by_op": {
+    "aten.convolution": 8.340832256,
+    "aten.addmm": 174.1160448,
+    "aten.bmm": 38.73024
+   },
+   "GFLOPs_vs_msdb_fewer_x": 55.41082834346538,
+   "GFLOPs_vs_ours_B448_x": 1.0,
+   "params_total": 90301569,
+   "params_backbone_frozen": 86580480,
+   "params_trainable_readout": 3721089,
+   "latency": {
+    "cpu_run1": [
+     {
+      "median_s": 0.49574041715823114,
+      "iqr_s": [
+       0.4291101766284555,
+       0.5226750418078154
+      ],
+      "runs": 30,
+      "warmup": 3,
+      "threads": 6,
+      "normalised_s_estimate": 0.11327804710517715,
+      "peak_rss_GB": 0.8867645263671875
+     },
+     {
+      "median_s": 0.572494188323617,
+      "iqr_s": [
+       0.5255095101892948,
+       0.618060615262948
+      ],
+      "runs": 30,
+      "warmup": 3,
+      "threads": 6,
+      "normalised_s_estimate": 0.130816494656847,
+      "peak_rss_GB": 0.8857269287109375
+     }
+    ],
+    "mps_run1": [
+     {
+      "median_s": 0.08122408366762102,
+      "iqr_s": [
+       0.08022260444704443,
+       0.08202533307485282
+      ],
+      "runs": 30,
+      "warmup": 3,
+      "threads": 6,
+      "normalised_s_estimate": 0.074006483927276,
+      "mps_driver_allocated_max_GB": 1.483154296875
+     },
+     {
+      "median_s": 0.08135595847852528,
+      "iqr_s": [
+       0.08022981253452599,
+       0.08230402076151222
+      ],
+      "runs": 30,
+      "warmup": 3,
+      "threads": 6,
+      "normalised_s_estimate": 0.07412664029756559,
+      "mps_driver_allocated_max_GB": 1.483154296875
+     }
+    ],
+    "cpu_run2": [
+     {
+      "median_s": 0.2944246258120984,
+      "iqr_s": [
+       0.2739066140493378,
+       0.3146100724115968
+      ],
+      "runs": 30,
+      "warmup": 3,
+      "threads": 6,
+      "normalised_s_estimate": 0.12041751475170885,
+      "peak_rss_GB": 0.8858642578125
+     },
+     {
+      "median_s": 0.33307306258939207,
+      "iqr_s": [
+       0.303334302152507,
+       0.35781584377400577
+      ],
+      "runs": 30,
+      "warmup": 3,
+      "threads": 6,
+      "normalised_s_estimate": 0.13622444222227442,
+      "peak_rss_GB": 0.863037109375
+     },
+     {
+      "median_s": 0.2677306046243757,
+      "iqr_s": [
+       0.2415920204948634,
+       0.30100831226445735
+      ],
+      "runs": 30,
+      "warmup": 3,
+      "threads": 6,
+      "normalised_s_estimate": 0.10949985566905295,
+      "peak_rss_GB": 0.883697509765625
+     }
+    ]
+   },
+   "cpu_latency_measured_min_median_s": 0.2677306046243757,
+   "cpu_latency_normalised_estimate_s": 0.12041751475170885,
+   "cpu_msdb_slower_x_normalised": 62.36780971225732,
+   "cpu_msdb_slower_x_raw_contended": 28.051244483589187,
+   "cpu_vs_ours_B448_x_normalised": 0.9866465172261645,
+   "mps_latency_measured_min_median_s": 0.08122408366762102,
+   "mps_latency_normalised_estimate_s": 0.0740665621124208,
+   "mps_msdb_slower_x_normalised": 39.95542599828737,
+   "mps_msdb_slower_x_raw_contended": 36.434526655178466,
+   "mps_vs_ours_B448_x_normalised": 1.0
+  },
+  "L448": {
+   "row": "ours_L448_s*",
+   "backbone": "facebook/dinov2-large",
+   "input_sizes": [
+    448
+   ],
+   "GFLOPs": 733.42500864,
+   "GFLOPs_by_op": {
+    "aten.convolution": 11.06509824,
+    "aten.addmm": 619.0792704,
+    "aten.bmm": 103.28064
+   },
+   "GFLOPs_vs_msdb_fewer_x": 16.710858275344016,
+   "GFLOPs_vs_ours_B448_x": 3.315857715412566,
+   "params_total": 309302145,
+   "params_backbone_frozen": 304368640,
+   "params_trainable_readout": 4933505,
+   "latency": {
+    "cpu_run1": [
+     {
+      "median_s": 1.4094956037588418,
+      "iqr_s": [
+       1.3391360832611099,
+       1.494874968426302
+      ],
+      "runs": 30,
+      "warmup": 3,
+      "threads": 6,
+      "normalised_s_estimate": 0.32207361730236356,
+      "peak_rss_GB": 1.7314910888671875
+     }
+    ],
+    "mps_run1": [
+     {
+      "median_s": 0.26096897944808006,
+      "iqr_s": [
+       0.237220625160262,
+       0.27201098995283246
+      ],
+      "runs": 30,
+      "warmup": 3,
+      "threads": 6,
+      "normalised_s_estimate": 0.23777918704598458,
+      "mps_driver_allocated_max_GB": 2.172607421875
+     }
+    ],
+    "cpu_run2": [
+     {
+      "median_s": 0.9522992915008217,
+      "iqr_s": [
+       0.8883978750091046,
+       0.9992750105448067
+      ],
+      "runs": 30,
+      "warmup": 3,
+      "threads": 6,
+      "normalised_s_estimate": 0.38948343286857623,
+      "peak_rss_GB": 1.4996490478515625
+     }
+    ]
+   },
+   "cpu_latency_measured_min_median_s": 0.9522992915008217,
+   "cpu_latency_normalised_estimate_s": 0.3557785250854699,
+   "cpu_msdb_slower_x_normalised": 21.109134240896974,
+   "cpu_msdb_slower_x_raw_contended": 7.886361685958511,
+   "cpu_vs_ours_B448_x_normalised": 2.9150879205839035,
+   "mps_latency_measured_min_median_s": 0.26096897944808006,
+   "mps_latency_normalised_estimate_s": 0.23777918704598458,
+   "mps_msdb_slower_x_normalised": 12.445837157556046,
+   "mps_msdb_slower_x_raw_contended": 11.339895828573567,
+   "mps_vs_ours_B448_x_normalised": 3.210344590924513
+  },
+  "msB": {
+   "row": "ours_ms_B_s0",
+   "backbone": "facebook/dinov2-base",
+   "input_sizes": [
+    448,
+    672
+   ],
+   "GFLOPs": 817.924087808,
+   "GFLOPs_by_op": {
+    "aten.convolution": 17.669685248,
+    "aten.addmm": 565.66480896,
+    "aten.bmm": 234.5895936
+   },
+   "GFLOPs_vs_msdb_fewer_x": 14.984472957413402,
+   "GFLOPs_vs_ours_B448_x": 3.6978830353890753,
+   "params_total": 93938817,
+   "params_backbone_frozen": 86580480,
+   "params_trainable_readout": 7358337,
+   "latency": {
+    "cpu_run1": [
+     {
+      "median_s": 1.5164396043401212,
+      "iqr_s": [
+       1.4237771253101528,
+       1.6344553645467386
+      ],
+      "runs": 30,
+      "warmup": 3,
+      "threads": 6,
+      "normalised_s_estimate": 0.346510615207248,
+      "peak_rss_GB": 1.02911376953125
+     }
+    ],
+    "mps_run1": [
+     {
+      "median_s": 0.36929689534008503,
+      "iqr_s": [
+       0.36364253133069724,
+       0.37732314656022936
+      ],
+      "runs": 30,
+      "warmup": 3,
+      "threads": 6,
+      "normalised_s_estimate": 0.3364810474343812,
+      "mps_driver_allocated_max_GB": 1.9909820556640625
+     }
+    ],
+    "cpu_run2": [
+     {
+      "median_s": 1.0416420625988394,
+      "iqr_s": [
+       0.9620814165100455,
+       1.093215063214302
+      ],
+      "runs": 30,
+      "warmup": 3,
+      "threads": 6,
+      "normalised_s_estimate": 0.4260239716464708,
+      "peak_rss_GB": 0.9028472900390625
+     }
+    ]
+   },
+   "cpu_latency_measured_min_median_s": 1.0416420625988394,
+   "cpu_latency_normalised_estimate_s": 0.3862672934268594,
+   "cpu_msdb_slower_x_normalised": 19.442952519819247,
+   "cpu_msdb_slower_x_raw_contended": 7.209939878311021,
+   "cpu_vs_ours_B448_x_normalised": 3.164899064424342,
+   "mps_latency_measured_min_median_s": 0.36929689534008503,
+   "mps_latency_normalised_estimate_s": 0.3364810474343812,
+   "mps_msdb_slower_x_normalised": 8.795030400657271,
+   "mps_msdb_slower_x_raw_contended": 8.013501003589841,
+   "mps_vs_ours_B448_x_normalised": 4.542954848149406
+  },
+  "B644": {
+   "row": "ours_B644_s0",
+   "backbone": "facebook/dinov2-base",
+   "input_sizes": [
+    644
+   ],
+   "GFLOPs": 542.06165504,
+   "GFLOPs_by_op": {
+    "aten.convolution": 17.23533824,
+    "aten.addmm": 359.613333504,
+    "aten.bmm": 165.212983296
+   },
+   "GFLOPs_vs_msdb_fewer_x": 22.610271840887894,
+   "GFLOPs_vs_ours_B448_x": 2.4506927087564563,
+   "params_total": 90301569,
+   "params_backbone_frozen": 86580480,
+   "params_trainable_readout": 3721089,
+   "latency": {
+    "cpu_run1": [
+     {
+      "median_s": 0.9650705209933221,
+      "iqr_s": [
+       0.9349929586751387,
+       1.0700375519227237
+      ],
+      "runs": 30,
+      "warmup": 3,
+      "threads": 6,
+      "normalised_s_estimate": 0.2205212650676535,
+      "peak_rss_GB": 0.975341796875
+     }
+    ],
+    "mps_run1": [
+     {
+      "median_s": 0.2534121251665056,
+      "iqr_s": [
+       0.250512229045853,
+       0.2589860102161765
+      ],
+      "runs": 30,
+      "warmup": 3,
+      "threads": 6,
+      "normalised_s_estimate": 0.2308938374098021,
+      "mps_driver_allocated_max_GB": 1.819091796875
+     }
+    ],
+    "cpu_run2": [
+     {
+      "median_s": 0.6652889165561646,
+      "iqr_s": [
+       0.6153953222092241,
+       0.6940935213351622
+      ],
+      "runs": 30,
+      "warmup": 3,
+      "threads": 6,
+      "normalised_s_estimate": 0.27209829239853756,
+      "peak_rss_GB": 0.95574951171875
+     }
+    ]
+   },
+   "cpu_latency_measured_min_median_s": 0.6652889165561646,
+   "cpu_latency_normalised_estimate_s": 0.2463097787330955,
+   "cpu_msdb_slower_x_normalised": 30.490777445728785,
+   "cpu_msdb_slower_x_raw_contended": 11.288594262074254,
+   "cpu_vs_ours_B448_x_normalised": 2.018150647327715,
+   "mps_latency_measured_min_median_s": 0.2534121251665056,
+   "mps_latency_normalised_estimate_s": 0.2308938374098021,
+   "mps_msdb_slower_x_normalised": 12.816977164175931,
+   "mps_msdb_slower_x_raw_contended": 11.678056207791645,
+   "mps_vs_ours_B448_x_normalised": 3.117382943457581
+  },
+  "Lms": {
+   "row": "ours_L_ms_s0",
+   "backbone": "facebook/dinov2-large",
+   "input_sizes": [
+    448,
+    672
+   ],
+   "GFLOPs": 2660.328472576,
+   "GFLOPs_by_op": {
+    "aten.convolution": 23.503568896,
+    "aten.addmm": 2011.25265408,
+    "aten.bmm": 625.5722496
+   },
+   "GFLOPs_vs_msdb_fewer_x": 4.607010563288954,
+   "GFLOPs_vs_ours_B448_x": 12.027501908723101,
+   "params_total": 314151809,
+   "params_backbone_frozen": 304368640,
+   "params_trainable_readout": 9783169,
+   "latency": {
+    "cpu_run1": [
+     {
+      "median_s": 4.277377978665754,
+      "iqr_s": [
+       3.698008843581192,
+       4.468459572875872
+      ],
+      "runs": 30,
+      "warmup": 3,
+      "threads": 6,
+      "normalised_s_estimate": 0.9773926179581456,
+      "peak_rss_GB": 1.911956787109375
+     }
+    ],
+    "mps_run1": [
+     {
+      "median_s": 1.045572978677228,
+      "iqr_s": [
+       1.027974791242741,
+       1.0724421459017321
+      ],
+      "runs": 30,
+      "warmup": 3,
+      "threads": 6,
+      "normalised_s_estimate": 0.9526630076605793,
+      "mps_driver_allocated_max_GB": 2.809326171875
+     }
+    ],
+    "cpu_run2": [
+     {
+      "median_s": 3.1655380001757294,
+      "iqr_s": [
+       3.08376477076672,
+       3.376834698137827
+      ],
+      "runs": 30,
+      "warmup": 3,
+      "threads": 6,
+      "normalised_s_estimate": 1.2946818486458014,
+      "peak_rss_GB": 1.6682281494140625
+     }
+    ]
+   },
+   "cpu_latency_measured_min_median_s": 3.1655380001757294,
+   "cpu_latency_normalised_estimate_s": 1.1360372333019735,
+   "cpu_msdb_slower_x_normalised": 6.610854315248674,
+   "cpu_msdb_slower_x_raw_contended": 2.372480332139624,
+   "cpu_vs_ours_B448_x_normalised": 9.308173997676144,
+   "mps_latency_measured_min_median_s": 1.045572978677228,
+   "mps_latency_normalised_estimate_s": 0.9526630076605793,
+   "mps_msdb_slower_x_normalised": 3.1064091054585834,
+   "mps_msdb_slower_x_raw_contended": 2.830372534277159,
+   "mps_vs_ours_B448_x_normalised": 12.862254983761693
+  }
+ },
+ "created": "2026-11-24 01:41:53",
+ "command": "python -I scripts/trackA/cost_table_a.py --tags _run1 _run2"
+}

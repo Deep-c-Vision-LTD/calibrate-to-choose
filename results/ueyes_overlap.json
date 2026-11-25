@@ -1,0 +1,164 @@
+{
+ "n_add1000": 1000,
+ "n_ueyes": 1980,
+ "detector": "cosine of L2-normalised mean DINOv2-base patch tokens at 448",
+ "max_cos": 0.8636868000030518,
+ "n_pairs_ge_0.94": 0,
+ "n_pairs_ge_0.925": 0,
+ "n_add1000_with_any_ge_0.94": 0,
+ "reference_within_add1000_threshold": 0.94,
+ "top30": [
+  {
+   "add1000_id": "287",
+   "ueyes_file": "71bc07.jpg",
+   "cos": 0.8637
+  },
+  {
+   "add1000_id": "170",
+   "ueyes_file": "71bc07.jpg",
+   "cos": 0.8297
+  },
+  {
+   "add1000_id": "142",
+   "ueyes_file": "e102af.png",
+   "cos": 0.8289
+  },
+  {
+   "add1000_id": "340",
+   "ueyes_file": "a7aa57.jpg",
+   "cos": 0.8263
+  },
+  {
+   "add1000_id": "320",
+   "ueyes_file": "6b173a.png",
+   "cos": 0.8213
+  },
+  {
+   "add1000_id": "142",
+   "ueyes_file": "b36130.jpg",
+   "cos": 0.821
+  },
+  {
+   "add1000_id": "986",
+   "ueyes_file": "71bc07.jpg",
+   "cos": 0.8207
+  },
+  {
+   "add1000_id": "218",
+   "ueyes_file": "48a58b.jpg",
+   "cos": 0.8202
+  },
+  {
+   "add1000_id": "340",
+   "ueyes_file": "00398c.jpg",
+   "cos": 0.8201
+  },
+  {
+   "add1000_id": "142",
+   "ueyes_file": "a128c8.png",
+   "cos": 0.82
+  },
+  {
+   "add1000_id": "256",
+   "ueyes_file": "6c5780.png",
+   "cos": 0.8183
+  },
+  {
+   "add1000_id": "329",
+   "ueyes_file": "edcc83.png",
+   "cos": 0.8162
+  },
+  {
+   "add1000_id": "510",
+   "ueyes_file": "00b3a0.png",
+   "cos": 0.815
+  },
+  {
+   "add1000_id": "226",
+   "ueyes_file": "48a58b.jpg",
+   "cos": 0.8139
+  },
+  {
+   "add1000_id": "142",
+   "ueyes_file": "e4f360.jpg",
+   "cos": 0.8138
+  },
+  {
+   "add1000_id": "420",
+   "ueyes_file": "c90ca1.png",
+   "cos": 0.8137
+  },
+  {
+   "add1000_id": "329",
+   "ueyes_file": "27c37d.png",
+   "cos": 0.8136
+  },
+  {
+   "add1000_id": "142",
+   "ueyes_file": "fd4c35.jpg",
+   "cos": 0.8107
+  },
+  {
+   "add1000_id": "986",
+   "ueyes_file": "48a58b.jpg",
+   "cos": 0.8101
+  },
+  {
+   "add1000_id": "340",
+   "ueyes_file": "25d2e6.jpg",
+   "cos": 0.81
+  },
+  {
+   "add1000_id": "142",
+   "ueyes_file": "13bd83.png",
+   "cos": 0.81
+  },
+  {
+   "add1000_id": "180",
+   "ueyes_file": "0197c7.jpg",
+   "cos": 0.8093
+  },
+  {
+   "add1000_id": "180",
+   "ueyes_file": "c68139.png",
+   "cos": 0.8091
+  },
+  {
+   "add1000_id": "226",
+   "ueyes_file": "172c5d.jpg",
+   "cos": 0.8084
+  },
+  {
+   "add1000_id": "142",
+   "ueyes_file": "056cfb.png",
+   "cos": 0.8083
+  },
+  {
+   "add1000_id": "142",
+   "ueyes_file": "cba28b.jpg",
+   "cos": 0.8059
+  },
+  {
+   "add1000_id": "218",
+   "ueyes_file": "71bc07.jpg",
+   "cos": 0.8058
+  },
+  {
+   "add1000_id": "420",
+   "ueyes_file": "00b3a0.png",
+   "cos": 0.8028
+  },
+  {
+   "add1000_id": "340",
+   "ueyes_file": "333ba8.png",
+   "cos": 0.8028
+  },
+  {
+   "add1000_id": "525",
+   "ueyes_file": "08b92b.png",
+   "cos": 0.8026
+  }
+ ],
+ "wall_s": 367.17393016815186,
+ "command": "python -I scripts/revision/ueyes_overlap.py --threads 4"
+}

@@ -1,0 +1,178 @@
+{
+ "row": "ours_warm_s0",
+ "kind": "kfold",
+ "init": "warm",
+ "seed": 0,
+ "mode": "full",
+ "n": null,
+ "r": null,
+ "folds_file": "splits/kfold_seed0.json",
+ "per_fold": [
+  {
+   "fold": 0,
+   "n": 200,
+   "CC": 0.8987767473442219,
+   "SIM": 0.8049257688377958,
+   "KLD": 0.14854271852628834
+  },
+  {
+   "fold": 1,
+   "n": 200,
+   "CC": 0.8966465061518764,
+   "SIM": 0.8019214517598688,
+   "KLD": 0.15464113689524248
+  },
+  {
+   "fold": 2,
+   "n": 200,
+   "CC": 0.89158679237629,
+   "SIM": 0.8007949996588962,
+   "KLD": 0.15532970768692336
+  },
+  {
+   "fold": 3,
+   "n": 200,
+   "CC": 0.8956431819247826,
+   "SIM": 0.804545693325891,
+   "KLD": 0.15208594528750435
+  },
+  {
+   "fold": 4,
+   "n": 200,
+   "CC": 0.8910608812282643,
+   "SIM": 0.8040120464422603,
+   "KLD": 0.15195799974966515
+  }
+ ],
+ "mean_CC": 0.894742821805087,
+ "sd_CC_ddof0": 0.0029740351665479537,
+ "sd_CC_ddof1": 0.0033250723999380663,
+ "pooled_image_mean_CC": 0.894742821805087,
+ "mean_SIM": 0.8032399920049424,
+ "sd_SIM_ddof0": 0.0016037021839479624,
+ "sd_SIM_ddof1": 0.001792993549486258,
+ "pooled_image_mean_SIM": 0.8032399920049424,
+ "mean_KLD": 0.15251150162912475,
+ "sd_KLD_ddof0": 0.0023965113644096744,
+ "sd_KLD_ddof1": 0.0026793811598354008,
+ "pooled_image_mean_KLD": 0.15251150162912475,
+ "folds_detail": [
+  {
+   "fold": 0,
+   "n_train": 800,
+   "n_test": 200,
+   "warm_load": {
+    "missing_keys": [],
+    "n_unexpected_keys": 0
+   },
+   "start_sigma": 12,
+   "start_CC": 0.7524955674781364,
+   "start_SIM": 0.69244669250189,
+   "start_KLD": 0.3547530960286023,
+   "sigma": 4,
+   "CC": 0.8987767473442219,
+   "SIM": 0.8049257688377958,
+   "KLD": 0.14854271852628834,
+   "wall_s": 181.6097321510315
+  },
+  {
+   "fold": 1,
+   "n_train": 800,
+   "n_test": 200,
+   "warm_load": {
+    "missing_keys": [],
+    "n_unexpected_keys": 0
+   },
+   "start_sigma": 12,
+   "start_CC": 0.7550948424479759,
+   "start_SIM": 0.6926377124017229,
+   "start_KLD": 0.3493404281954979,
+   "sigma": 4,
+   "CC": 0.8966465061518764,
+   "SIM": 0.8019214517598688,
+   "KLD": 0.15464113689524248,
+   "wall_s": 185.09288668632507
+  },
+  {
+   "fold": 2,
+   "n_train": 800,
+   "n_test": 200,
+   "warm_load": {
+    "missing_keys": [],
+    "n_unexpected_keys": 0
+   },
+   "start_sigma": 12,
+   "start_CC": 0.7421135627203023,
+   "start_SIM": 0.6921045590840847,
+   "start_KLD": 0.34797628496940214,
+   "sigma": 4,
+   "CC": 0.89158679237629,
+   "SIM": 0.8007949996588962,
+   "KLD": 0.15532970768692336,
+   "wall_s": 183.55631375312805
+  },
+  {
+   "fold": 3,
+   "n_train": 800,
+   "n_test": 200,
+   "warm_load": {
+    "missing_keys": [],
+    "n_unexpected_keys": 0
+   },
+   "start_sigma": 12,
+   "start_CC": 0.739286093638086,
+   "start_SIM": 0.6882508931023534,
+   "start_KLD": 0.3569168902490027,
+   "sigma": 4,
+   "CC": 0.8956431819247826,
+   "SIM": 0.804545693325891,
+   "KLD": 0.15208594528750435,
+   "wall_s": 189.90486073493958
+  },
+  {
+   "fold": 4,
+   "n_train": 800,
+   "n_test": 200,
+   "warm_load": {
+    "missing_keys": [],
+    "n_unexpected_keys": 0
+   },
+   "start_sigma": 12,
+   "start_CC": 0.727521981457584,
+   "start_SIM": 0.6834787771880184,
+   "start_KLD": 0.37651298469244965,
+   "sigma": 4,
+   "CC": 0.8910608812282643,
+   "SIM": 0.8040120464422603,
+   "KLD": 0.15195799974966515,
+   "wall_s": 196.988933801651
+  }
+ ],
+ "calibration_and_training_data": {
+  "sigma_selection_maps_per_fold": 200,
+  "sigma_selection_maps_are_subset_of_training_maps": true,
+  "train_weight_maps_per_fold": 800,
+  "centre_prior": "learned 16x16 centre-bias logit map, trained jointly with the readout on the same training maps (no separately fitted prior)",
+  "warm_start_source": "readout initialised from a UEyes-trained checkpoint (0 ADD1000 maps)"
+ },
+ "trainable_params": 3721089,
+ "protocol": {
+  "backbone": "frozen facebook/dinov2-base, 448x448 input, patch tokens cached fp16 (cache/ours)",
+  "epochs": 60,
+  "lr": 0.0003,
+  "batch": 16,
+  "optimizer": "AdamW wd 1e-4",
+  "loss": "KL + (1 - CC) at 64x64",
+  "finalizer": "Gaussian sigma from {0,2,4,6,8,10,12} chosen by mean CC on training images",
+  "scoring": "unified: 384x384, GT bilinear to 384, clip at 0 and divide by sum; CC/SIM/KLD (eps 1e-8)",
+  "native_resolution": "the readout's 32x32 logits are bilinearly upsampled to 384 inside the model, so the native score is the 384 score",
+  "init_seed_rule": "torch.manual_seed(1000*seed + fold) [curves: 1000*n + r]; data-order rng default_rng(fold + 1000*seed) [curves: default_rng(r)]",
+  "gt_note": "training targets use the published load_gt (min subtracted); evaluation GT uses the unified clip/sum rule (differs from the published scorer only for SIM/KLD on the 1 map whose resized minimum is above 0)"
+ },
+ "wall_clock_s": 949.2100560665131,
+ "feature_load_s": 12.036389827728271,
+ "device": "mps",
+ "torch": "2.12.0",
+ "machine": "macOS-26.6.2-arm64-arm-64bit",
+ "command": "python -I scripts/ours/run_row.py --row ours_warm_s0 --kind kfold --init warm --seed 0 --device mps"
+}

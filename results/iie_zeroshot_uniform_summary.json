@@ -1,0 +1,67 @@
+{
+ "row": "iie_zeroshot_uniform",
+ "per_fold": [
+  {
+   "fold": 0,
+   "n": 200,
+   "CC": 0.7376224666495844,
+   "SIM": 0.696886310260713,
+   "KLD": 0.3390653755044488
+  },
+  {
+   "fold": 1,
+   "n": 200,
+   "CC": 0.7563435289069357,
+   "SIM": 0.7105840776824607,
+   "KLD": 0.31125551374426125
+  },
+  {
+   "fold": 2,
+   "n": 200,
+   "CC": 0.75256838866078,
+   "SIM": 0.7073413598031099,
+   "KLD": 0.3127236353588648
+  },
+  {
+   "fold": 3,
+   "n": 200,
+   "CC": 0.758262959860889,
+   "SIM": 0.7068372585984932,
+   "KLD": 0.3161524021237174
+  },
+  {
+   "fold": 4,
+   "n": 200,
+   "CC": 0.7433887367130968,
+   "SIM": 0.7042264325046744,
+   "KLD": 0.3186884981209131
+  }
+ ],
+ "CC_mean": 0.7496372161582572,
+ "CC_sd_over_folds": 0.007891356771542776,
+ "CC_sd_over_folds_ddof1": 0.008822805087936463,
+ "CC_mean_over_images": 0.7496372161582572,
+ "SIM_mean": 0.7051750877698904,
+ "SIM_sd_over_folds": 0.004611214539977961,
+ "SIM_sd_over_folds_ddof1": 0.005155494585113072,
+ "SIM_mean_over_images": 0.7051750877698904,
+ "KLD_mean": 0.31957708497044107,
+ "KLD_sd_over_folds": 0.010084937544461957,
+ "KLD_sd_over_folds_ddof1": 0.01127530294912837,
+ "KLD_mean_over_images": 0.31957708497044107,
+ "n_images": 1000,
+ "protocol": "zero-shot DeepGaze IIE (released weights, no ADD1000 data), uniform centre prior (zeros), input PIL bilinear 384x384, CC/SIM/KLD on 384 grid vs bilinear-384 GT (clip+sum normalisation)",
+ "calibration_maps": 0,
+ "training_maps": 0,
+ "trainable_params_trained": 0,
+ "native_resolution": "DeepGaze IIE predicts at its input resolution (384 x 384 here), so the native and unified scores are identical",
+ "wall_clock_s_total_script": 237.60862112045288,
+ "command": "python -I scripts/iie/zeroshot_iie.py --device cpu --threads 6",
+ "wall_clock_s_row": 237.607745885849,
+ "reference_previous_uniform_number": {
+  "CC": 0.75,
+  "SIM": 0.705,
+  "KLD": 0.32,
+  "source": "earlier zero-shot baseline run, script not released (rounded)"
+ }
+}

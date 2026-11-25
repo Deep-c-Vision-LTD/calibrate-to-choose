@@ -1,0 +1,4635 @@
+{
+ "description": "Accuracy-cost frontier of every ADD1000-adapted model (KBS letter), compiled from saved files only.\n\n  python -I compile_frontier.py     # writes results/frontier.json, results/FRONTIER.md, results/frontier.png\n\nNothing is trained or re-scored here. Accuracy comes from the per-image files of each row (same folds\nsplits/kfold_seed0.json, same 384 x 384 clip-and-sum scoring, mean +/- SD over the 5 folds, ddof = 1).\nCosts come from:\n  * results/cost_table.json (quiet machine): ours B448, DeepGaze IIE, DeepGaze MSDB, SUM;\n  * results/cost_raw/frontier_quiet_<variant>_<dev>_p<k>.json: quiet-machine re-measurement of the Track A\n    backbones (L448, msB, B644, Lms; B448 measured first and last as the same-session check), made with\n    scripts/trackA/cost_bench_a.py unchanged through scripts/frontier/run_cost_quiet.sh (same protocol:\n    batch 1, float32, 6 threads, 3 warm-ups, median of 30). These replace Track A's contended estimates;\n    the estimates and the contended raw numbers are kept in frontier.json for comparison;\n  * results/trackA_cost.json: GFLOPs and parameter counts of the Track A backbones (deterministic).\nDistilled students have exactly the inference graph of the matching non-distilled model (the teacher is\nused only to make training targets), so they take that model's cost.\n\nPareto frontier: on (CPU latency, mean CC), over one entry per configuration (seed 0 or single run; seed\naverages and extra seeds excluded). A model is on the frontier if no other model is at most as slow and at\nleast as accurate, with one of the two strict. The same rule is applied on (MPS latency, CC) and (GFLOPs, CC).\n24 Nov 2026: the SUM full fine-tune rows (sum_ft = SUM's own loss, primary; sum_ft_klcc = KL+CC loss,\nsecondary) replace the former placeholder; both are frontier candidates with SUM's cost from cost_table.json\n(inference cost does not change with fine-tuning). Only quiet-machine CPU latencies are used or quoted;\nTrack A's contended estimates are kept in frontier.json for audit only.\n\n\"Fast\" (declared here before looking at the paired tests): CPU latency <= 1/10 of adapted MSDB's\n(>= 10x faster). The best fast model is the fast model with the highest mean CC.\n\nPaired tests: copied from scripts/compile/compile_results.py (Wilcoxon signed-rank, two-sided,\nzero_method='wilcox', on the 1000 out-of-fold images; Nadeau-Bengio corrected t on the 5 fold differences,\ndf 4, n_test/n_train = 0.25; 5000-sample bootstrap 95% CI of the mean per-image difference, rng seed 0).\nDifferences = fast model minus reference (for KLD negative = fast model better). Holm family (primary):\n{best fast model, best model at our base inference cost} x {msdb_adapt_s0, ours_scratch_s0} = 4 comparisons,\ncorrected separately per metric and per test. Secondary family: the same two models against the seed\naverages (msdb_adapt seeds 0-2, ours_scratch seeds 0-2).\n\nSUM full fine-tune tests (added 24 Nov 2026; differences = sum_ft minus reference): primary Holm family =\nsum_ft vs {msdb_adapt_s0, ours_scratch_s0, distill_pitt, distill_pitt_L, sum_ft_head, sum_ft_klcc} = 6\ncomparisons, Holm per metric (CC, SIM, KLD) and per test (Wilcoxon, NB). Secondary: sum_ft vs\nmsdb_adapt_seedavg, a single comparison (no correction). Same Wilcoxon and NB as above; the bootstrap CI of\nthese tests uses the letter's stated convention, 10,000 resamples with a fresh numpy default_rng(20261121)\nper comparison (drawn in metric order CC, SIM, KLD); the 5,000-resample rng-0 CI of the older sections is\nalso stored for comparison.\n\nTraining cost: per-fold training wall-clock with the hardware it ran on, read from the row summaries (or\ncost_table.json training_adaptation where it already lists the row). Hardware differs between rows (Apple\nM4 Pro CPU, Apple M4 Pro GPU via MPS, cloud NVIDIA A10G), so these times are not comparable across hardware.\n\nZero-shot to adapted gains: read from results/main_table.json (rows already compiled there).",
+ "protocol": {
+  "folds": "splits/kfold_seed0.json (5 x 200)",
+  "scoring": "384 x 384, clip at 0 and divide by sum",
+  "sd": "over the 5 fold means, ddof = 1",
+  "fast_definition": "CPU latency <= MSDB-adapted / 10 = 0.751 s",
+  "frontier": "Pareto on (CPU latency, mean CC) over frontier_candidate rows",
+  "latency": "batch 1, float32, preprocessed input in memory, model forward only (our Gaussian finalizer adds 1.4 ms on CPU and is not included, as in cost_table.json ratios); CPU 6 threads; MPS = Apple M4 Pro GPU"
+ },
+ "quiet_session": {
+  "cpu_B448_quiet_median_s": 0.12202395824715495,
+  "cpu_B448_cost_table_s": 0.12204727088101208,
+  "cpu_session_factor": 0.9998089868483838,
+  "mps_B448_quiet_median_s": 0.07373967673629522,
+  "mps_B448_cost_table_s": 0.0740665621124208,
+  "mps_session_factor": 0.9955865998528538,
+  "cpu_rss_B448_trackA_bench_GB": 0.8797607421875,
+  "cpu_rss_B448_cost_table_GB": 1.216522216796875,
+  "cpu_rss_alignment_offset_GB": 0.336761474609375,
+  "B448_passes": {
+   "cpu": [
+    {
+     "file": "frontier_quiet_B448_cpu_p1.json",
+     "median_s": 0.12151756230741739,
+     "iqr_s": [
+      0.12126890569925308,
+      0.12196165625937283
+     ],
+     "runs": 30,
+     "threads": 6,
+     "latency_incl_finalizer_s": 0.122918916400522,
+     "GFLOPs": 221.187117056,
+     "params_total": 90301569,
+     "peak_rss_GB": 0.8794403076171875,
+     "rss_after_load_GB": 0.46710205078125
+    },
+    {
+     "file": "frontier_quiet_B448_cpu_p6.json",
+     "median_s": 0.12253035418689251,
+     "iqr_s": [
+      0.12216856249142438,
+      0.1227594162337482
+     ],
+     "runs": 30,
+     "threads": 6,
+     "latency_incl_finalizer_s": 0.12395391683094203,
+     "GFLOPs": 221.187117056,
+     "params_total": 90301569,
+     "peak_rss_GB": 0.8800811767578125,
+     "rss_after_load_GB": 0.4695892333984375
+    }
+   ],
+   "mps": [
+    {
+     "file": "frontier_quiet_B448_mps_p1.json",
+     "median_s": 0.07313379156403244,
+     "iqr_s": [
+      0.07305682264268398,
+      0.0731730938423425
+     ],
+     "runs": 30,
+     "threads": 6,
+     "latency_incl_finalizer_s": 0.07455154159106314,
+     "GFLOPs": null,
+     "params_total": 90301569,
+     "mps_driver_allocated_max_GB": 1.483154296875
+    },
+    {
+     "file": "frontier_quiet_B448_mps_p6.json",
+     "median_s": 0.07434556190855801,
+     "iqr_s": [
+      0.07427209394518286,
+      0.07443878112826496
+     ],
+     "runs": 30,
+     "threads": 6,
+     "latency_incl_finalizer_s": 0.07576691592112184,
+     "GFLOPs": null,
+     "params_total": 90301569,
+     "mps_driver_allocated_max_GB": 1.483154296875
+    }
+   ]
+  }
+ },
+ "models": [
+  {
+   "row": "ours_scratch_s0",
+   "label": "Ours B448 (DINOv2-B 448 + readout), scratch, seed 0",
+   "family": "ours",
+   "kind": "ours",
+   "frontier_candidate": true,
+   "accuracy": {
+    "CC": {
+     "mean": 0.8974643822883056,
+     "sd_folds_ddof1": 0.0037801328380290505,
+     "per_fold": [
+      0.9010515516988788,
+      0.901205322627188,
+      0.8927204674524344,
+      0.8976641692854261,
+      0.8946804003776002
+     ]
+    },
+    "SIM": {
+     "mean": 0.8051536956779968,
+     "sd_folds_ddof1": 0.0021779651558613525,
+     "per_fold": [
+      0.8053298963992381,
+      0.805678686842977,
+      0.8016428230573137,
+      0.8054644412162368,
+      0.807652630874218
+     ]
+    },
+    "KLD": {
+     "mean": 0.14892052288472418,
+     "sd_folds_ddof1": 0.0028647176174451884,
+     "per_fold": [
+      0.14713332833193904,
+      0.14872086286925637,
+      0.15272147323615362,
+      0.15061153237223873,
+      0.14541541761403315
+     ]
+    }
+   },
+   "cost": {
+    "source": "cost_table.json (quiet machine)",
+    "GFLOPs": 221.187117056,
+    "params_total": 90301569,
+    "params_frozen": 86580480,
+    "params_trainable": 3721089,
+    "cpu_latency_s": 0.12204727088101208,
+    "cpu_latency_iqr_s": [
+     0.12182881217449903,
+     0.12250940641388297
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 0.0740665621124208,
+    "mps_latency_iqr_s": [
+     0.073924177326262,
+     0.07415409362874925
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 1.216522216796875,
+    "cpu_peak_rss_kind": "measured (cost_bench.py)",
+    "mps_driver_mem_GB": 1.483154296875,
+    "note": "reference fast model",
+    "quiet_session_check_cpu_s": 0.12202395824715495,
+    "quiet_session_check_mps_s": 0.07373967673629522,
+    "trackA_contended": {
+     "cpu_latency_normalised_estimate_s": 0.12204727088101208,
+     "mps_latency_normalised_estimate_s": 0.0740665621124208,
+     "raw_contended_medians_s": {
+      "cpu_run1": [
+       0.49574041715823114,
+       0.572494188323617
+      ],
+      "cpu_run2": [
+       0.2944246258120984,
+       0.33307306258939207,
+       0.2677306046243757
+      ],
+      "mps_run1": [
+       0.08122408366762102,
+       0.08135595847852528
+      ]
+     }
+    }
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (train 800; sigma on 200 of them; centre bias learned jointly, no fitted prior)",
+   "extra_unlabeled_images": 0,
+   "training_cost": {
+    "hardware": "Apple M4 Pro GPU (MPS)",
+    "train_s_per_fold": [
+     193.9646818637848,
+     216.09052109718323,
+     208.14387392997742,
+     198.29167675971985,
+     184.99797105789185
+    ],
+    "train_s_per_fold_median": 198.29167675971985,
+    "train_s_total_5_folds": 1001.4887247085571,
+    "covers": "per fold: 60-epoch readout training on cached features + sigma selection + test scoring",
+    "one_off_not_included": "DINOv2-B 448 feature cache, 129 s for 1000 images (CPU, 6 threads)",
+    "source": "cost_table.json training_adaptation",
+    "note": "MPS run held the shared MPS lock (no other MPS job); CPU shared with other tracks"
+   },
+   "vs_msdb_adapt": {
+    "dCC_mean": -0.021509318870381877,
+    "share_of_ours_to_msdb_gap_closed": 0.0,
+    "GFLOPs_fewer_x": 55.41082834346538,
+    "cpu_faster_x": 61.53498223962284,
+    "mps_faster_x": 39.95542599828737,
+    "cpu_rss_lower_x": 7.559014625090937
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 8.193546588804374,
+    "mps": 13.501369193863288
+   },
+   "on_pareto_frontier_cc_vs_cpu": false
+  },
+  {
+   "row": "ours_scratch_seedavg",
+   "label": "Ours B448, scratch, per-image mean of seeds 0-2",
+   "family": "ours",
+   "kind": "ours",
+   "frontier_candidate": false,
+   "accuracy": {
+    "CC": {
+     "mean": 0.8977604044558107,
+     "sd_folds_ddof1": 0.0031087060894933512,
+     "per_fold": [
+      0.900536461476265,
+      0.9010624928852039,
+      0.8952089159833315,
+      0.897909820785949,
+      0.8940843311483044
+     ]
+    },
+    "SIM": {
+     "mean": 0.8052461531365191,
+     "sd_folds_ddof1": 0.001379396945440563,
+     "per_fold": [
+      0.806021402825752,
+      0.8051203945425705,
+      0.8029208774085135,
+      0.8057814878973053,
+      0.8063866030084544
+     ]
+    },
+    "KLD": {
+     "mean": 0.1484652667948378,
+     "sd_folds_ddof1": 0.001997820221497855,
+     "per_fold": [
+      0.14569660683414948,
+      0.14928948186918667,
+      0.1506110743676187,
+      0.1495884258165852,
+      0.1471407450866488
+     ]
+    }
+   },
+   "cost": {
+    "source": "cost_table.json (quiet machine)",
+    "GFLOPs": 221.187117056,
+    "params_total": 90301569,
+    "params_frozen": 86580480,
+    "params_trainable": 3721089,
+    "cpu_latency_s": 0.12204727088101208,
+    "cpu_latency_iqr_s": [
+     0.12182881217449903,
+     0.12250940641388297
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 0.0740665621124208,
+    "mps_latency_iqr_s": [
+     0.073924177326262,
+     0.07415409362874925
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 1.216522216796875,
+    "cpu_peak_rss_kind": "measured (cost_bench.py)",
+    "mps_driver_mem_GB": 1.483154296875,
+    "note": "seed average (3 trainings, one model's cost)",
+    "quiet_session_check_cpu_s": 0.12202395824715495,
+    "quiet_session_check_mps_s": 0.07373967673629522,
+    "trackA_contended": {
+     "cpu_latency_normalised_estimate_s": 0.12204727088101208,
+     "mps_latency_normalised_estimate_s": 0.0740665621124208,
+     "raw_contended_medians_s": {
+      "cpu_run1": [
+       0.49574041715823114,
+       0.572494188323617
+      ],
+      "cpu_run2": [
+       0.2944246258120984,
+       0.33307306258939207,
+       0.2677306046243757
+      ],
+      "mps_run1": [
+       0.08122408366762102,
+       0.08135595847852528
+      ]
+     }
+    }
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (train 800; sigma on 200 of them; centre bias learned jointly, no fitted prior)",
+   "extra_unlabeled_images": 0,
+   "training_cost": null,
+   "vs_msdb_adapt": {
+    "dCC_mean": -0.02121329670287675,
+    "share_of_ours_to_msdb_gap_closed": 0.013762507743225074,
+    "GFLOPs_fewer_x": 55.41082834346538,
+    "cpu_faster_x": 61.53498223962284,
+    "mps_faster_x": 39.95542599828737,
+    "cpu_rss_lower_x": 7.559014625090937
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 8.193546588804374,
+    "mps": 13.501369193863288
+   },
+   "on_pareto_frontier_cc_vs_cpu": false
+  },
+  {
+   "row": "ours_warm_s0",
+   "label": "Ours B448, warm start (UEyes readout), seed 0",
+   "family": "ours",
+   "kind": "ours",
+   "frontier_candidate": true,
+   "accuracy": {
+    "CC": {
+     "mean": 0.894742821805087,
+     "sd_folds_ddof1": 0.0033250723999380663,
+     "per_fold": [
+      0.8987767473442219,
+      0.8966465061518764,
+      0.89158679237629,
+      0.8956431819247826,
+      0.8910608812282643
+     ]
+    },
+    "SIM": {
+     "mean": 0.8032399920049424,
+     "sd_folds_ddof1": 0.001792993549486258,
+     "per_fold": [
+      0.8049257688377958,
+      0.8019214517598688,
+      0.8007949996588962,
+      0.804545693325891,
+      0.8040120464422603
+     ]
+    },
+    "KLD": {
+     "mean": 0.15251150162912475,
+     "sd_folds_ddof1": 0.0026793811598354008,
+     "per_fold": [
+      0.14854271852628834,
+      0.15464113689524248,
+      0.15532970768692336,
+      0.15208594528750435,
+      0.15195799974966515
+     ]
+    }
+   },
+   "cost": {
+    "source": "cost_table.json (quiet machine)",
+    "GFLOPs": 221.187117056,
+    "params_total": 90301569,
+    "params_frozen": 86580480,
+    "params_trainable": 3721089,
+    "cpu_latency_s": 0.12204727088101208,
+    "cpu_latency_iqr_s": [
+     0.12182881217449903,
+     0.12250940641388297
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 0.0740665621124208,
+    "mps_latency_iqr_s": [
+     0.073924177326262,
+     0.07415409362874925
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 1.216522216796875,
+    "cpu_peak_rss_kind": "measured (cost_bench.py)",
+    "mps_driver_mem_GB": 1.483154296875,
+    "note": "",
+    "quiet_session_check_cpu_s": 0.12202395824715495,
+    "quiet_session_check_mps_s": 0.07373967673629522,
+    "trackA_contended": {
+     "cpu_latency_normalised_estimate_s": 0.12204727088101208,
+     "mps_latency_normalised_estimate_s": 0.0740665621124208,
+     "raw_contended_medians_s": {
+      "cpu_run1": [
+       0.49574041715823114,
+       0.572494188323617
+      ],
+      "cpu_run2": [
+       0.2944246258120984,
+       0.33307306258939207,
+       0.2677306046243757
+      ],
+      "mps_run1": [
+       0.08122408366762102,
+       0.08135595847852528
+      ]
+     }
+    }
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (train 800; sigma on 200 of them; centre bias learned jointly, no fitted prior)",
+   "extra_unlabeled_images": 0,
+   "training_cost": {
+    "hardware": "Apple M4 Pro GPU (MPS)",
+    "train_s_per_fold": [
+     181.6097321510315,
+     185.09288668632507,
+     183.55631375312805,
+     189.90486073493958,
+     196.988933801651
+    ],
+    "train_s_per_fold_median": 185.09288668632507,
+    "train_s_total_5_folds": 937.1527271270752,
+    "covers": "per fold: 60-epoch readout training on cached features + sigma selection + test scoring",
+    "one_off_not_included": "DINOv2-B 448 feature cache, 129 s for 1000 images (CPU, 6 threads)",
+    "source": "cost_table.json training_adaptation",
+    "note": "MPS run held the shared MPS lock (no other MPS job); CPU shared with other tracks"
+   },
+   "vs_msdb_adapt": {
+    "dCC_mean": -0.024230879353600465,
+    "share_of_ours_to_msdb_gap_closed": -0.1265293661607365,
+    "GFLOPs_fewer_x": 55.41082834346538,
+    "cpu_faster_x": 61.53498223962284,
+    "mps_faster_x": 39.95542599828737,
+    "cpu_rss_lower_x": 7.559014625090937
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 8.193546588804374,
+    "mps": 13.501369193863288
+   },
+   "on_pareto_frontier_cc_vs_cpu": false
+  },
+  {
+   "row": "ours_B644_s0",
+   "label": "Ours B644 (DINOv2-B at 644)",
+   "family": "ours",
+   "kind": "ours",
+   "frontier_candidate": true,
+   "accuracy": {
+    "CC": {
+     "mean": 0.8995249584336532,
+     "sd_folds_ddof1": 0.0021914387746190364,
+     "per_fold": [
+      0.9014748860721172,
+      0.9016927854027336,
+      0.8965556620963926,
+      0.8997354984081026,
+      0.8981659601889205
+     ]
+    },
+    "SIM": {
+     "mean": 0.8060516077168233,
+     "sd_folds_ddof1": 0.0017700499285820642,
+     "per_fold": [
+      0.8051548400135025,
+      0.8048514823066809,
+      0.8050296104176519,
+      0.8061312562306223,
+      0.8090908496156594
+     ]
+    },
+    "KLD": {
+     "mean": 0.14708382958351612,
+     "sd_folds_ddof1": 0.0031335761735084107,
+     "per_fold": [
+      0.1445585894673669,
+      0.14792637014310048,
+      0.14962878831117263,
+      0.15021232960913933,
+      0.14309307038680116
+     ]
+    }
+   },
+   "cost": {
+    "source": "GFLOPs/params: trackA_cost.json; latency/memory: quiet re-measurement (results/cost_raw/frontier_quiet_*)",
+    "GFLOPs": 542.06165504,
+    "params_total": 90301569,
+    "params_frozen": 86580480,
+    "params_trainable": 3721089,
+    "cpu_latency_s": 0.2929456038400531,
+    "cpu_latency_iqr_s": [
+     0.29158928093966097,
+     0.29441574995871633
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 0.2134017499629408,
+    "mps_latency_iqr_s": [
+     0.21043764613568783,
+     0.21387337520718575
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 1.31695556640625,
+    "cpu_peak_rss_kind": "Track A bench 0.98 GB + 0.34 GB loading-path offset (B448: 0.88 GB in this bench vs 1.22 GB in cost_table.json)",
+    "cpu_peak_rss_GB_trackA_bench_raw": 0.980194091796875,
+    "mps_driver_mem_GB": 1.819091796875,
+    "quiet_passes": {
+     "cpu": [
+      {
+       "file": "frontier_quiet_B644_cpu_p4.json",
+       "median_s": 0.2929456038400531,
+       "iqr_s": [
+        0.29158928093966097,
+        0.29441574995871633
+       ],
+       "runs": 30,
+       "threads": 6,
+       "latency_incl_finalizer_s": 0.2943681455217302,
+       "GFLOPs": 542.06165504,
+       "params_total": 90301569,
+       "peak_rss_GB": 0.980194091796875,
+       "rss_after_load_GB": 0.470123291015625
+      }
+     ],
+     "mps": [
+      {
+       "file": "frontier_quiet_B644_mps_p4.json",
+       "median_s": 0.2134017499629408,
+       "iqr_s": [
+        0.21043764613568783,
+        0.21387337520718575
+       ],
+       "runs": 30,
+       "threads": 6,
+       "latency_incl_finalizer_s": 0.21482172841206193,
+       "GFLOPs": null,
+       "params_total": 90301569,
+       "mps_driver_allocated_max_GB": 1.819091796875
+      }
+     ]
+    },
+    "trackA_contended": {
+     "cpu_latency_normalised_estimate_s": 0.2463097787330955,
+     "mps_latency_normalised_estimate_s": 0.2308938374098021,
+     "raw_contended_medians_s": {
+      "cpu_run1": [
+       0.9650705209933221
+      ],
+      "cpu_run2": [
+       0.6652889165561646
+      ],
+      "mps_run1": [
+       0.2534121251665056
+      ]
+     }
+    },
+    "note": "single scale, 46x46 tokens"
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (train 800; sigma on 200 of them; centre bias learned jointly, no fitted prior)",
+   "extra_unlabeled_images": 0,
+   "training_cost": {
+    "hardware": "Apple M4 Pro GPU (MPS)",
+    "train_s_per_fold": [
+     329.80744099617004,
+     327.47908091545105,
+     324.53459310531616,
+     326.21901297569275,
+     324.38077306747437
+    ],
+    "train_s_per_fold_median": 326.21901297569275,
+    "train_s_total_5_folds": 1632.4209010601044,
+    "covers": "per fold: 60-epoch readout training on cached features + sigma selection + test scoring",
+    "one_off_not_included": "backbone feature cache (time not recorded in the summary)",
+    "source": "ours_B644_s0_summary.json folds_detail wall_s",
+    "note": ""
+   },
+   "vs_msdb_adapt": {
+    "dCC_mean": -0.019448742725034274,
+    "share_of_ours_to_msdb_gap_closed": 0.09579922812827871,
+    "GFLOPs_fewer_x": 22.610271840887894,
+    "cpu_faster_x": 25.636761731908553,
+    "mps_faster_x": 13.867557515082723,
+    "cpu_rss_lower_x": 6.982550864346295
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 3.413603026949656,
+    "mps": 4.685997186872457
+   },
+   "on_pareto_frontier_cc_vs_cpu": false
+  },
+  {
+   "row": "ours_L448_s0",
+   "label": "Ours L448 (DINOv2-L 448 + readout), seed 0",
+   "family": "ours",
+   "kind": "ours",
+   "frontier_candidate": true,
+   "accuracy": {
+    "CC": {
+     "mean": 0.9004937456061197,
+     "sd_folds_ddof1": 0.0036508706601912364,
+     "per_fold": [
+      0.9050904767382135,
+      0.9032595561335693,
+      0.897261454439231,
+      0.9000957422182188,
+      0.8967614985013661
+     ]
+    },
+    "SIM": {
+     "mean": 0.8083023659174797,
+     "sd_folds_ddof1": 0.001855600218755808,
+     "per_fold": [
+      0.8111400773600538,
+      0.808461654153474,
+      0.8060579970998666,
+      0.8074932620178632,
+      0.808358838956141
+     ]
+    },
+    "KLD": {
+     "mean": 0.14525591126929369,
+     "sd_folds_ddof1": 0.003318059217081514,
+     "per_fold": [
+      0.13939000480776317,
+      0.1470973855104044,
+      0.147343832328207,
+      0.14626735127180657,
+      0.14618098242828725
+     ]
+    }
+   },
+   "cost": {
+    "source": "GFLOPs/params: trackA_cost.json; latency/memory: quiet re-measurement (results/cost_raw/frontier_quiet_*)",
+    "GFLOPs": 733.42500864,
+    "params_total": 309302145,
+    "params_frozen": 304368640,
+    "params_trainable": 4933505,
+    "cpu_latency_s": 0.38847385393455625,
+    "cpu_latency_iqr_s": [
+     0.38742497912608087,
+     0.3894288433948532
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 0.2101605418138206,
+    "mps_latency_iqr_s": [
+     0.20995374990161508,
+     0.21070870838593692
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 2.062103271484375,
+    "cpu_peak_rss_kind": "Track A bench 1.73 GB + 0.34 GB loading-path offset (B448: 0.88 GB in this bench vs 1.22 GB in cost_table.json)",
+    "cpu_peak_rss_GB_trackA_bench_raw": 1.725341796875,
+    "mps_driver_mem_GB": 2.172607421875,
+    "quiet_passes": {
+     "cpu": [
+      {
+       "file": "frontier_quiet_L448_cpu_p2.json",
+       "median_s": 0.38847385393455625,
+       "iqr_s": [
+        0.38742497912608087,
+        0.3894288433948532
+       ],
+       "runs": 30,
+       "threads": 6,
+       "latency_incl_finalizer_s": 0.3898919578641653,
+       "GFLOPs": 733.42500864,
+       "params_total": 309302145,
+       "peak_rss_GB": 1.725341796875,
+       "rss_after_load_GB": 0.4780120849609375
+      }
+     ],
+     "mps": [
+      {
+       "file": "frontier_quiet_L448_mps_p2.json",
+       "median_s": 0.2101605418138206,
+       "iqr_s": [
+        0.20995374990161508,
+        0.21070870838593692
+       ],
+       "runs": 30,
+       "threads": 6,
+       "latency_incl_finalizer_s": 0.2115817496087402,
+       "GFLOPs": null,
+       "params_total": 309302145,
+       "mps_driver_allocated_max_GB": 2.172607421875
+      }
+     ]
+    },
+    "trackA_contended": {
+     "cpu_latency_normalised_estimate_s": 0.3557785250854699,
+     "mps_latency_normalised_estimate_s": 0.23777918704598458,
+     "raw_contended_medians_s": {
+      "cpu_run1": [
+       1.4094956037588418
+      ],
+      "cpu_run2": [
+       0.9522992915008217
+      ],
+      "mps_run1": [
+       0.26096897944808006
+      ]
+     }
+    },
+    "note": ""
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (train 800; sigma on 200 of them; centre bias learned jointly, no fitted prior)",
+   "extra_unlabeled_images": 0,
+   "training_cost": {
+    "hardware": "Apple M4 Pro GPU (MPS)",
+    "train_s_per_fold": [
+     205.32668805122375,
+     210.48594212532043,
+     217.85255026817322,
+     214.24253296852112,
+     213.26197004318237
+    ],
+    "train_s_per_fold_median": 213.26197004318237,
+    "train_s_total_5_folds": 1061.169683456421,
+    "covers": "per fold: 60-epoch readout training on cached features + sigma selection + test scoring",
+    "one_off_not_included": "backbone feature cache (time not recorded in the summary)",
+    "source": "ours_L448_s0_summary.json folds_detail wall_s",
+    "note": ""
+   },
+   "vs_msdb_adapt": {
+    "dCC_mean": -0.01847995555256776,
+    "share_of_ours_to_msdb_gap_closed": 0.1408395745150963,
+    "GFLOPs_fewer_x": 16.710858275344016,
+    "cpu_faster_x": 19.332515097200616,
+    "mps_faster_x": 14.081430395492871,
+    "cpu_rss_lower_x": 4.459383463320063
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 2.574175816137329,
+    "mps": 4.75826713887087
+   },
+   "on_pareto_frontier_cc_vs_cpu": false
+  },
+  {
+   "row": "ours_L448_s1",
+   "label": "Ours L448, seed 1",
+   "family": "ours",
+   "kind": "ours",
+   "frontier_candidate": false,
+   "accuracy": {
+    "CC": {
+     "mean": 0.9007829967712471,
+     "sd_folds_ddof1": 0.002609485920302776,
+     "per_fold": [
+      0.9041208049632542,
+      0.9026976445416173,
+      0.8996719360681853,
+      0.8998570249229442,
+      0.8975675733602353
+     ]
+    },
+    "SIM": {
+     "mean": 0.8081199936139584,
+     "sd_folds_ddof1": 0.0021063229224327707,
+     "per_fold": [
+      0.8107108050315442,
+      0.8068627633811729,
+      0.8053828504932058,
+      0.8081230228960575,
+      0.8095205262678107
+     ]
+    },
+    "KLD": {
+     "mean": 0.14444597936380796,
+     "sd_folds_ddof1": 0.003397600403174943,
+     "per_fold": [
+      0.13891770862935449,
+      0.14541643521592623,
+      0.14639493663999054,
+      0.14768298270041688,
+      0.14381783363335165
+     ]
+    }
+   },
+   "cost": {
+    "source": "GFLOPs/params: trackA_cost.json; latency/memory: quiet re-measurement (results/cost_raw/frontier_quiet_*)",
+    "GFLOPs": 733.42500864,
+    "params_total": 309302145,
+    "params_frozen": 304368640,
+    "params_trainable": 4933505,
+    "cpu_latency_s": 0.38847385393455625,
+    "cpu_latency_iqr_s": [
+     0.38742497912608087,
+     0.3894288433948532
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 0.2101605418138206,
+    "mps_latency_iqr_s": [
+     0.20995374990161508,
+     0.21070870838593692
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 2.062103271484375,
+    "cpu_peak_rss_kind": "Track A bench 1.73 GB + 0.34 GB loading-path offset (B448: 0.88 GB in this bench vs 1.22 GB in cost_table.json)",
+    "cpu_peak_rss_GB_trackA_bench_raw": 1.725341796875,
+    "mps_driver_mem_GB": 2.172607421875,
+    "quiet_passes": {
+     "cpu": [
+      {
+       "file": "frontier_quiet_L448_cpu_p2.json",
+       "median_s": 0.38847385393455625,
+       "iqr_s": [
+        0.38742497912608087,
+        0.3894288433948532
+       ],
+       "runs": 30,
+       "threads": 6,
+       "latency_incl_finalizer_s": 0.3898919578641653,
+       "GFLOPs": 733.42500864,
+       "params_total": 309302145,
+       "peak_rss_GB": 1.725341796875,
+       "rss_after_load_GB": 0.4780120849609375
+      }
+     ],
+     "mps": [
+      {
+       "file": "frontier_quiet_L448_mps_p2.json",
+       "median_s": 0.2101605418138206,
+       "iqr_s": [
+        0.20995374990161508,
+        0.21070870838593692
+       ],
+       "runs": 30,
+       "threads": 6,
+       "latency_incl_finalizer_s": 0.2115817496087402,
+       "GFLOPs": null,
+       "params_total": 309302145,
+       "mps_driver_allocated_max_GB": 2.172607421875
+      }
+     ]
+    },
+    "trackA_contended": {
+     "cpu_latency_normalised_estimate_s": 0.3557785250854699,
+     "mps_latency_normalised_estimate_s": 0.23777918704598458,
+     "raw_contended_medians_s": {
+      "cpu_run1": [
+       1.4094956037588418
+      ],
+      "cpu_run2": [
+       0.9522992915008217
+      ],
+      "mps_run1": [
+       0.26096897944808006
+      ]
+     }
+    },
+    "note": ""
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (train 800; sigma on 200 of them; centre bias learned jointly, no fitted prior)",
+   "extra_unlabeled_images": 0,
+   "training_cost": {
+    "hardware": "Apple M4 Pro GPU (MPS)",
+    "train_s_per_fold": [
+     208.97028303146362,
+     207.55007314682007,
+     207.63323402404785,
+     208.34320998191833,
+     207.3338520526886
+    ],
+    "train_s_per_fold_median": 207.63323402404785,
+    "train_s_total_5_folds": 1039.8306522369385,
+    "covers": "per fold: 60-epoch readout training on cached features + sigma selection + test scoring",
+    "one_off_not_included": "backbone feature cache (time not recorded in the summary)",
+    "source": "ours_L448_s1_summary.json folds_detail wall_s",
+    "note": ""
+   },
+   "vs_msdb_adapt": {
+    "dCC_mean": -0.018190704387440415,
+    "share_of_ours_to_msdb_gap_closed": 0.15428728835812472,
+    "GFLOPs_fewer_x": 16.710858275344016,
+    "cpu_faster_x": 19.332515097200616,
+    "mps_faster_x": 14.081430395492871,
+    "cpu_rss_lower_x": 4.459383463320063
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 2.574175816137329,
+    "mps": 4.75826713887087
+   },
+   "on_pareto_frontier_cc_vs_cpu": false
+  },
+  {
+   "row": "ours_L448_s2",
+   "label": "Ours L448, seed 2",
+   "family": "ours",
+   "kind": "ours",
+   "frontier_candidate": false,
+   "accuracy": {
+    "CC": {
+     "mean": 0.9006138177428349,
+     "sd_folds_ddof1": 0.0032627557592006585,
+     "per_fold": [
+      0.9043401650045821,
+      0.9027359219887967,
+      0.8988418081639786,
+      0.9010999385622916,
+      0.8960512549945255
+     ]
+    },
+    "SIM": {
+     "mean": 0.8084819935682491,
+     "sd_folds_ddof1": 0.0015329269754814447,
+     "per_fold": [
+      0.8101404881285111,
+      0.8066901096363932,
+      0.8070306468109582,
+      0.809079545683681,
+      0.8094691775817018
+     ]
+    },
+    "KLD": {
+     "mean": 0.14468308348879316,
+     "sd_folds_ddof1": 0.002966497809765413,
+     "per_fold": [
+      0.13995032306025063,
+      0.14746068224093503,
+      0.1450544712138292,
+      0.14411587846746496,
+      0.14683406246148592
+     ]
+    }
+   },
+   "cost": {
+    "source": "GFLOPs/params: trackA_cost.json; latency/memory: quiet re-measurement (results/cost_raw/frontier_quiet_*)",
+    "GFLOPs": 733.42500864,
+    "params_total": 309302145,
+    "params_frozen": 304368640,
+    "params_trainable": 4933505,
+    "cpu_latency_s": 0.38847385393455625,
+    "cpu_latency_iqr_s": [
+     0.38742497912608087,
+     0.3894288433948532
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 0.2101605418138206,
+    "mps_latency_iqr_s": [
+     0.20995374990161508,
+     0.21070870838593692
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 2.062103271484375,
+    "cpu_peak_rss_kind": "Track A bench 1.73 GB + 0.34 GB loading-path offset (B448: 0.88 GB in this bench vs 1.22 GB in cost_table.json)",
+    "cpu_peak_rss_GB_trackA_bench_raw": 1.725341796875,
+    "mps_driver_mem_GB": 2.172607421875,
+    "quiet_passes": {
+     "cpu": [
+      {
+       "file": "frontier_quiet_L448_cpu_p2.json",
+       "median_s": 0.38847385393455625,
+       "iqr_s": [
+        0.38742497912608087,
+        0.3894288433948532
+       ],
+       "runs": 30,
+       "threads": 6,
+       "latency_incl_finalizer_s": 0.3898919578641653,
+       "GFLOPs": 733.42500864,
+       "params_total": 309302145,
+       "peak_rss_GB": 1.725341796875,
+       "rss_after_load_GB": 0.4780120849609375
+      }
+     ],
+     "mps": [
+      {
+       "file": "frontier_quiet_L448_mps_p2.json",
+       "median_s": 0.2101605418138206,
+       "iqr_s": [
+        0.20995374990161508,
+        0.21070870838593692
+       ],
+       "runs": 30,
+       "threads": 6,
+       "latency_incl_finalizer_s": 0.2115817496087402,
+       "GFLOPs": null,
+       "params_total": 309302145,
+       "mps_driver_allocated_max_GB": 2.172607421875
+      }
+     ]
+    },
+    "trackA_contended": {
+     "cpu_latency_normalised_estimate_s": 0.3557785250854699,
+     "mps_latency_normalised_estimate_s": 0.23777918704598458,
+     "raw_contended_medians_s": {
+      "cpu_run1": [
+       1.4094956037588418
+      ],
+      "cpu_run2": [
+       0.9522992915008217
+      ],
+      "mps_run1": [
+       0.26096897944808006
+      ]
+     }
+    },
+    "note": ""
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (train 800; sigma on 200 of them; centre bias learned jointly, no fitted prior)",
+   "extra_unlabeled_images": 0,
+   "training_cost": {
+    "hardware": "Apple M4 Pro GPU (MPS)",
+    "train_s_per_fold": [
+     207.87715411186218,
+     208.03326416015625,
+     208.0450620651245,
+     207.27342677116394,
+     208.4180202484131
+    ],
+    "train_s_per_fold_median": 208.03326416015625,
+    "train_s_total_5_folds": 1039.64692735672,
+    "covers": "per fold: 60-epoch readout training on cached features + sigma selection + test scoring",
+    "one_off_not_included": "backbone feature cache (time not recorded in the summary)",
+    "source": "ours_L448_s2_summary.json folds_detail wall_s",
+    "note": ""
+   },
+   "vs_msdb_adapt": {
+    "dCC_mean": -0.018359883415852596,
+    "share_of_ours_to_msdb_gap_closed": 0.14642190547772405,
+    "GFLOPs_fewer_x": 16.710858275344016,
+    "cpu_faster_x": 19.332515097200616,
+    "mps_faster_x": 14.081430395492871,
+    "cpu_rss_lower_x": 4.459383463320063
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 2.574175816137329,
+    "mps": 4.75826713887087
+   },
+   "on_pareto_frontier_cc_vs_cpu": false
+  },
+  {
+   "row": "ours_L448_seedavg",
+   "label": "Ours L448, per-image mean of seeds 0-2",
+   "family": "ours",
+   "kind": "ours",
+   "frontier_candidate": false,
+   "accuracy": {
+    "CC": {
+     "mean": 0.9006301867067339,
+     "sd_folds_ddof1": 0.0031306559864450853,
+     "per_fold": [
+      0.9045171489020167,
+      0.9028977075546613,
+      0.8985917328904649,
+      0.9003509019011517,
+      0.8967934422853756
+     ]
+    },
+    "SIM": {
+     "mean": 0.808301451033229,
+     "sd_folds_ddof1": 0.0017157451067341606,
+     "per_fold": [
+      0.8106637901733698,
+      0.8073381757236802,
+      0.8061571648013435,
+      0.808231943532534,
+      0.8091161809352179
+     ]
+    },
+    "KLD": {
+     "mean": 0.14479499137396493,
+     "sd_folds_ddof1": 0.003029014833542181,
+     "per_fold": [
+      0.13941934549912274,
+      0.14665816765575523,
+      0.14626441339400892,
+      0.14602207081322946,
+      0.14561095950770828
+     ]
+    }
+   },
+   "cost": {
+    "source": "GFLOPs/params: trackA_cost.json; latency/memory: quiet re-measurement (results/cost_raw/frontier_quiet_*)",
+    "GFLOPs": 733.42500864,
+    "params_total": 309302145,
+    "params_frozen": 304368640,
+    "params_trainable": 4933505,
+    "cpu_latency_s": 0.38847385393455625,
+    "cpu_latency_iqr_s": [
+     0.38742497912608087,
+     0.3894288433948532
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 0.2101605418138206,
+    "mps_latency_iqr_s": [
+     0.20995374990161508,
+     0.21070870838593692
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 2.062103271484375,
+    "cpu_peak_rss_kind": "Track A bench 1.73 GB + 0.34 GB loading-path offset (B448: 0.88 GB in this bench vs 1.22 GB in cost_table.json)",
+    "cpu_peak_rss_GB_trackA_bench_raw": 1.725341796875,
+    "mps_driver_mem_GB": 2.172607421875,
+    "quiet_passes": {
+     "cpu": [
+      {
+       "file": "frontier_quiet_L448_cpu_p2.json",
+       "median_s": 0.38847385393455625,
+       "iqr_s": [
+        0.38742497912608087,
+        0.3894288433948532
+       ],
+       "runs": 30,
+       "threads": 6,
+       "latency_incl_finalizer_s": 0.3898919578641653,
+       "GFLOPs": 733.42500864,
+       "params_total": 309302145,
+       "peak_rss_GB": 1.725341796875,
+       "rss_after_load_GB": 0.4780120849609375
+      }
+     ],
+     "mps": [
+      {
+       "file": "frontier_quiet_L448_mps_p2.json",
+       "median_s": 0.2101605418138206,
+       "iqr_s": [
+        0.20995374990161508,
+        0.21070870838593692
+       ],
+       "runs": 30,
+       "threads": 6,
+       "latency_incl_finalizer_s": 0.2115817496087402,
+       "GFLOPs": null,
+       "params_total": 309302145,
+       "mps_driver_allocated_max_GB": 2.172607421875
+      }
+     ]
+    },
+    "trackA_contended": {
+     "cpu_latency_normalised_estimate_s": 0.3557785250854699,
+     "mps_latency_normalised_estimate_s": 0.23777918704598458,
+     "raw_contended_medians_s": {
+      "cpu_run1": [
+       1.4094956037588418
+      ],
+      "cpu_run2": [
+       0.9522992915008217
+      ],
+      "mps_run1": [
+       0.26096897944808006
+      ]
+     }
+    },
+    "note": "seed average"
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (train 800; sigma on 200 of them; centre bias learned jointly, no fitted prior)",
+   "extra_unlabeled_images": 0,
+   "training_cost": null,
+   "vs_msdb_adapt": {
+    "dCC_mean": -0.01834351445195359,
+    "share_of_ours_to_msdb_gap_closed": 0.14718292278364836,
+    "GFLOPs_fewer_x": 16.710858275344016,
+    "cpu_faster_x": 19.332515097200616,
+    "mps_faster_x": 14.081430395492871,
+    "cpu_rss_lower_x": 4.459383463320063
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 2.574175816137329,
+    "mps": 4.75826713887087
+   },
+   "on_pareto_frontier_cc_vs_cpu": false
+  },
+  {
+   "row": "ours_ms_B_s0",
+   "label": "Ours msB (DINOv2-B at 448 + 672, concatenated)",
+   "family": "ours",
+   "kind": "ours",
+   "frontier_candidate": true,
+   "accuracy": {
+    "CC": {
+     "mean": 0.9025182831085783,
+     "sd_folds_ddof1": 0.0035655691630253057,
+     "per_fold": [
+      0.9061465431954993,
+      0.9060964321788774,
+      0.8987364330700334,
+      0.9023421545029151,
+      0.8992698525955664
+     ]
+    },
+    "SIM": {
+     "mean": 0.8093899537587472,
+     "sd_folds_ddof1": 0.002110570790593085,
+     "per_fold": [
+      0.8101289028402292,
+      0.8102125726234846,
+      0.8057004353273743,
+      0.8098544893389302,
+      0.8110533686637177
+     ]
+    },
+    "KLD": {
+     "mean": 0.14348411614467732,
+     "sd_folds_ddof1": 0.002992308403427888,
+     "per_fold": [
+      0.14056859193740942,
+      0.14442631609002457,
+      0.14717953193842404,
+      0.14499885642490315,
+      0.14024728433262532
+     ]
+    }
+   },
+   "cost": {
+    "source": "GFLOPs/params: trackA_cost.json; latency/memory: quiet re-measurement (results/cost_raw/frontier_quiet_*)",
+    "GFLOPs": 817.924087808,
+    "params_total": 93938817,
+    "params_frozen": 86580480,
+    "params_trainable": 7358337,
+    "cpu_latency_s": 0.4430017084814608,
+    "cpu_latency_iqr_s": [
+     0.4410901768133044,
+     0.44467329152394086
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 0.3065952081233263,
+    "mps_latency_iqr_s": [
+     0.30542336450889707,
+     0.3089665418956429
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 1.3652191162109375,
+    "cpu_peak_rss_kind": "Track A bench 1.03 GB + 0.34 GB loading-path offset (B448: 0.88 GB in this bench vs 1.22 GB in cost_table.json)",
+    "cpu_peak_rss_GB_trackA_bench_raw": 1.0284576416015625,
+    "mps_driver_mem_GB": 1.9909820556640625,
+    "quiet_passes": {
+     "cpu": [
+      {
+       "file": "frontier_quiet_msB_cpu_p3.json",
+       "median_s": 0.4430017084814608,
+       "iqr_s": [
+        0.4410901768133044,
+        0.44467329152394086
+       ],
+       "runs": 30,
+       "threads": 6,
+       "latency_incl_finalizer_s": 0.4444610201753676,
+       "GFLOPs": 817.924087808,
+       "params_total": 93938817,
+       "peak_rss_GB": 1.0284576416015625,
+       "rss_after_load_GB": 0.4863433837890625
+      }
+     ],
+     "mps": [
+      {
+       "file": "frontier_quiet_msB_mps_p3.json",
+       "median_s": 0.3065952081233263,
+       "iqr_s": [
+        0.30542336450889707,
+        0.3089665418956429
+       ],
+       "runs": 30,
+       "threads": 6,
+       "latency_incl_finalizer_s": 0.3080151870381087,
+       "GFLOPs": null,
+       "params_total": 93938817,
+       "mps_driver_allocated_max_GB": 1.9909820556640625
+      }
+     ]
+    },
+    "trackA_contended": {
+     "cpu_latency_normalised_estimate_s": 0.3862672934268594,
+     "mps_latency_normalised_estimate_s": 0.3364810474343812,
+     "raw_contended_medians_s": {
+      "cpu_run1": [
+       1.5164396043401212
+      ],
+      "cpu_run2": [
+       1.0416420625988394
+      ],
+      "mps_run1": [
+       0.36929689534008503
+      ]
+     }
+    },
+    "note": "two backbone passes"
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (train 800; sigma on 200 of them; centre bias learned jointly, no fitted prior)",
+   "extra_unlabeled_images": 0,
+   "training_cost": {
+    "hardware": "Apple M4 Pro GPU (MPS)",
+    "train_s_per_fold": [
+     318.39977383613586,
+     326.2976920604706,
+     313.7459809780121,
+     320.12304878234863,
+     308.5963809490204
+    ],
+    "train_s_per_fold_median": 318.39977383613586,
+    "train_s_total_5_folds": 1587.1628766059875,
+    "covers": "per fold: 60-epoch readout training on cached features + sigma selection + test scoring",
+    "one_off_not_included": "backbone feature cache (time not recorded in the summary)",
+    "source": "ours_ms_B_s0_summary.json folds_detail wall_s",
+    "note": ""
+   },
+   "vs_msdb_adapt": {
+    "dCC_mean": -0.016455418050109194,
+    "share_of_ours_to_msdb_gap_closed": 0.23496331291233286,
+    "GFLOPs_fewer_x": 14.984472957413402,
+    "cpu_faster_x": 16.952929305399756,
+    "mps_faster_x": 9.652339511581657,
+    "cpu_rss_lower_x": 6.735702071062132
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 2.2573276374663216,
+    "mps": 3.2616295803219315
+   },
+   "on_pareto_frontier_cc_vs_cpu": false
+  },
+  {
+   "row": "ours_L_ms_s0",
+   "label": "Ours L-ms (DINOv2-L at 448 + 672, concatenated)",
+   "family": "ours",
+   "kind": "ours",
+   "frontier_candidate": true,
+   "accuracy": {
+    "CC": {
+     "mean": 0.9034732180837421,
+     "sd_folds_ddof1": 0.004016871952630093,
+     "per_fold": [
+      0.9077452632425472,
+      0.9079377425312919,
+      0.9001168339272846,
+      0.9002262679217856,
+      0.9013399827958011
+     ]
+    },
+    "SIM": {
+     "mean": 0.8115597734605446,
+     "sd_folds_ddof1": 0.0029933913592768975,
+     "per_fold": [
+      0.8133639392712968,
+      0.8125206086381186,
+      0.8081253132696747,
+      0.80876051644782,
+      0.815028489675813
+     ]
+    },
+    "KLD": {
+     "mean": 0.14127522332589745,
+     "sd_folds_ddof1": 0.004189969533049919,
+     "per_fold": [
+      0.1362583167355315,
+      0.14095406689509601,
+      0.14512750190583049,
+      0.1458264654255125,
+      0.13820976566751683
+     ]
+    }
+   },
+   "cost": {
+    "source": "GFLOPs/params: trackA_cost.json; latency/memory: quiet re-measurement (results/cost_raw/frontier_quiet_*)",
+    "GFLOPs": 2660.328472576,
+    "params_total": 314151809,
+    "params_frozen": 304368640,
+    "params_trainable": 9783169,
+    "cpu_latency_s": 1.433634749846533,
+    "cpu_latency_iqr_s": [
+     1.4292713543400168,
+     1.4365732809528708
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 0.8906030829530209,
+    "mps_latency_iqr_s": [
+     0.8878885208396241,
+     0.8973666246747598
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 2.2540130615234375,
+    "cpu_peak_rss_kind": "Track A bench 1.92 GB + 0.34 GB loading-path offset (B448: 0.88 GB in this bench vs 1.22 GB in cost_table.json)",
+    "cpu_peak_rss_GB_trackA_bench_raw": 1.9172515869140625,
+    "mps_driver_mem_GB": 2.809326171875,
+    "quiet_passes": {
+     "cpu": [
+      {
+       "file": "frontier_quiet_Lms_cpu_p5.json",
+       "median_s": 1.433634749846533,
+       "iqr_s": [
+        1.4292713543400168,
+        1.4365732809528708
+       ],
+       "runs": 30,
+       "threads": 6,
+       "latency_incl_finalizer_s": 1.4350545834749937,
+       "GFLOPs": 2660.328472576,
+       "params_total": 314151809,
+       "peak_rss_GB": 1.9172515869140625,
+       "rss_after_load_GB": 0.4992828369140625
+      }
+     ],
+     "mps": [
+      {
+       "file": "frontier_quiet_Lms_mps_p5.json",
+       "median_s": 0.8906030829530209,
+       "iqr_s": [
+        0.8878885208396241,
+        0.8973666246747598
+       ],
+       "runs": 30,
+       "threads": 6,
+       "latency_incl_finalizer_s": 0.8920794371515512,
+       "GFLOPs": null,
+       "params_total": 314151809,
+       "mps_driver_allocated_max_GB": 2.809326171875
+      }
+     ]
+    },
+    "trackA_contended": {
+     "cpu_latency_normalised_estimate_s": 1.1360372333019735,
+     "mps_latency_normalised_estimate_s": 0.9526630076605793,
+     "raw_contended_medians_s": {
+      "cpu_run1": [
+       4.277377978665754
+      ],
+      "cpu_run2": [
+       3.1655380001757294
+      ],
+      "mps_run1": [
+       1.045572978677228
+      ]
+     }
+    },
+    "note": "two backbone passes"
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (train 800; sigma on 200 of them; centre bias learned jointly, no fitted prior)",
+   "extra_unlabeled_images": 0,
+   "training_cost": {
+    "hardware": "Apple M4 Pro GPU (MPS)",
+    "train_s_per_fold": [
+     402.4308981895447,
+     403.16147470474243,
+     401.691978931427,
+     401.29652404785156,
+     402.49745321273804
+    ],
+    "train_s_per_fold_median": 402.4308981895447,
+    "train_s_total_5_folds": 2011.0783290863037,
+    "covers": "per fold: 60-epoch readout training on cached features + sigma selection + test scoring",
+    "one_off_not_included": "backbone feature cache (time not recorded in the summary)",
+    "source": "ours_L_ms_s0_summary.json folds_detail wall_s",
+    "note": ""
+   },
+   "vs_msdb_adapt": {
+    "dCC_mean": -0.015500483074945337,
+    "share_of_ours_to_msdb_gap_closed": 0.2793596501891396,
+    "GFLOPs_fewer_x": 4.607010563288954,
+    "cpu_faster_x": 5.2385565060148425,
+    "mps_faster_x": 3.322873116066329,
+    "cpu_rss_lower_x": 4.0797053865785715
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 0.6975277350852771,
+    "mps": 1.122834648948492
+   },
+   "on_pareto_frontier_cc_vs_cpu": false
+  },
+  {
+   "row": "distill_gt800_teacher800",
+   "label": "Distilled B448: GT + teacher maps on the same 800 images",
+   "family": "ours",
+   "kind": "distill",
+   "frontier_candidate": true,
+   "accuracy": {
+    "CC": {
+     "mean": 0.9004093060480365,
+     "sd_folds_ddof1": 0.003708804909504327,
+     "per_fold": [
+      0.9040058165249957,
+      0.9040851884830684,
+      0.8972834176115282,
+      0.9005950367606411,
+      0.8960770708599495
+     ]
+    },
+    "SIM": {
+     "mean": 0.8057577560146469,
+     "sd_folds_ddof1": 0.0007841513263044871,
+     "per_fold": [
+      0.806333451694276,
+      0.8059206183873232,
+      0.8044864173305389,
+      0.8064385096323027,
+      0.8056097830287939
+     ]
+    },
+    "KLD": {
+     "mean": 0.1457361596778321,
+     "sd_folds_ddof1": 0.0013936527705207939,
+     "per_fold": [
+      0.14395206533570767,
+      0.14614330316287788,
+      0.14736111485320422,
+      0.14654732631285863,
+      0.14467698872451218
+     ]
+    }
+   },
+   "cost": {
+    "source": "cost_table.json (quiet machine)",
+    "GFLOPs": 221.187117056,
+    "params_total": 90301569,
+    "params_frozen": 86580480,
+    "params_trainable": 3721089,
+    "cpu_latency_s": 0.12204727088101208,
+    "cpu_latency_iqr_s": [
+     0.12182881217449903,
+     0.12250940641388297
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 0.0740665621124208,
+    "mps_latency_iqr_s": [
+     0.073924177326262,
+     0.07415409362874925
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 1.216522216796875,
+    "cpu_peak_rss_kind": "measured (cost_bench.py)",
+    "mps_driver_mem_GB": 1.483154296875,
+    "note": "inference = ours B448",
+    "quiet_session_check_cpu_s": 0.12202395824715495,
+    "quiet_session_check_mps_s": 0.07373967673629522,
+    "trackA_contended": {
+     "cpu_latency_normalised_estimate_s": 0.12204727088101208,
+     "mps_latency_normalised_estimate_s": 0.0740665621124208,
+     "raw_contended_medians_s": {
+      "cpu_run1": [
+       0.49574041715823114,
+       0.572494188323617
+      ],
+      "cpu_run2": [
+       0.2944246258120984,
+       0.33307306258939207,
+       0.2677306046243757
+      ],
+      "mps_run1": [
+       0.08122408366762102,
+       0.08135595847852528
+      ]
+     }
+    }
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (GT + teacher map of each of the same 800 training images; sigma on 200 of them)",
+   "extra_unlabeled_images": 0,
+   "training_cost": {
+    "hardware": "Apple M4 Pro GPU (MPS)",
+    "train_s_per_fold": [
+     163.03199195861816,
+     160.26240801811218,
+     160.9329559803009,
+     162.34832286834717,
+     158.58497309684753
+    ],
+    "train_s_per_fold_median": 160.9329559803009,
+    "train_s_total_5_folds": 805.160651922226,
+    "covers": "per fold: student training (3000 steps) + sigma selection + test scoring",
+    "one_off_not_included": "adapted-MSDB teacher maps of the 800 training images; backbone feature cache",
+    "source": "distill_gt800_teacher800_summary.json folds_detail wall_s",
+    "note": ""
+   },
+   "vs_msdb_adapt": {
+    "dCC_mean": -0.018564395110651,
+    "share_of_ours_to_msdb_gap_closed": 0.13691385475650783,
+    "GFLOPs_fewer_x": 55.41082834346538,
+    "cpu_faster_x": 61.53498223962284,
+    "mps_faster_x": 39.95542599828737,
+    "cpu_rss_lower_x": 7.559014625090937
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 8.193546588804374,
+    "mps": 13.501369193863288
+   },
+   "on_pareto_frontier_cc_vs_cpu": false
+  },
+  {
+   "row": "distill_pitt_only",
+   "label": "Distilled B448: teacher maps on Pitt only (no ADD1000 GT in the student)",
+   "family": "ours",
+   "kind": "distill",
+   "frontier_candidate": true,
+   "accuracy": {
+    "CC": {
+     "mean": 0.8886556090218868,
+     "sd_folds_ddof1": 0.006055572582066491,
+     "per_fold": [
+      0.8915455875319914,
+      0.8968459615044168,
+      0.8882921552939453,
+      0.8859132896379828,
+      0.8806810511410974
+     ]
+    },
+    "SIM": {
+     "mean": 0.7896706132778071,
+     "sd_folds_ddof1": 0.004284995173164037,
+     "per_fold": [
+      0.7912729462524571,
+      0.7961837075243969,
+      0.7878749808413545,
+      0.784888577173436,
+      0.7881328545973912
+     ]
+    },
+    "KLD": {
+     "mean": 0.1646736016398565,
+     "sd_folds_ddof1": 0.005164411067554029,
+     "per_fold": [
+      0.1631492653978595,
+      0.15647674386258284,
+      0.16770378150606188,
+      0.16969327463997086,
+      0.16634494279280745
+     ]
+    }
+   },
+   "cost": {
+    "source": "cost_table.json (quiet machine)",
+    "GFLOPs": 221.187117056,
+    "params_total": 90301569,
+    "params_frozen": 86580480,
+    "params_trainable": 3721089,
+    "cpu_latency_s": 0.12204727088101208,
+    "cpu_latency_iqr_s": [
+     0.12182881217449903,
+     0.12250940641388297
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 0.0740665621124208,
+    "mps_latency_iqr_s": [
+     0.073924177326262,
+     0.07415409362874925
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 1.216522216796875,
+    "cpu_peak_rss_kind": "measured (cost_bench.py)",
+    "mps_driver_mem_GB": 1.483154296875,
+    "note": "inference = ours B448",
+    "quiet_session_check_cpu_s": 0.12202395824715495,
+    "quiet_session_check_mps_s": 0.07373967673629522,
+    "trackA_contended": {
+     "cpu_latency_normalised_estimate_s": 0.12204727088101208,
+     "mps_latency_normalised_estimate_s": 0.0740665621124208,
+     "raw_contended_medians_s": {
+      "cpu_run1": [
+       0.49574041715823114,
+       0.572494188323617
+      ],
+      "cpu_run2": [
+       0.2944246258120984,
+       0.33307306258939207,
+       0.2677306046243757
+      ],
+      "mps_run1": [
+       0.08122408366762102,
+       0.08135595847852528
+      ]
+     }
+    }
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "0 direct (800 only through the teacher); sigma on 200 Pitt images vs teacher maps",
+   "extra_unlabeled_images": 2499,
+   "training_cost": {
+    "hardware": "Apple M4 Pro GPU (MPS)",
+    "train_s_per_fold": [
+     148.60544514656067,
+     148.34452080726624,
+     147.96499705314636,
+     148.06467509269714,
+     149.95089888572693
+    ],
+    "train_s_per_fold_median": 148.34452080726624,
+    "train_s_total_5_folds": 742.9305369853973,
+    "covers": "per fold: student training (3000 steps) + sigma selection + test scoring",
+    "one_off_not_included": "adapted-MSDB teacher (head training per fold) and its maps for the 2,499 Pitt images (MSDB feature pass 3.6 s/img on MPS); backbone features of ADD1000 and Pitt",
+    "source": "distill_pitt_only_summary.json folds_detail wall_s",
+    "note": ""
+   },
+   "vs_msdb_adapt": {
+    "dCC_mean": -0.0303180921368007,
+    "share_of_ours_to_msdb_gap_closed": -0.4095328782608927,
+    "GFLOPs_fewer_x": 55.41082834346538,
+    "cpu_faster_x": 61.53498223962284,
+    "mps_faster_x": 39.95542599828737,
+    "cpu_rss_lower_x": 7.559014625090937
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 8.193546588804374,
+    "mps": 13.501369193863288
+   },
+   "on_pareto_frontier_cc_vs_cpu": false
+  },
+  {
+   "row": "distill_pitt",
+   "label": "Distilled B448: 800 GT + 2,499 Pitt teacher maps",
+   "family": "ours",
+   "kind": "distill",
+   "frontier_candidate": true,
+   "accuracy": {
+    "CC": {
+     "mean": 0.9034090103483438,
+     "sd_folds_ddof1": 0.0029778876389870874,
+     "per_fold": [
+      0.9041771055379171,
+      0.9081106185155673,
+      0.9015694922449152,
+      0.9027778138834183,
+      0.9004100215599012
+     ]
+    },
+    "SIM": {
+     "mean": 0.8100887708531133,
+     "sd_folds_ddof1": 0.0010485209645648037,
+     "per_fold": [
+      0.8087396411567401,
+      0.8113685729929736,
+      0.8107950015725731,
+      0.8094253875761507,
+      0.8101152509671286
+     ]
+    },
+    "KLD": {
+     "mean": 0.14064389749976264,
+     "sd_folds_ddof1": 0.0018496104610314103,
+     "per_fold": [
+      0.14049832565657014,
+      0.13910879393676573,
+      0.14007187025205523,
+      0.14382475016815796,
+      0.13971574748526408
+     ]
+    }
+   },
+   "cost": {
+    "source": "cost_table.json (quiet machine)",
+    "GFLOPs": 221.187117056,
+    "params_total": 90301569,
+    "params_frozen": 86580480,
+    "params_trainable": 3721089,
+    "cpu_latency_s": 0.12204727088101208,
+    "cpu_latency_iqr_s": [
+     0.12182881217449903,
+     0.12250940641388297
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 0.0740665621124208,
+    "mps_latency_iqr_s": [
+     0.073924177326262,
+     0.07415409362874925
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 1.216522216796875,
+    "cpu_peak_rss_kind": "measured (cost_bench.py)",
+    "mps_driver_mem_GB": 1.483154296875,
+    "note": "inference = ours B448",
+    "quiet_session_check_cpu_s": 0.12202395824715495,
+    "quiet_session_check_mps_s": 0.07373967673629522,
+    "trackA_contended": {
+     "cpu_latency_normalised_estimate_s": 0.12204727088101208,
+     "mps_latency_normalised_estimate_s": 0.0740665621124208,
+     "raw_contended_medians_s": {
+      "cpu_run1": [
+       0.49574041715823114,
+       0.572494188323617
+      ],
+      "cpu_run2": [
+       0.2944246258120984,
+       0.33307306258939207,
+       0.2677306046243757
+      ],
+      "mps_run1": [
+       0.08122408366762102,
+       0.08135595847852528
+      ]
+     }
+    }
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (student GT 800; teacher = adapted MSDB trained on the same 800; sigma on 200 of them) + 2,499 unlabeled Pitt ads with teacher maps",
+   "extra_unlabeled_images": 2499,
+   "training_cost": {
+    "hardware": "Apple M4 Pro GPU (MPS)",
+    "train_s_per_fold": [
+     296.70455026626587,
+     292.93965101242065,
+     293.808974981308,
+     282.48295307159424,
+     281.8304660320282
+    ],
+    "train_s_per_fold_median": 292.93965101242065,
+    "train_s_total_5_folds": 1447.766595363617,
+    "covers": "per fold: student training (3000 steps) + sigma selection + test scoring",
+    "one_off_not_included": "adapted-MSDB teacher (head training per fold) and its maps for the 2,499 Pitt images (MSDB feature pass 3.6 s/img on MPS); backbone features of ADD1000 and Pitt",
+    "source": "distill_pitt_summary.json folds_detail wall_s",
+    "note": ""
+   },
+   "vs_msdb_adapt": {
+    "dCC_mean": -0.015564690810343729,
+    "share_of_ours_to_msdb_gap_closed": 0.27637453774623444,
+    "GFLOPs_fewer_x": 55.41082834346538,
+    "cpu_faster_x": 61.53498223962284,
+    "mps_faster_x": 39.95542599828737,
+    "cpu_rss_lower_x": 7.559014625090937
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 8.193546588804374,
+    "mps": 13.501369193863288
+   },
+   "on_pareto_frontier_cc_vs_cpu": true
+  },
+  {
+   "row": "distill_pitt_L",
+   "label": "Distilled L448: 800 GT + 2,499 Pitt teacher maps",
+   "family": "ours",
+   "kind": "distill",
+   "frontier_candidate": true,
+   "accuracy": {
+    "CC": {
+     "mean": 0.9067690216610883,
+     "sd_folds_ddof1": 0.0033367250775647992,
+     "per_fold": [
+      0.9090328304808526,
+      0.9104604604300548,
+      0.9040721332838666,
+      0.9077090566357762,
+      0.9025706274748907
+     ]
+    },
+    "SIM": {
+     "mean": 0.8143047838982611,
+     "sd_folds_ddof1": 0.0014882035693320579,
+     "per_fold": [
+      0.8147070354988992,
+      0.8166016492012854,
+      0.8130915893288215,
+      0.8142121223657978,
+      0.8129115230965008
+     ]
+    },
+    "KLD": {
+     "mean": 0.1352229992855082,
+     "sd_folds_ddof1": 0.0019247953256062028,
+     "per_fold": [
+      0.13217104816943825,
+      0.1347667038612953,
+      0.1371012219334632,
+      0.13650733403784757,
+      0.1355686884254968
+     ]
+    }
+   },
+   "cost": {
+    "source": "GFLOPs/params: trackA_cost.json; latency/memory: quiet re-measurement (results/cost_raw/frontier_quiet_*)",
+    "GFLOPs": 733.42500864,
+    "params_total": 309302145,
+    "params_frozen": 304368640,
+    "params_trainable": 4933505,
+    "cpu_latency_s": 0.38847385393455625,
+    "cpu_latency_iqr_s": [
+     0.38742497912608087,
+     0.3894288433948532
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 0.2101605418138206,
+    "mps_latency_iqr_s": [
+     0.20995374990161508,
+     0.21070870838593692
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 2.062103271484375,
+    "cpu_peak_rss_kind": "Track A bench 1.73 GB + 0.34 GB loading-path offset (B448: 0.88 GB in this bench vs 1.22 GB in cost_table.json)",
+    "cpu_peak_rss_GB_trackA_bench_raw": 1.725341796875,
+    "mps_driver_mem_GB": 2.172607421875,
+    "quiet_passes": {
+     "cpu": [
+      {
+       "file": "frontier_quiet_L448_cpu_p2.json",
+       "median_s": 0.38847385393455625,
+       "iqr_s": [
+        0.38742497912608087,
+        0.3894288433948532
+       ],
+       "runs": 30,
+       "threads": 6,
+       "latency_incl_finalizer_s": 0.3898919578641653,
+       "GFLOPs": 733.42500864,
+       "params_total": 309302145,
+       "peak_rss_GB": 1.725341796875,
+       "rss_after_load_GB": 0.4780120849609375
+      }
+     ],
+     "mps": [
+      {
+       "file": "frontier_quiet_L448_mps_p2.json",
+       "median_s": 0.2101605418138206,
+       "iqr_s": [
+        0.20995374990161508,
+        0.21070870838593692
+       ],
+       "runs": 30,
+       "threads": 6,
+       "latency_incl_finalizer_s": 0.2115817496087402,
+       "GFLOPs": null,
+       "params_total": 309302145,
+       "mps_driver_allocated_max_GB": 2.172607421875
+      }
+     ]
+    },
+    "trackA_contended": {
+     "cpu_latency_normalised_estimate_s": 0.3557785250854699,
+     "mps_latency_normalised_estimate_s": 0.23777918704598458,
+     "raw_contended_medians_s": {
+      "cpu_run1": [
+       1.4094956037588418
+      ],
+      "cpu_run2": [
+       0.9522992915008217
+      ],
+      "mps_run1": [
+       0.26096897944808006
+      ]
+     }
+    },
+    "note": "inference = ours L448"
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (student GT 800; teacher = adapted MSDB trained on the same 800; sigma on 200 of them) + 2,499 unlabeled Pitt ads with teacher maps",
+   "extra_unlabeled_images": 2499,
+   "training_cost": {
+    "hardware": "Apple M4 Pro GPU (MPS)",
+    "train_s_per_fold": [
+     364.0209770202637,
+     362.3502390384674,
+     362.79078912734985,
+     362.84574007987976,
+     362.4128439426422
+    ],
+    "train_s_per_fold_median": 362.79078912734985,
+    "train_s_total_5_folds": 1814.420589208603,
+    "covers": "per fold: student training (3000 steps) + sigma selection + test scoring",
+    "one_off_not_included": "adapted-MSDB teacher (head training per fold) and its maps for the 2,499 Pitt images (MSDB feature pass 3.6 s/img on MPS); backbone features of ADD1000 and Pitt",
+    "source": "distill_pitt_L_summary.json folds_detail wall_s",
+    "note": ""
+   },
+   "vs_msdb_adapt": {
+    "dCC_mean": -0.01220467949759918,
+    "share_of_ours_to_msdb_gap_closed": 0.43258642585819373,
+    "GFLOPs_fewer_x": 16.710858275344016,
+    "cpu_faster_x": 19.332515097200616,
+    "mps_faster_x": 14.081430395492871,
+    "cpu_rss_lower_x": 4.459383463320063
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 2.574175816137329,
+    "mps": 4.75826713887087
+   },
+   "on_pareto_frontier_cc_vs_cpu": true
+  },
+  {
+   "row": "msdb_adapt_s0",
+   "label": "DeepGaze MSDB adapted, head 26,463 params (KL+CC), seed 0",
+   "family": "msdb",
+   "kind": "baseline",
+   "frontier_candidate": true,
+   "accuracy": {
+    "CC": {
+     "mean": 0.9189737011586875,
+     "sd_folds_ddof1": 0.0047738065036019425,
+     "per_fold": [
+      0.92220251559267,
+      0.9221207611438901,
+      0.9186125236015894,
+      0.9210951414022055,
+      0.9108375640530825
+     ]
+    },
+    "SIM": {
+     "mean": 0.8249847864612165,
+     "sd_folds_ddof1": 0.0027705913474040007,
+     "per_fold": [
+      0.8282127762992405,
+      0.8273163739694311,
+      0.8237476272209555,
+      0.824233590675397,
+      0.8214135641410585
+     ]
+    },
+    "KLD": {
+     "mean": 0.1196810885917671,
+     "sd_folds_ddof1": 0.0031302278051802564,
+     "per_fold": [
+      0.11582155842989147,
+      0.11708929153658733,
+      0.12103597757568847,
+      0.12105513695567462,
+      0.12340347846099356
+     ]
+    }
+   },
+   "cost": {
+    "source": "cost_table.json (quiet machine)",
+    "GFLOPs": 12256.161374976,
+    "params_total": 451641181,
+    "params_frozen": 451614706,
+    "params_trainable": 26463,
+    "cpu_latency_s": 7.510176646057516,
+    "cpu_latency_iqr_s": [
+     7.489343958790414,
+     7.525892385165207
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 2.959361041430384,
+    "mps_latency_iqr_s": [
+     2.9290471458807588,
+     2.979496125248261
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 9.195709228515625,
+    "cpu_peak_rss_kind": "measured (cost_bench.py)",
+    "mps_driver_mem_GB": 7.527313232421875,
+    "note": ""
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (train 800; centre prior from the 800; sigma on 200 of them)",
+   "extra_unlabeled_images": 0,
+   "training_cost": {
+    "hardware": "Apple M4 Pro GPU (MPS)",
+    "train_s_per_fold": [
+     458.18543887138367,
+     408.2006950378418,
+     393.18531918525696,
+     396.9706382751465,
+     391.1243431568146
+    ],
+    "train_s_per_fold_median": 396.9706382751465,
+    "train_s_total_5_folds": 2047.6664345264435,
+    "covers": "per fold: head training from cached frozen features (60 epochs); excludes the one-off feature cache",
+    "one_off_not_included": "MSDB 10-scale feature cache, 3,561 s for 1000 images (MPS)",
+    "source": "cost_table.json training_adaptation",
+    "note": "row_wall_clock_s_total covers all seeds/folds of the row and evaluation"
+   },
+   "vs_msdb_adapt": {
+    "dCC_mean": 0.0,
+    "share_of_ours_to_msdb_gap_closed": 1.0,
+    "GFLOPs_fewer_x": 1.0,
+    "cpu_faster_x": 1.0,
+    "mps_faster_x": 1.0,
+    "cpu_rss_lower_x": 1.0
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 0.1331526603338887,
+    "mps": 0.3379107807395673
+   },
+   "on_pareto_frontier_cc_vs_cpu": true
+  },
+  {
+   "row": "msdb_adapt_seedavg",
+   "label": "DeepGaze MSDB adapted, head, per-image mean of seeds 0-2",
+   "family": "msdb",
+   "kind": "baseline",
+   "frontier_candidate": false,
+   "accuracy": {
+    "CC": {
+     "mean": 0.9189775194638603,
+     "sd_folds_ddof1": 0.004784516636199684,
+     "per_fold": [
+      0.922141236264855,
+      0.9220296496264466,
+      0.9187242167270441,
+      0.9212116891408482,
+      0.9107808055601078
+     ]
+    },
+    "SIM": {
+     "mean": 0.8249106280594317,
+     "sd_folds_ddof1": 0.0028428041785645963,
+     "per_fold": [
+      0.8284995227071477,
+      0.8268046286417325,
+      0.8238787130712669,
+      0.8242485122207907,
+      0.8211217636562208
+     ]
+    },
+    "KLD": {
+     "mean": 0.1197005484108887,
+     "sd_folds_ddof1": 0.003177550472057546,
+     "per_fold": [
+      0.1155545500567958,
+      0.11747006294730479,
+      0.12092927191868343,
+      0.1209584763075988,
+      0.1235903808240607
+     ]
+    }
+   },
+   "cost": {
+    "source": "cost_table.json (quiet machine)",
+    "GFLOPs": 12256.161374976,
+    "params_total": 451641181,
+    "params_frozen": 451614706,
+    "params_trainable": 26463,
+    "cpu_latency_s": 7.510176646057516,
+    "cpu_latency_iqr_s": [
+     7.489343958790414,
+     7.525892385165207
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 2.959361041430384,
+    "mps_latency_iqr_s": [
+     2.9290471458807588,
+     2.979496125248261
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 9.195709228515625,
+    "cpu_peak_rss_kind": "measured (cost_bench.py)",
+    "mps_driver_mem_GB": 7.527313232421875,
+    "note": "seed average"
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (train 800; centre prior from the 800; sigma on 200 of them)",
+   "extra_unlabeled_images": 0,
+   "training_cost": null,
+   "vs_msdb_adapt": {
+    "dCC_mean": 3.818305172820224e-06,
+    "share_of_ours_to_msdb_gap_closed": 1.0001775186464914,
+    "GFLOPs_fewer_x": 1.0,
+    "cpu_faster_x": 1.0,
+    "mps_faster_x": 1.0,
+    "cpu_rss_lower_x": 1.0
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 0.1331526603338887,
+    "mps": 0.3379107807395673
+   },
+   "on_pareto_frontier_cc_vs_cpu": false
+  },
+  {
+   "row": "msdb_adapt_kl",
+   "label": "DeepGaze MSDB adapted, head, KL only",
+   "family": "msdb",
+   "kind": "baseline",
+   "frontier_candidate": true,
+   "accuracy": {
+    "CC": {
+     "mean": 0.9177914076018372,
+     "sd_folds_ddof1": 0.004834010301921874,
+     "per_fold": [
+      0.9203190116221333,
+      0.9209062893445713,
+      0.9173929904806815,
+      0.9208027775748829,
+      0.9095359689869167
+     ]
+    },
+    "SIM": {
+     "mean": 0.825094971250057,
+     "sd_folds_ddof1": 0.002685753952665593,
+     "per_fold": [
+      0.8279384869783155,
+      0.826921660891146,
+      0.824236787261002,
+      0.8253601914520945,
+      0.821017729667727
+     ]
+    },
+    "KLD": {
+     "mean": 0.1186141156359291,
+     "sd_folds_ddof1": 0.002892616553811212,
+     "per_fold": [
+      0.11527721249361697,
+      0.11618168341375076,
+      0.11978858042934686,
+      0.11941463948797411,
+      0.12240846235495674
+     ]
+    }
+   },
+   "cost": {
+    "source": "cost_table.json (quiet machine)",
+    "GFLOPs": 12256.161374976,
+    "params_total": 451641181,
+    "params_frozen": 451614706,
+    "params_trainable": 26463,
+    "cpu_latency_s": 7.510176646057516,
+    "cpu_latency_iqr_s": [
+     7.489343958790414,
+     7.525892385165207
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 2.959361041430384,
+    "mps_latency_iqr_s": [
+     2.9290471458807588,
+     2.979496125248261
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 9.195709228515625,
+    "cpu_peak_rss_kind": "measured (cost_bench.py)",
+    "mps_driver_mem_GB": 7.527313232421875,
+    "note": ""
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (train 800; centre prior from the 800; sigma on 200 of them)",
+   "extra_unlabeled_images": 0,
+   "training_cost": {
+    "hardware": "Apple M4 Pro CPU",
+    "train_s_per_fold": [
+     1898.9079229831696,
+     1733.6146759986877,
+     2345.743149995804,
+     2239.572766304016,
+     3039.6026408672333
+    ],
+    "train_s_per_fold_median": 2239.572766304016,
+    "train_s_total_5_folds": 11257.44115614891,
+    "covers": "per fold: head training from cached frozen features (60 epochs); excludes the one-off feature cache",
+    "one_off_not_included": "MSDB 10-scale feature cache, 3,561 s for 1000 images (MPS)",
+    "source": "cost_table.json training_adaptation",
+    "note": ""
+   },
+   "vs_msdb_adapt": {
+    "dCC_mean": -0.001182293556850289,
+    "share_of_ours_to_msdb_gap_closed": 0.9450334264894694,
+    "GFLOPs_fewer_x": 1.0,
+    "cpu_faster_x": 1.0,
+    "mps_faster_x": 1.0,
+    "cpu_rss_lower_x": 1.0
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 0.1331526603338887,
+    "mps": 0.3379107807395673
+   },
+   "on_pareto_frontier_cc_vs_cpu": false
+  },
+  {
+   "row": "msdb_adapt_dsp",
+   "label": "DeepGaze MSDB adapted, 13 per-dataset params",
+   "family": "msdb",
+   "kind": "baseline",
+   "frontier_candidate": true,
+   "accuracy": {
+    "CC": {
+     "mean": 0.8620802387510083,
+     "sd_folds_ddof1": 0.003681501055648023,
+     "per_fold": [
+      0.8613196524239148,
+      0.8671703652920784,
+      0.8578508752772993,
+      0.8642475122416781,
+      0.8598127885200707
+     ]
+    },
+    "SIM": {
+     "mean": 0.7726089290409891,
+     "sd_folds_ddof1": 0.0021144914049087593,
+     "per_fold": [
+      0.7711666490737104,
+      0.7743192926263407,
+      0.7696327609766243,
+      0.7735420535309904,
+      0.7743838889972801
+     ]
+    },
+    "KLD": {
+     "mean": 0.18813494535209926,
+     "sd_folds_ddof1": 0.0035697373821931525,
+     "per_fold": [
+      0.19032305547705505,
+      0.18648511057940362,
+      0.1930175392259132,
+      0.18699449237836185,
+      0.18385452909976266
+     ]
+    }
+   },
+   "cost": {
+    "source": "cost_table.json (quiet machine)",
+    "GFLOPs": 12256.161374976,
+    "params_total": 451641181,
+    "params_frozen": 451614706,
+    "params_trainable": 13,
+    "cpu_latency_s": 7.510176646057516,
+    "cpu_latency_iqr_s": [
+     7.489343958790414,
+     7.525892385165207
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 2.959361041430384,
+    "mps_latency_iqr_s": [
+     2.9290471458807588,
+     2.979496125248261
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 9.195709228515625,
+    "cpu_peak_rss_kind": "measured (cost_bench.py)",
+    "mps_driver_mem_GB": 7.527313232421875,
+    "note": ""
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (train 800; centre prior from the 800; sigma on 200 of them)",
+   "extra_unlabeled_images": 0,
+   "training_cost": {
+    "hardware": "Apple M4 Pro CPU",
+    "train_s_per_fold": [
+     390.86936116218567,
+     494.25657892227173,
+     597.8473200798035,
+     666.7569561004639,
+     675.268128156662
+    ],
+    "train_s_per_fold_median": 597.8473200798035,
+    "train_s_total_5_folds": 2824.9983444213867,
+    "covers": "per fold: head training from cached frozen features (60 epochs); excludes the one-off feature cache",
+    "one_off_not_included": "MSDB 10-scale feature cache, 3,561 s for 1000 images (MPS)",
+    "source": "cost_table.json training_adaptation",
+    "note": ""
+   },
+   "vs_msdb_adapt": {
+    "dCC_mean": -0.05689346240767923,
+    "share_of_ours_to_msdb_gap_closed": -1.6450610895922406,
+    "GFLOPs_fewer_x": 1.0,
+    "cpu_faster_x": 1.0,
+    "mps_faster_x": 1.0,
+    "cpu_rss_lower_x": 1.0
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 0.1331526603338887,
+    "mps": 0.3379107807395673
+   },
+   "on_pareto_frontier_cc_vs_cpu": false
+  },
+  {
+   "row": "iie_ft_kl_sigma",
+   "label": "DeepGaze IIE adapted, published recipe (KL, 20 ep) + sigma [best IIE CC]",
+   "family": "iie",
+   "kind": "baseline",
+   "frontier_candidate": true,
+   "accuracy": {
+    "CC": {
+     "mean": 0.8550809636321309,
+     "sd_folds_ddof1": 0.004005198351328244,
+     "per_fold": [
+      0.8554223480142403,
+      0.8564386305321952,
+      0.8481309682608758,
+      0.8579493451785994,
+      0.8574635261747439
+     ]
+    },
+    "SIM": {
+     "mean": 0.7768574661323833,
+     "sd_folds_ddof1": 0.0032366190646354607,
+     "per_fold": [
+      0.7763844165643793,
+      0.7769446970450153,
+      0.7720204708703485,
+      0.7779463733407644,
+      0.7809913728414091
+     ]
+    },
+    "KLD": {
+     "mean": 0.1927117970965146,
+     "sd_folds_ddof1": 0.004409996448758885,
+     "per_fold": [
+      0.19254568392342486,
+      0.19376775167610508,
+      0.1992933669092488,
+      0.19062254024839603,
+      0.18732964272539818
+     ]
+    }
+   },
+   "cost": {
+    "source": "cost_table.json (quiet machine)",
+    "GFLOPs": 23.816175744,
+    "params_total": 104048808,
+    "params_frozen": 100989648,
+    "params_trainable": 3059160,
+    "cpu_latency_s": 0.7218687920831144,
+    "cpu_latency_iqr_s": [
+     0.7161798538872972,
+     0.7245840728282928
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 0.3909771875478327,
+    "mps_latency_iqr_s": [
+     0.38913857319857925,
+     0.3926779687171802
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 1.2235107421875,
+    "cpu_peak_rss_kind": "measured (cost_bench.py)",
+    "mps_driver_mem_GB": 1.4872283935546875,
+    "note": ""
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (train 800; centre prior from the 800; sigma on 200 of them)",
+   "extra_unlabeled_images": 0,
+   "training_cost": {
+    "hardware": "Apple M4 Pro CPU",
+    "train_s_per_fold": [
+     1291.856461763382,
+     1249.5525619983673,
+     1740.1044340133667,
+     1308.7809410095215,
+     1305.221792936325
+    ],
+    "train_s_per_fold_median": 1305.221792936325,
+    "train_s_total_5_folds": 6895.5161917209625,
+    "covers": "per fold: readout training only (evaluation excluded)",
+    "one_off_not_included": "IIE 4-backbone feature cache, 2,300 s for 1000 images (CPU)",
+    "source": "iie_ft_kl_sigma_summary.json t_train_s_per_fold",
+    "note": "measured under heavy CPU contention"
+   },
+   "vs_msdb_adapt": {
+    "dCC_mean": -0.06389273752655655,
+    "share_of_ours_to_msdb_gap_closed": -1.970467726643647,
+    "GFLOPs_fewer_x": 514.6150039669442,
+    "cpu_faster_x": 10.40379737761653,
+    "mps_faster_x": 7.569139928575325,
+    "cpu_rss_lower_x": 7.515838571286042
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 1.3852932984043758,
+    "mps": 2.5576939827919207
+   },
+   "on_pareto_frontier_cc_vs_cpu": false
+  },
+  {
+   "row": "iie_ft_klcc_e20",
+   "label": "DeepGaze IIE adapted, KL+CC 20 ep + sigma [selected recipe]",
+   "family": "iie",
+   "kind": "baseline",
+   "frontier_candidate": true,
+   "accuracy": {
+    "CC": {
+     "mean": 0.854924387077855,
+     "sd_folds_ddof1": 0.004278620502974999,
+     "per_fold": [
+      0.8560385955849137,
+      0.8547862389291795,
+      0.8476903416980734,
+      0.8578902426752458,
+      0.8582165165018623
+     ]
+    },
+    "SIM": {
+     "mean": 0.7760847569654459,
+     "sd_folds_ddof1": 0.0034362481673654017,
+     "per_fold": [
+      0.7759467743714723,
+      0.7750071233667216,
+      0.7714370635442801,
+      0.7771110747220906,
+      0.7809217488226643
+     ]
+    },
+    "KLD": {
+     "mean": 0.1932318971911005,
+     "sd_folds_ddof1": 0.004857773443449262,
+     "per_fold": [
+      0.19294381399771346,
+      0.1953021332546458,
+      0.19972614768559216,
+      0.19170121024641434,
+      0.18648618077113663
+     ]
+    }
+   },
+   "cost": {
+    "source": "cost_table.json (quiet machine)",
+    "GFLOPs": 23.816175744,
+    "params_total": 104048808,
+    "params_frozen": 100989648,
+    "params_trainable": 3059160,
+    "cpu_latency_s": 0.7218687920831144,
+    "cpu_latency_iqr_s": [
+     0.7161798538872972,
+     0.7245840728282928
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 0.3909771875478327,
+    "mps_latency_iqr_s": [
+     0.38913857319857925,
+     0.3926779687171802
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 1.2235107421875,
+    "cpu_peak_rss_kind": "measured (cost_bench.py)",
+    "mps_driver_mem_GB": 1.4872283935546875,
+    "note": ""
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (train 800; centre prior from the 800; sigma on 200 of them)",
+   "extra_unlabeled_images": 0,
+   "training_cost": {
+    "hardware": "Apple M4 Pro, CPU or MPS by fold (contended)",
+    "train_s_per_fold": [
+     1237.7193620204926,
+     537.8859980106354,
+     514.962898015976,
+     1228.843605041504,
+     1220.6275660991669
+    ],
+    "train_s_per_fold_median": 1220.6275660991669,
+    "train_s_total_5_folds": 4740.039429187775,
+    "covers": "per fold: readout training only (evaluation excluded)",
+    "one_off_not_included": "IIE 4-backbone feature cache, 2,300 s for 1000 images (CPU)",
+    "source": "iie_ft_klcc_e20_summary.json t_train_s_per_fold",
+    "note": "measured under heavy CPU contention; devices by fold ['cpu', 'mps', 'mps', 'cpu', 'cpu']"
+   },
+   "vs_msdb_adapt": {
+    "dCC_mean": -0.06404931408083248,
+    "share_of_ours_to_msdb_gap_closed": -1.9777472018896776,
+    "GFLOPs_fewer_x": 514.6150039669442,
+    "cpu_faster_x": 10.40379737761653,
+    "mps_faster_x": 7.569139928575325,
+    "cpu_rss_lower_x": 7.515838571286042
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 1.3852932984043758,
+    "mps": 2.5576939827919207
+   },
+   "on_pareto_frontier_cc_vs_cpu": false
+  },
+  {
+   "row": "sum_ft_head",
+   "label": "SUM adapted, output head only (36,937 params), SUM loss + sigma",
+   "family": "sum",
+   "kind": "baseline",
+   "frontier_candidate": true,
+   "accuracy": {
+    "CC": {
+     "mean": 0.8649428132143111,
+     "sd_folds_ddof1": 0.005651117416927659,
+     "per_fold": [
+      0.8684164057898504,
+      0.8728181276445725,
+      0.8587352734514525,
+      0.8633477604175949,
+      0.8613964987680859
+     ]
+    },
+    "SIM": {
+     "mean": 0.7732070320426462,
+     "sd_folds_ddof1": 0.002499645167206379,
+     "per_fold": [
+      0.773596869842048,
+      0.776080307345953,
+      0.7700406784331497,
+      0.771348301088514,
+      0.7749690035035663
+     ]
+    },
+    "KLD": {
+     "mean": 0.19964484768231264,
+     "sd_folds_ddof1": 0.004306676956958001,
+     "per_fold": [
+      0.20089921068699226,
+      0.1935569132733498,
+      0.20547601690247944,
+      0.1984203220504309,
+      0.19987177549831064
+     ]
+    }
+   },
+   "cost": {
+    "source": "cost_table.json (quiet machine)",
+    "GFLOPs": 26.420397568,
+    "params_total": 57501196,
+    "params_frozen": 57464259,
+    "params_trainable": 36937,
+    "cpu_latency_s": 1.2849033961538225,
+    "cpu_latency_iqr_s": [
+     1.2815493958769366,
+     1.2912159591214731
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 0.45756714534945786,
+    "mps_latency_iqr_s": [
+     0.45663650054484606,
+     0.46050126082263887
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 2.2899932861328125,
+    "cpu_peak_rss_kind": "measured (cost_bench.py)",
+    "mps_driver_mem_GB": 2.2995758056640625,
+    "note": "pure-PyTorch selective scan; overstates latency vs the CUDA kernel"
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (train 800; token chosen on the 800; sigma on 200 of them)",
+   "extra_unlabeled_images": 0,
+   "training_cost": {
+    "hardware": "Apple M4 Pro CPU",
+    "train_s_per_fold": [
+     44.3105902671814,
+     39.05186986923218,
+     41.315746545791626,
+     42.4032723903656,
+     37.397783041000366
+    ],
+    "train_s_per_fold_median": 41.315746545791626,
+    "train_s_total_5_folds": 204.47926211357117,
+    "covers": "per fold: output-head training on cached decoder features (8 epochs)",
+    "one_off_not_included": "SUM decoder-feature cache, 1,988 s for 1000 images (CPU, 6 threads)",
+    "source": "cost_table.json training_adaptation",
+    "note": "head-only stand-in for SUM fine-tuning; full fine-tuning was not run"
+   },
+   "vs_msdb_adapt": {
+    "dCC_mean": -0.05403088794437638,
+    "share_of_ours_to_msdb_gap_closed": -1.511975775242999,
+    "GFLOPs_fewer_x": 463.89011911843767,
+    "cpu_faster_x": 5.844934855443742,
+    "mps_faster_x": 6.467599502080138,
+    "cpu_rss_lower_x": 4.015605322601065
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 0.7782686254806075,
+    "mps": 2.1854715972587364
+   },
+   "on_pareto_frontier_cc_vs_cpu": false
+  },
+  {
+   "row": "sum_ft_head_klcc",
+   "label": "SUM adapted, output head only, KL+CC + sigma",
+   "family": "sum",
+   "kind": "baseline",
+   "frontier_candidate": true,
+   "accuracy": {
+    "CC": {
+     "mean": 0.8612414769029488,
+     "sd_folds_ddof1": 0.005470419158246739,
+     "per_fold": [
+      0.8645117574481327,
+      0.8689066516492961,
+      0.8550902789583084,
+      0.8595459503385363,
+      0.8581527461204711
+     ]
+    },
+    "SIM": {
+     "mean": 0.7652298184530085,
+     "sd_folds_ddof1": 0.0022730567913563336,
+     "per_fold": [
+      0.7654345583688308,
+      0.766479890412603,
+      0.7624302976716081,
+      0.7636304871065093,
+      0.7681738587054917
+     ]
+    },
+    "KLD": {
+     "mean": 0.20765923755632185,
+     "sd_folds_ddof1": 0.0035251426748156194,
+     "per_fold": [
+      0.2093088726606146,
+      0.20409924186251607,
+      0.21288415908157737,
+      0.2068733628924653,
+      0.20513055128443597
+     ]
+    }
+   },
+   "cost": {
+    "source": "cost_table.json (quiet machine)",
+    "GFLOPs": 26.420397568,
+    "params_total": 57501196,
+    "params_frozen": 57464259,
+    "params_trainable": 36937,
+    "cpu_latency_s": 1.2849033961538225,
+    "cpu_latency_iqr_s": [
+     1.2815493958769366,
+     1.2912159591214731
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 0.45756714534945786,
+    "mps_latency_iqr_s": [
+     0.45663650054484606,
+     0.46050126082263887
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 2.2899932861328125,
+    "cpu_peak_rss_kind": "measured (cost_bench.py)",
+    "mps_driver_mem_GB": 2.2995758056640625,
+    "note": "pure-PyTorch selective scan; overstates latency vs the CUDA kernel"
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (train 800; token chosen on the 800; sigma on 200 of them)",
+   "extra_unlabeled_images": 0,
+   "training_cost": {
+    "hardware": "Apple M4 Pro CPU",
+    "train_s_per_fold": [
+     32.974714517593384,
+     33.19201159477234,
+     33.64581871032715,
+     32.601868629455566,
+     32.63165211677551
+    ],
+    "train_s_per_fold_median": 32.974714517593384,
+    "train_s_total_5_folds": 165.04606556892395,
+    "covers": "per fold: output-head training on cached decoder features (8 epochs)",
+    "one_off_not_included": "SUM decoder-feature cache, 1,988 s for 1000 images (CPU, 6 threads)",
+    "source": "cost_table.json training_adaptation",
+    "note": "head-only stand-in for SUM fine-tuning; full fine-tuning was not run"
+   },
+   "vs_msdb_adapt": {
+    "dCC_mean": -0.05773222425573865,
+    "share_of_ours_to_msdb_gap_closed": -1.6840563666214166,
+    "GFLOPs_fewer_x": 463.89011911843767,
+    "cpu_faster_x": 5.844934855443742,
+    "mps_faster_x": 6.467599502080138,
+    "cpu_rss_lower_x": 4.015605322601065
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 0.7782686254806075,
+    "mps": 2.1854715972587364
+   },
+   "on_pareto_frontier_cc_vs_cpu": false
+  },
+  {
+   "row": "sum_ft",
+   "label": "SUM adapted, full fine-tune (all 57,501,196 params), SUM loss + sigma",
+   "family": "sum",
+   "kind": "baseline",
+   "frontier_candidate": true,
+   "accuracy": {
+    "CC": {
+     "mean": 0.9170690101622017,
+     "sd_folds_ddof1": 0.003673955117858736,
+     "per_fold": [
+      0.9202597817557958,
+      0.9204701502790575,
+      0.9145868638655418,
+      0.9179837125491342,
+      0.9120445423614784
+     ]
+    },
+    "SIM": {
+     "mean": 0.8284795185286521,
+     "sd_folds_ddof1": 0.0027253364738336707,
+     "per_fold": [
+      0.8318287673603838,
+      0.8308770203789184,
+      0.8256535389166174,
+      0.8275154897878937,
+      0.8265227761994473
+     ]
+    },
+    "KLD": {
+     "mean": 0.11737529557143742,
+     "sd_folds_ddof1": 0.002753106506409829,
+     "per_fold": [
+      0.11562944214321508,
+      0.11335627293421706,
+      0.11924234276521085,
+      0.11945731600081184,
+      0.11919110401373231
+     ]
+    }
+   },
+   "cost": {
+    "source": "cost_table.json (quiet machine)",
+    "GFLOPs": 26.420397568,
+    "params_total": 57501196,
+    "params_frozen": 0,
+    "params_trainable": 57501196,
+    "cpu_latency_s": 1.2849033961538225,
+    "cpu_latency_iqr_s": [
+     1.2815493958769366,
+     1.2912159591214731
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 0.45756714534945786,
+    "mps_latency_iqr_s": [
+     0.45663650054484606,
+     0.46050126082263887
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 2.2899932861328125,
+    "cpu_peak_rss_kind": "measured (cost_bench.py)",
+    "mps_driver_mem_GB": 2.2995758056640625,
+    "note": "pure-PyTorch selective scan; overstates latency vs the CUDA kernel"
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (train 800; token 2 chosen on the 800; sigma on 200 of them)",
+   "extra_unlabeled_images": 0,
+   "training_cost": {
+    "hardware": "NVIDIA A10G 24 GB (cloud, CUDA)",
+    "train_s_per_fold": [
+     5141.597435712814,
+     5143.695602416992,
+     5141.9344301223755,
+     5139.652138948441,
+     5137.432745695114
+    ],
+    "train_s_per_fold_median": 5141.597435712814,
+    "train_s_total_5_folds": 25704.312352895737,
+    "covers": "per fold: 12-epoch end-to-end fine-tune of all 57.5M parameters from images (chunked pure-PyTorch selective scan on the GPU); excludes model loading, sigma selection and test scoring",
+    "one_off_not_included": "none (no feature cache)",
+    "source": "results/sum_ft_summary.json fold_meta train_seconds (identical to runs/sum_ft/ckpt/sum_ft/sum_ft_fold_meta.json)",
+    "note": ""
+   },
+   "vs_msdb_adapt": {
+    "dCC_mean": -0.001904690996485825,
+    "share_of_ours_to_msdb_gap_closed": 0.9114481026589565,
+    "GFLOPs_fewer_x": 463.89011911843767,
+    "cpu_faster_x": 5.844934855443742,
+    "mps_faster_x": 6.467599502080138,
+    "cpu_rss_lower_x": 4.015605322601065
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 0.7782686254806075,
+    "mps": 2.1854715972587364
+   },
+   "on_pareto_frontier_cc_vs_cpu": true
+  },
+  {
+   "row": "sum_ft_klcc",
+   "label": "SUM adapted, full fine-tune (all 57,501,196 params), KL+CC + sigma [secondary loss]",
+   "family": "sum",
+   "kind": "baseline",
+   "frontier_candidate": true,
+   "accuracy": {
+    "CC": {
+     "mean": 0.916934932002708,
+     "sd_folds_ddof1": 0.0037053509956640027,
+     "per_fold": [
+      0.9199700067798188,
+      0.9207497255449186,
+      0.9141745200428016,
+      0.9176445163039796,
+      0.9121358913420216
+     ]
+    },
+    "SIM": {
+     "mean": 0.8264330875605767,
+     "sd_folds_ddof1": 0.002525804756037687,
+     "per_fold": [
+      0.829240738740877,
+      0.8289322804402676,
+      0.8235229545606816,
+      0.8253911008772968,
+      0.8250783631837605
+     ]
+    },
+    "KLD": {
+     "mean": 0.11862009122903486,
+     "sd_folds_ddof1": 0.0026157438527405594,
+     "per_fold": [
+      0.11708769041873865,
+      0.11482057586324312,
+      0.12122846804899894,
+      0.1201708468949538,
+      0.1197928749192397
+     ]
+    }
+   },
+   "cost": {
+    "source": "cost_table.json (quiet machine)",
+    "GFLOPs": 26.420397568,
+    "params_total": 57501196,
+    "params_frozen": 0,
+    "params_trainable": 57501196,
+    "cpu_latency_s": 1.2849033961538225,
+    "cpu_latency_iqr_s": [
+     1.2815493958769366,
+     1.2912159591214731
+    ],
+    "cpu_latency_kind": "measured, quiet machine",
+    "mps_latency_s": 0.45756714534945786,
+    "mps_latency_iqr_s": [
+     0.45663650054484606,
+     0.46050126082263887
+    ],
+    "mps_latency_kind": "measured",
+    "cpu_peak_rss_GB": 2.2899932861328125,
+    "cpu_peak_rss_kind": "measured (cost_bench.py)",
+    "mps_driver_mem_GB": 2.2995758056640625,
+    "note": "pure-PyTorch selective scan; overstates latency vs the CUDA kernel"
+   },
+   "add1000_maps_per_fold": 800,
+   "add1000_maps_desc": "800 (train 800; token 2 chosen on the 800; sigma on 200 of them)",
+   "extra_unlabeled_images": 0,
+   "training_cost": {
+    "hardware": "NVIDIA A10G 24 GB (cloud, CUDA)",
+    "train_s_per_fold": [
+     5139.25870513916,
+     5141.231240034103,
+     5141.133171796799,
+     5143.909738540649,
+     5140.02251625061
+    ],
+    "train_s_per_fold_median": 5141.133171796799,
+    "train_s_total_5_folds": 25705.555371761322,
+    "covers": "per fold: 12-epoch end-to-end fine-tune of all 57.5M parameters from images (chunked pure-PyTorch selective scan on the GPU); excludes model loading, sigma selection and test scoring",
+    "one_off_not_included": "none (no feature cache)",
+    "source": "results/sum_ft_klcc_summary.json fold_meta train_seconds (identical to runs/sum_ft_klcc/ckpt/sum_ft_klcc/sum_ft_klcc_fold_meta.json)",
+    "note": ""
+   },
+   "vs_msdb_adapt": {
+    "dCC_mean": -0.0020387691559794474,
+    "share_of_ours_to_msdb_gap_closed": 0.905214611012773,
+    "GFLOPs_fewer_x": 463.89011911843767,
+    "cpu_faster_x": 5.844934855443742,
+    "mps_faster_x": 6.467599502080138,
+    "cpu_rss_lower_x": 4.015605322601065
+   },
+   "throughput_img_per_s": {
+    "cpu_6_threads": 0.7782686254806075,
+    "mps": 2.1854715972587364
+   },
+   "on_pareto_frontier_cc_vs_cpu": false
+  }
+ ],
+ "sum_full_finetune": {
+  "sum_ft": {
+   "status": "available (5/5 folds)",
+   "summary_file": "results/sum_ft_summary.json",
+   "per_image_file": "results/sum_ft_per_image.json",
+   "raw_job_output": "runs/sum_ft/ckpt/sum_ft",
+   "loss": "SUM's own objective -2*CC + 10*KL - SIM + 5*MSE (NSS term dropped: ADD1000 has density maps only)",
+   "init": "released SUM weights (hf safe-models/SUM, 57,501,196 parameters); all parameters trained",
+   "n_trainable_params": 57501196,
+   "means": {
+    "CC": 0.9170690101622017,
+    "SIM": 0.8284795185286521,
+    "KLD": 0.11737529557143742
+   },
+   "sd_folds_ddof1": {
+    "CC": 0.003673955117858736,
+    "SIM": 0.0027253364738336707,
+    "KLD": 0.002753106506409829
+   },
+   "sd_folds_ddof0": {
+    "CC": 0.003286085355926154,
+    "SIM": 0.0024376150468206656,
+    "KLD": 0.0024624533190517354
+   },
+   "no_sigma_384_means": {
+    "CC": 0.9167975910961846,
+    "SIM": 0.8283692376205412,
+    "KLD": 0.11780393010532475
+   },
+   "sigma_per_fold": [
+    2,
+    4,
+    4,
+    2,
+    4
+   ],
+   "train_seconds_per_fold": [
+    5141.597435712814,
+    5143.695602416992,
+    5141.9344301223755,
+    5139.652138948441,
+    5137.432745695114
+   ],
+   "hardware": "NVIDIA A10G 24 GB (cloud GPU), chunked pure-PyTorch selective scan",
+   "command": "cloud NVIDIA A10G 24 GB GPU (PyTorch 2.3.0, CUDA 12.1, Python 3.11), chunked torch selective scan; ft_sum_folds.py --scripts scripts/sum --code third_party/SUM/code --weights third_party/SUM/weights --data data/ADD1000/flat --split splits/kfold_seed0.json --out_dir runs/sum_ft/ckpt/sum_ft --loss sum --folds 0,1,2,3,4 --epochs 12 --batch 16 --micro 8 --lr 0.0001 --step 4 --gamma 0.1 --token 2 --seed 0 --device cuda --threads 4 --scan chunked --max_steps 0 --tag sum_ft --limit_eval 0 --mode full --enc_cache None"
+  },
+  "sum_ft_klcc": {
+   "status": "available (5/5 folds)",
+   "summary_file": "results/sum_ft_klcc_summary.json",
+   "per_image_file": "results/sum_ft_klcc_per_image.json",
+   "raw_job_output": "runs/sum_ft_klcc/ckpt/sum_ft_klcc",
+   "loss": "our objective KL(gt || softmax(logits)) + (1 - CC(sigmoid(logits), gt)) at 256x256",
+   "init": "released SUM weights (hf safe-models/SUM, 57,501,196 parameters); all parameters trained",
+   "n_trainable_params": 57501196,
+   "means": {
+    "CC": 0.916934932002708,
+    "SIM": 0.8264330875605767,
+    "KLD": 0.11862009122903486
+   },
+   "sd_folds_ddof1": {
+    "CC": 0.0037053509956640027,
+    "SIM": 0.002525804756037687,
+    "KLD": 0.0026157438527405594
+   },
+   "sd_folds_ddof0": {
+    "CC": 0.0033141666827204955,
+    "SIM": 0.002259148452957016,
+    "KLD": 0.002339592426582036
+   },
+   "no_sigma_384_means": {
+    "CC": 0.916853300454654,
+    "SIM": 0.8264691572572751,
+    "KLD": 0.11870401545126108
+   },
+   "sigma_per_fold": [
+    2,
+    2,
+    2,
+    2,
+    2
+   ],
+   "train_seconds_per_fold": [
+    5139.25870513916,
+    5141.231240034103,
+    5141.133171796799,
+    5143.909738540649,
+    5140.02251625061
+   ],
+   "hardware": "NVIDIA A10G 24 GB (cloud GPU), chunked pure-PyTorch selective scan",
+   "command": "cloud NVIDIA A10G 24 GB GPU (PyTorch 2.3.0, CUDA 12.1, Python 3.11), chunked torch selective scan; ft_sum_folds.py --scripts scripts/sum --code third_party/SUM/code --weights third_party/SUM/weights --data data/ADD1000/flat --split splits/kfold_seed0.json --out_dir runs/sum_ft_klcc/ckpt/sum_ft_klcc --loss klcc --folds 0,1,2,3,4 --epochs 12 --batch 16 --micro 8 --lr 0.0001 --step 4 --gamma 0.1 --token 2 --seed 0 --device cuda --threads 4 --scan chunked --max_steps 0 --tag sum_ft_klcc --limit_eval 0 --mode full --enc_cache None"
+  }
+ },
+ "pareto_frontier_cc_vs_cpu": [
+  "distill_pitt",
+  "distill_pitt_L",
+  "sum_ft",
+  "msdb_adapt_s0"
+ ],
+ "pareto_frontier_cc_vs_mps": [
+  "distill_pitt",
+  "distill_pitt_L",
+  "sum_ft",
+  "msdb_adapt_s0"
+ ],
+ "pareto_frontier_cc_vs_gflops": [
+  "iie_ft_kl_sigma",
+  "sum_ft",
+  "msdb_adapt_s0"
+ ],
+ "pareto_frontier_robustness": {
+  "cpu_latency_quiet (primary)": [
+   "distill_pitt",
+   "distill_pitt_L",
+   "sum_ft",
+   "msdb_adapt_s0"
+  ],
+  "cpu_latency_trackA_normalised_estimates": [
+   "distill_pitt",
+   "distill_pitt_L",
+   "sum_ft",
+   "msdb_adapt_s0"
+  ],
+  "cpu_latency_trackA_raw_contended_min (B448 rows at cost_table)": [
+   "distill_pitt",
+   "distill_pitt_L",
+   "sum_ft",
+   "msdb_adapt_s0"
+  ],
+  "mps_latency": [
+   "distill_pitt",
+   "distill_pitt_L",
+   "sum_ft",
+   "msdb_adapt_s0"
+  ],
+  "GFLOPs": [
+   "iie_ft_kl_sigma",
+   "sum_ft",
+   "msdb_adapt_s0"
+  ]
+ },
+ "pareto_frontier_robustness_note": "the two trackA_* axes use Track A's superseded contended CPU estimates; audit only, never quoted",
+ "best_fast_model": "distill_pitt_L",
+ "best_model_at_our_base_cost": "distill_pitt",
+ "fast_models_reaching_msdb_adapted_cc": [],
+ "candidates_within_0.002_CC_of_msdb_adapted": [
+  "msdb_adapt_kl",
+  "sum_ft"
+ ],
+ "paired_tests": {
+  "primary": {
+   "members": [
+    "distill_pitt_L vs msdb_adapt_s0",
+    "distill_pitt_L vs ours_scratch_s0",
+    "distill_pitt vs msdb_adapt_s0",
+    "distill_pitt vs ours_scratch_s0"
+   ],
+   "results": {
+    "distill_pitt_L": {
+     "msdb_adapt_s0": {
+      "CC": {
+       "mean_diff": -0.01220467949759938,
+       "median_diff": -0.01084804167969855,
+       "boot95": [
+        -0.01400527622784415,
+        -0.010396273291143612
+       ],
+       "dz": -0.4145977743553919,
+       "rank_biserial": -0.46152247752247755,
+       "frac_images_model_better": 0.328,
+       "wilcoxon_p": 1.231221083835756e-36,
+       "fold_diffs": [
+        -0.013169685111817375,
+        -0.011660300713835281,
+        -0.014540390317722807,
+        -0.01338608476642933,
+        -0.008266936578191775
+       ],
+       "folds_model_better": 0,
+       "nb_t": -7.4926465299347935,
+       "nb_p": 0.0016971493030929173,
+       "wilcoxon_p_holm": 3.6936632515072684e-36,
+       "nb_p_holm": 0.005091447909278752
+      },
+      "SIM": {
+       "mean_diff": -0.010680002562955645,
+       "median_diff": -0.010279007155920727,
+       "boot95": [
+        -0.01237962291840624,
+        -0.008938839391686042
+       ],
+       "dz": -0.3820844243840807,
+       "rank_biserial": -0.4172787212787213,
+       "frac_images_model_better": 0.358,
+       "wilcoxon_p": 2.9439663182099897e-30,
+       "fold_diffs": [
+        -0.013505740800341282,
+        -0.010714724768145722,
+        -0.010656037892133985,
+        -0.010021468309599268,
+        -0.008502041044557651
+       ],
+       "folds_model_better": 0,
+       "nb_t": -8.776171744304296,
+       "nb_p": 0.0009294900247166891,
+       "wilcoxon_p_holm": 8.831898954629969e-30,
+       "nb_p_holm": 0.0037179600988667565
+      },
+      "KLD": {
+       "mean_diff": 0.015541910693741126,
+       "median_diff": 0.013060844982712212,
+       "boot95": [
+        0.013345040502601399,
+        0.017745707247593858
+       ],
+       "dz": 0.430443527554452,
+       "rank_biserial": 0.4644955044955045,
+       "frac_images_model_better": 0.341,
+       "wilcoxon_p": 4.355015859140944e-37,
+       "fold_diffs": [
+        0.01634948973954678,
+        0.017677412324707972,
+        0.01606524435777472,
+        0.01545219708217295,
+        0.012165209964503237
+       ],
+       "folds_model_better": 0,
+       "nb_t": 11.27271874428597,
+       "nb_p": 0.00035284909338212405,
+       "wilcoxon_p_holm": 1.3065047577422831e-36,
+       "nb_p_holm": 0.0014113963735284962
+      }
+     },
+     "ours_scratch_s0": {
+      "CC": {
+       "mean_diff": 0.009304639372782645,
+       "median_diff": 0.00793954069606262,
+       "boot95": [
+        0.007632298040555724,
+        0.011040257344893428
+       ],
+       "dz": 0.33887287652271925,
+       "rank_biserial": 0.4020619380619381,
+       "frac_images_model_better": 0.646,
+       "wilcoxon_p": 3.283476189511547e-28,
+       "fold_diffs": [
+        0.007981278781973744,
+        0.009255137802866797,
+        0.011351665831432212,
+        0.010044887350350029,
+        0.007890227097290481
+       ],
+       "folds_model_better": 5,
+       "nb_t": 9.519265888407155,
+       "nb_p": 0.0006798971375453363,
+       "wilcoxon_p_holm": 6.566952379023094e-28,
+       "nb_p_holm": 0.002719588550181345
+      },
+      "SIM": {
+       "mean_diff": 0.009151088220264194,
+       "median_diff": 0.008726762587719594,
+       "boot95": [
+        0.007671113017179447,
+        0.010656965967614604
+       ],
+       "dz": 0.3771218396443593,
+       "rank_biserial": 0.4155884115884116,
+       "frac_images_model_better": 0.665,
+       "wilcoxon_p": 5.012560010436803e-30,
+       "fold_diffs": [
+        0.009377139099661091,
+        0.010922962358308363,
+        0.011448766271507815,
+        0.008747681149560926,
+        0.005258892222282818
+       ],
+       "folds_model_better": 5,
+       "nb_t": 5.594655033424524,
+       "nb_p": 0.0050094331877533335,
+       "wilcoxon_p_holm": 1.0025120020873606e-29,
+       "nb_p_holm": 0.010018866375506667
+      },
+      "KLD": {
+       "mean_diff": -0.013697523599215968,
+       "median_diff": -0.011902066675921696,
+       "boot95": [
+        -0.01586559155155993,
+        -0.011527946456999559
+       ],
+       "dz": -0.3845595483363834,
+       "rank_biserial": -0.437962037962038,
+       "frac_images_model_better": 0.66,
+       "wilcoxon_p": 3.6804892978290775e-33,
+       "fold_diffs": [
+        -0.014962280162500785,
+        -0.01395415900796107,
+        -0.01562025130269043,
+        -0.014104198334391166,
+        -0.009846729188536352
+       ],
+       "folds_model_better": 5,
+       "nb_t": -9.051400711069727,
+       "nb_p": 0.0008255621405757183,
+       "wilcoxon_p_holm": 7.360978595658155e-33,
+       "nb_p_holm": 0.0020771877304981683
+      }
+     }
+    },
+    "distill_pitt": {
+     "msdb_adapt_s0": {
+      "CC": {
+       "mean_diff": -0.01556469081034368,
+       "median_diff": -0.013212044035551651,
+       "boot95": [
+        -0.017472715498180604,
+        -0.01369947244214037
+       ],
+       "dz": -0.5060234743425844,
+       "rank_biserial": -0.5556363636363636,
+       "frac_images_model_better": 0.284,
+       "wilcoxon_p": 2.584277110076278e-52,
+       "fold_diffs": [
+        -0.01802541005475289,
+        -0.014010142628322786,
+        -0.017043031356674176,
+        -0.01831732751878723,
+        -0.01042754249318123
+       ],
+       "folds_model_better": 0,
+       "nb_t": -6.946680161629369,
+       "nb_p": 0.0022558233665226704,
+       "wilcoxon_p_holm": 1.0337108440305112e-51,
+       "nb_p_holm": 0.005091447909278752
+      },
+      "SIM": {
+       "mean_diff": -0.014896015608103294,
+       "median_diff": -0.013377215015143828,
+       "boot95": [
+        -0.01668807836695867,
+        -0.013092673026765327
+       ],
+       "dz": -0.525751146278015,
+       "rank_biserial": -0.5493026973026973,
+       "frac_images_model_better": 0.302,
+       "wilcoxon_p": 3.6107189698327895e-51,
+       "fold_diffs": [
+        -0.019473135142500375,
+        -0.015947800976457538,
+        -0.012952625648382399,
+        -0.014808203099246353,
+        -0.01129831317392993
+       ],
+       "folds_model_better": 0,
+       "nb_t": -7.131261462689732,
+       "nb_p": 0.002044535691267741,
+       "wilcoxon_p_holm": 1.4442875879331158e-50,
+       "nb_p_holm": 0.006133607073803223
+      },
+      "KLD": {
+       "mean_diff": 0.020962808907995543,
+       "median_diff": 0.017844625829633608,
+       "boot95": [
+        0.01870599615722199,
+        0.023267570872660643
+       ],
+       "dz": 0.5545536273612546,
+       "rank_biserial": 0.5911408591408591,
+       "frac_images_model_better": 0.28,
+       "wilcoxon_p": 5.640985594164773e-59,
+       "fold_diffs": [
+        0.024676767226678664,
+        0.0220195024001784,
+        0.019035892676366753,
+        0.022769613212483344,
+        0.01631226902427052
+       ],
+       "folds_model_better": 0,
+       "nb_t": 9.474426659880352,
+       "nb_p": 0.0006923959101660562,
+       "wilcoxon_p_holm": 2.2563942376659092e-58,
+       "nb_p_holm": 0.0020771877304981683
+      }
+     },
+     "ours_scratch_s0": {
+      "CC": {
+       "mean_diff": 0.005944628060038344,
+       "median_diff": 0.004606074425676121,
+       "boot95": [
+        0.004694967887843438,
+        0.007209853293188024
+       ],
+       "dz": 0.2954502403131445,
+       "rank_biserial": 0.3320719280719281,
+       "frac_images_model_better": 0.63,
+       "wilcoxon_p": 9.33443158556699e-20,
+       "fold_diffs": [
+        0.003125553839038231,
+        0.0069052958883792925,
+        0.008849024792480842,
+        0.0051136445979921286,
+        0.005729621182301026
+       ],
+       "folds_model_better": 5,
+       "nb_t": 4.172553813997216,
+       "nb_p": 0.014002256719163095,
+       "wilcoxon_p_holm": 9.33443158556699e-20,
+       "nb_p_holm": 0.014002256719163095
+      },
+      "SIM": {
+       "mean_diff": 0.004935075175116547,
+       "median_diff": 0.005397047446201841,
+       "boot95": [
+        0.003832093217560012,
+        0.006038201569706979
+       ],
+       "dz": 0.27392950026532786,
+       "rank_biserial": 0.3167592407592408,
+       "frac_images_model_better": 0.619,
+       "wilcoxon_p": 4.064293307835867e-18,
+       "fold_diffs": [
+        0.003409744757501998,
+        0.005689886149996548,
+        0.009152178515259402,
+        0.003960946359913842,
+        0.002462620092910539
+       ],
+       "folds_model_better": 5,
+       "nb_t": 2.7934848811335558,
+       "nb_p": 0.04913695887371352,
+       "wilcoxon_p_holm": 4.064293307835867e-18,
+       "nb_p_holm": 0.04913695887371352
+      },
+      "KLD": {
+       "mean_diff": -0.008276625384961548,
+       "median_diff": -0.007259475027436041,
+       "boot95": [
+        -0.009956502677816831,
+        -0.006651619539129365
+       ],
+       "dz": -0.3082396849705418,
+       "rank_biserial": -0.3694545454545455,
+       "frac_images_model_better": 0.644,
+       "wilcoxon_p": 4.483159105205056e-24,
+       "fold_diffs": [
+        -0.006635002675368901,
+        -0.009612068932490642,
+        -0.012649602984098396,
+        -0.006786782204080771,
+        -0.005699670128769069
+       ],
+       "folds_model_better": 5,
+       "nb_t": -4.331038902859493,
+       "nb_p": 0.01233961537511889,
+       "wilcoxon_p_holm": 4.483159105205056e-24,
+       "nb_p_holm": 0.01233961537511889
+      }
+     }
+    }
+   }
+  },
+  "secondary_seedavg": {
+   "members": [
+    "distill_pitt_L vs msdb_adapt_seedavg",
+    "distill_pitt_L vs ours_scratch_seedavg",
+    "distill_pitt vs msdb_adapt_seedavg",
+    "distill_pitt vs ours_scratch_seedavg"
+   ],
+   "results": {
+    "distill_pitt_L": {
+     "msdb_adapt_seedavg": {
+      "CC": {
+       "mean_diff": -0.012208497802772115,
+       "median_diff": -0.010785599118400713,
+       "boot95": [
+        -0.014018951850914053,
+        -0.010401762395932044
+       ],
+       "dz": -0.41238417891316326,
+       "rank_biserial": -0.4591168831168831,
+       "frac_images_model_better": 0.329,
+       "wilcoxon_p": 2.840813581606808e-36,
+       "fold_diffs": [
+        -0.013108405784002408,
+        -0.011569189196391827,
+        -0.014652083443177477,
+        -0.013502632505071999,
+        -0.008210178085217068
+       ],
+       "folds_model_better": 0,
+       "nb_t": -7.301531823728165,
+       "nb_p": 0.0018708925319964888,
+       "wilcoxon_p_holm": 8.522440744820423e-36,
+       "nb_p_holm": 0.005612677595989466
+      },
+      "SIM": {
+       "mean_diff": -0.010605844161170783,
+       "median_diff": -0.009987335560818711,
+       "boot95": [
+        -0.012318391615178441,
+        -0.00883860615033226
+       ],
+       "dz": -0.3774641167452362,
+       "rank_biserial": -0.412023976023976,
+       "frac_images_model_better": 0.362,
+       "wilcoxon_p": 1.5290373286284014e-29,
+       "fold_diffs": [
+        -0.013792487208248438,
+        -0.010202979440447124,
+        -0.010787123742445393,
+        -0.010036389854992889,
+        -0.008210240559719972
+       ],
+       "folds_model_better": 0,
+       "nb_t": -7.805025399758148,
+       "nb_p": 0.0014539873452824865,
+       "wilcoxon_p_holm": 3.058074657256803e-29,
+       "nb_p_holm": 0.005815949381129946
+      },
+      "KLD": {
+       "mean_diff": 0.01552245087461952,
+       "median_diff": 0.01286364909812475,
+       "boot95": [
+        0.01331335216140286,
+        0.017730512452576508
+       ],
+       "dz": 0.4286055821263445,
+       "rank_biserial": 0.4618181818181818,
+       "frac_images_model_better": 0.337,
+       "wilcoxon_p": 1.1106374115587121e-36,
+       "fold_diffs": [
+        0.016616498112642458,
+        0.01729664091399051,
+        0.016171950014779765,
+        0.015548857730248763,
+        0.011978307601436103
+       ],
+       "folds_model_better": 0,
+       "nb_t": 11.117508282135368,
+       "nb_p": 0.00037243649171436315,
+       "wilcoxon_p_holm": 2.2212748231174243e-36,
+       "nb_p_holm": 0.0011173094751430895
+      }
+     },
+     "ours_scratch_seedavg": {
+      "CC": {
+       "mean_diff": 0.009008617205277335,
+       "median_diff": 0.008019656627710925,
+       "boot95": [
+        0.007498372297353624,
+        0.010569618761029659
+       ],
+       "dz": 0.36641201466746925,
+       "rank_biserial": 0.44284515484515485,
+       "frac_images_model_better": 0.668,
+       "wilcoxon_p": 7.2498264196932756e-34,
+       "fold_diffs": [
+        0.008496369004587612,
+        0.009397967544850894,
+        0.008863217300535076,
+        0.009799235849827115,
+        0.008486296326586262
+       ],
+       "folds_model_better": 5,
+       "nb_t": 23.262796075741385,
+       "nb_p": 2.0238217723557955e-05,
+       "wilcoxon_p_holm": 1.4499652839386551e-33,
+       "nb_p_holm": 8.095287089423182e-05
+      },
+      "SIM": {
+       "mean_diff": 0.009058630761741756,
+       "median_diff": 0.00858724243607828,
+       "boot95": [
+        0.007759758501426633,
+        0.010448209491585807
+       ],
+       "dz": 0.41243463847296163,
+       "rank_biserial": 0.46104695304695303,
+       "frac_images_model_better": 0.674,
+       "wilcoxon_p": 1.4529865342994562e-36,
+       "fold_diffs": [
+        0.008685632673147259,
+        0.011481254658714968,
+        0.010170711920308051,
+        0.00843063446849246,
+        0.006524920088046393
+       ],
+       "folds_model_better": 5,
+       "nb_t": 7.202921016166681,
+       "nb_p": 0.0019691306982774627,
+       "wilcoxon_p_holm": 4.358959602898369e-36,
+       "nb_p_holm": 0.005907392094832388
+      },
+      "KLD": {
+       "mean_diff": -0.013242267509329546,
+       "median_diff": -0.011388869440318042,
+       "boot95": [
+        -0.015285488457901234,
+        -0.011263224613008441
+       ],
+       "dz": -0.40837105020484116,
+       "rank_biserial": -0.4773066933066933,
+       "frac_images_model_better": 0.679,
+       "wilcoxon_p": 4.5847951960557014e-39,
+       "fold_diffs": [
+        -0.013525558664711224,
+        -0.014522778007891368,
+        -0.013509852434155506,
+        -0.013081091778737647,
+        -0.011572056661151991
+       ],
+       "folds_model_better": 5,
+       "nb_t": -18.39374553370515,
+       "nb_p": 5.1399754909675224e-05,
+       "wilcoxon_p_holm": 1.3754385588167103e-38,
+       "nb_p_holm": 0.0002055990196387009
+      }
+     }
+    },
+    "distill_pitt": {
+     "msdb_adapt_seedavg": {
+      "CC": {
+       "mean_diff": -0.01556850911551642,
+       "median_diff": -0.01335924693566487,
+       "boot95": [
+        -0.01748566233272484,
+        -0.013702588464080059
+       ],
+       "dz": -0.503576970943245,
+       "rank_biserial": -0.5534825174825175,
+       "frac_images_model_better": 0.282,
+       "wilcoxon_p": 6.357093250822556e-52,
+       "fold_diffs": [
+        -0.01796413072693792,
+        -0.013919031110879332,
+        -0.017154724482128847,
+        -0.0184338752574299,
+        -0.010370784000206523
+       ],
+       "folds_model_better": 0,
+       "nb_t": -6.828697719614319,
+       "nb_p": 0.0024050699276528375,
+       "wilcoxon_p_holm": 2.5428373003290225e-51,
+       "nb_p_holm": 0.005612677595989466
+      },
+      "SIM": {
+       "mean_diff": -0.01482185720631843,
+       "median_diff": -0.013240980728143947,
+       "boot95": [
+        -0.01660990230246846,
+        -0.012993651526891107
+       ],
+       "dz": -0.521130834101935,
+       "rank_biserial": -0.5447912087912088,
+       "frac_images_model_better": 0.299,
+       "wilcoxon_p": 2.3196563555237923e-50,
+       "fold_diffs": [
+        -0.019759881550407532,
+        -0.01543605564875894,
+        -0.013083711498693806,
+        -0.014823124644639973,
+        -0.011006512689092252
+       ],
+       "folds_model_better": 0,
+       "nb_t": -6.791322790503755,
+       "nb_p": 0.002454871254270483,
+       "wilcoxon_p_holm": 9.27862542209517e-50,
+       "nb_p_holm": 0.005907392094832388
+      },
+      "KLD": {
+       "mean_diff": 0.020943349088873936,
+       "median_diff": 0.01770286475250224,
+       "boot95": [
+        0.018678418102277522,
+        0.023239252914560665
+       ],
+       "dz": 0.5539493670549857,
+       "rank_biserial": 0.5904055944055944,
+       "frac_images_model_better": 0.284,
+       "wilcoxon_p": 7.82432837948422e-59,
+       "fold_diffs": [
+        0.024943775599774343,
+        0.02163873098946094,
+        0.0191425983333718,
+        0.022866273860559158,
+        0.016125366661203386
+       ],
+       "folds_model_better": 0,
+       "nb_t": 9.143013513835308,
+       "nb_p": 0.0007941983503144408,
+       "wilcoxon_p_holm": 3.129731351793688e-58,
+       "nb_p_holm": 0.0015883967006288817
+      }
+     },
+     "ours_scratch_seedavg": {
+      "CC": {
+       "mean_diff": 0.005648605892533032,
+       "median_diff": 0.004909664434296412,
+       "boot95": [
+        0.004553019131639544,
+        0.006769600619512862
+       ],
+       "dz": 0.32013350459273565,
+       "rank_biserial": 0.3701178821178821,
+       "frac_images_model_better": 0.639,
+       "wilcoxon_p": 3.7229113631295986e-24,
+       "fold_diffs": [
+        0.0036406440616520985,
+        0.007048125630363389,
+        0.006360576261583706,
+        0.004867993097469214,
+        0.006325690411596807
+       ],
+       "folds_model_better": 5,
+       "nb_t": 6.122839291873418,
+       "nb_p": 0.0036041477821395556,
+       "wilcoxon_p_holm": 3.7229113631295986e-24,
+       "nb_p_holm": 0.005612677595989466
+      },
+      "SIM": {
+       "mean_diff": 0.004842617716594109,
+       "median_diff": 0.005477635686404192,
+       "boot95": [
+        0.0038604758016353496,
+        0.00586844525368034
+       ],
+       "dz": 0.29423670903904897,
+       "rank_biserial": 0.34216183816183815,
+       "frac_images_model_better": 0.63,
+       "wilcoxon_p": 7.061396340629523e-21,
+       "fold_diffs": [
+        0.0027182383309881653,
+        0.006248178450403152,
+        0.007874124164059637,
+        0.003643899678845375,
+        0.003728647958674114
+       ],
+       "folds_model_better": 5,
+       "nb_t": 3.3698401295343263,
+       "nb_p": 0.02804787733086031,
+       "wilcoxon_p_holm": 7.061396340629523e-21,
+       "nb_p_holm": 0.02804787733086031
+      },
+      "KLD": {
+       "mean_diff": -0.007821369295075127,
+       "median_diff": -0.007697583001731657,
+       "boot95": [
+        -0.009279362631031405,
+        -0.006361787619561432
+       ],
+       "dz": -0.32719052632646445,
+       "rank_biserial": -0.3974785214785215,
+       "frac_images_model_better": 0.661,
+       "wilcoxon_p": 1.3132710763327948e-27,
+       "fold_diffs": [
+        -0.005198281177579339,
+        -0.01018068793242094,
+        -0.010539204115563472,
+        -0.005763675648427252,
+        -0.0074249976013847085
+       ],
+       "folds_model_better": 5,
+       "nb_t": -4.7377952917362505,
+       "nb_p": 0.009051894002091361,
+       "wilcoxon_p_holm": 1.3132710763327948e-27,
+       "nb_p_holm": 0.009051894002091361
+      }
+     }
+    }
+   }
+  }
+ },
+ "paired_tests_crosscheck_trackB": {
+  "distill_pitt_L__vs__ours_scratch_s0": {
+   "mean_diff_here": 0.009304639372782645,
+   "mean_diff_trackB": 0.009304639372782645,
+   "wilcoxon_p_here": 3.283476189511547e-28,
+   "wilcoxon_p_trackB": 3.283476189511547e-28,
+   "nb_p_here": 0.0006798971375453363,
+   "nb_p_trackB": 0.0006798971375453363,
+   "boot95_here": [
+    0.007632298040555724,
+    0.011040257344893428
+   ],
+   "boot95_trackB": [
+    0.007632298040555724,
+    0.011040257344893428
+   ]
+  },
+  "distill_pitt_L__vs__msdb_adapt_s0": {
+   "mean_diff_here": -0.01220467949759938,
+   "mean_diff_trackB": -0.01220467949759938,
+   "wilcoxon_p_here": 1.231221083835756e-36,
+   "wilcoxon_p_trackB": 1.231221083835756e-36,
+   "nb_p_here": 0.0016971493030929173,
+   "nb_p_trackB": 0.0016971493030929173,
+   "boot95_here": [
+    -0.01400527622784415,
+    -0.010396273291143612
+   ],
+   "boot95_trackB": [
+    -0.01400527622784415,
+    -0.010396273291143612
+   ]
+  },
+  "distill_pitt__vs__ours_scratch_s0": {
+   "mean_diff_here": 0.005944628060038344,
+   "mean_diff_trackB": 0.005944628060038344,
+   "wilcoxon_p_here": 9.33443158556699e-20,
+   "wilcoxon_p_trackB": 9.33443158556699e-20,
+   "nb_p_here": 0.014002256719163095,
+   "nb_p_trackB": 0.014002256719163095,
+   "boot95_here": [
+    0.004694967887843438,
+    0.007209853293188024
+   ],
+   "boot95_trackB": [
+    0.004694967887843438,
+    0.007209853293188024
+   ]
+  },
+  "distill_pitt__vs__msdb_adapt_s0": {
+   "mean_diff_here": -0.01556469081034368,
+   "mean_diff_trackB": -0.01556469081034368,
+   "wilcoxon_p_here": 2.584277110076278e-52,
+   "wilcoxon_p_trackB": 2.584277110076278e-52,
+   "nb_p_here": 0.0022558233665226704,
+   "nb_p_trackB": 0.0022558233665226704,
+   "boot95_here": [
+    -0.017472715498180604,
+    -0.01369947244214037
+   ],
+   "boot95_trackB": [
+    -0.017472715498180604,
+    -0.01369947244214037
+   ]
+  }
+ },
+ "paired_tests_sum_ft": {
+  "primary": {
+   "members": [
+    "sum_ft vs msdb_adapt_s0",
+    "sum_ft vs ours_scratch_s0",
+    "sum_ft vs distill_pitt",
+    "sum_ft vs distill_pitt_L",
+    "sum_ft vs sum_ft_head",
+    "sum_ft vs sum_ft_klcc"
+   ],
+   "results": {
+    "msdb_adapt_s0": {
+     "CC": {
+      "mean_diff": -0.0019046909964859787,
+      "median_diff": -0.0012417066429776247,
+      "dz": -0.05944959784883146,
+      "rank_biserial": -0.04963036963036963,
+      "frac_images_model_better": 0.482,
+      "wilcoxon_p": 0.17398084557016524,
+      "fold_diffs": [
+       -0.0019427338368741554,
+       -0.0016506108648325357,
+       -0.0040256597360476265,
+       -0.003111428853071252,
+       0.0012069783083958896
+      ],
+      "folds_model_better": 1,
+      "nb_t": -1.4330257238958284,
+      "nb_p": 0.22513604002345436,
+      "boot95_5000_seed0": [
+       -0.003972106276650405,
+       5.889213716158547e-05
+      ],
+      "boot95": [
+       -0.003873001744592982,
+       0.00011976353233202617
+      ],
+      "wilcoxon_p_holm": 0.3479616911403305,
+      "nb_p_holm": 0.4502720800469087
+     },
+     "SIM": {
+      "mean_diff": 0.0034947320674356104,
+      "median_diff": 0.003744463610041826,
+      "dz": 0.12289982281460202,
+      "rank_biserial": 0.14632167832167833,
+      "frac_images_model_better": 0.548,
+      "wilcoxon_p": 6.118708771347137e-05,
+      "fold_diffs": [
+       0.0036159910611432977,
+       0.003560646409487278,
+       0.0019059116956618993,
+       0.0032818991124966557,
+       0.005109212058388768
+      ],
+      "folds_model_better": 5,
+      "nb_t": 4.571247411754558,
+      "nb_p": 0.010251104573791402,
+      "boot95_5000_seed0": [
+       0.001687823524159051,
+       0.005219410757695406
+      ],
+      "boot95": [
+       0.001761119810642869,
+       0.005252582049987287
+      ],
+      "wilcoxon_p_holm": 6.118708771347137e-05,
+      "nb_p_holm": 0.010251104573791402
+     },
+     "KLD": {
+      "mean_diff": -0.002305793020329659,
+      "median_diff": -0.0049065001144130635,
+      "dz": -0.06048083809020684,
+      "rank_biserial": -0.12167432567432568,
+      "frac_images_model_better": 0.556,
+      "wilcoxon_p": 0.0008590840568248123,
+      "fold_diffs": [
+       -0.00019211628667639702,
+       -0.0037330186023702694,
+       -0.0017936348104776179,
+       -0.001597820954862772,
+       -0.004212374447261247
+      ],
+      "folds_model_better": 5,
+      "nb_t": -2.0819359299869564,
+      "nb_p": 0.10579097322486263,
+      "boot95_5000_seed0": [
+       -0.004645570982760526,
+       8.373654804902074e-05
+      ],
+      "boot95": [
+       -0.0046166947582587815,
+       -6.425200405371332e-06
+      ],
+      "wilcoxon_p_holm": 0.0008590840568248123,
+      "nb_p_holm": 0.10579097322486263
+     }
+    },
+    "ours_scratch_s0": {
+     "CC": {
+      "mean_diff": 0.01960462787389605,
+      "median_diff": 0.01613534360535296,
+      "dz": 0.47842369283108865,
+      "rank_biserial": 0.5256823176823177,
+      "frac_images_model_better": 0.688,
+      "wilcoxon_p": 5.174349857353189e-47,
+      "fold_diffs": [
+       0.019208230056916964,
+       0.019264827651869543,
+       0.021866396413107392,
+       0.020319543263708106,
+       0.017364141983878145
+      ],
+      "folds_model_better": 5,
+      "nb_t": 17.68843660976969,
+      "nb_p": 6.0006182197697204e-05,
+      "boot95_5000_seed0": [
+       0.017018193324287362,
+       0.02211079797710814
+      ],
+      "boot95": [
+       0.0171168337346404,
+       0.02210422596722624
+      ],
+      "wilcoxon_p_holm": 2.5871749286765945e-46,
+      "nb_p_holm": 0.00024002472879078882
+     },
+     "SIM": {
+      "mean_diff": 0.02332582285065545,
+      "median_diff": 0.021086836137351517,
+      "dz": 0.6263262041412231,
+      "rank_biserial": 0.6420859140859141,
+      "frac_images_model_better": 0.743,
+      "wilcoxon_p": 3.0101407650757094e-69,
+      "fold_diffs": [
+       0.02649887096114567,
+       0.025198333535941364,
+       0.0240107158593037,
+       0.02205104857165685,
+       0.018870145325229237
+      ],
+      "folds_model_better": 5,
+      "nb_t": 11.668464635807181,
+      "nb_p": 0.00030840762385471205,
+      "boot95_5000_seed0": [
+       0.021019293548852663,
+       0.025568449785817782
+      ],
+      "boot95": [
+       0.02099621008716475,
+       0.02564575990819367
+      ],
+      "wilcoxon_p_holm": 1.5050703825378547e-68,
+      "nb_p_holm": 0.0013756422672095336
+     },
+     "KLD": {
+      "mean_diff": -0.03154522731328675,
+      "median_diff": -0.027681086488044696,
+      "dz": -0.5883354887769686,
+      "rank_biserial": -0.658061938061938,
+      "frac_images_model_better": 0.767,
+      "wilcoxon_p": 1.2119464632340965e-72,
+      "fold_diffs": [
+       -0.03150388618872396,
+       -0.03536458993503931,
+       -0.03347913047094277,
+       -0.031154216371426888,
+       -0.026224313600300836
+      ],
+      "folds_model_better": 5,
+      "nb_t": -13.748687171902809,
+      "nb_p": 0.0001621595873364625,
+      "boot95_5000_seed0": [
+       -0.0348347413969382,
+       -0.0282940516096815
+      ],
+      "boot95": [
+       -0.03480777680774685,
+       -0.028212017677648825
+      ],
+      "wilcoxon_p_holm": 6.059732316170483e-72,
+      "nb_p_holm": 0.0006877561136690643
+     }
+    },
+    "distill_pitt": {
+     "CC": {
+      "mean_diff": 0.013659999813857704,
+      "median_diff": 0.012107586645455026,
+      "dz": 0.3653803093110714,
+      "rank_biserial": 0.4128511488511489,
+      "frac_images_model_better": 0.65,
+      "wilcoxon_p": 1.181361161891922e-29,
+      "fold_diffs": [
+       0.016082676217878733,
+       0.01235953176349025,
+       0.01301737162062655,
+       0.015205898665715978,
+       0.01163452080157712
+      ],
+      "folds_model_better": 5,
+      "nb_t": 10.70782929046258,
+      "nb_p": 0.00043102905787312153,
+      "boot95_5000_seed0": [
+       0.011316394425866532,
+       0.015888627658887364
+      ],
+      "boot95": [
+       0.011344542950144684,
+       0.01597048301269543
+      ],
+      "wilcoxon_p_holm": 4.725444647567688e-29,
+      "nb_p_holm": 0.0012930871736193646
+     },
+     "SIM": {
+      "mean_diff": 0.018390747675538905,
+      "median_diff": 0.018023281219623766,
+      "dz": 0.5236948662083236,
+      "rank_biserial": 0.5508491508491509,
+      "frac_images_model_better": 0.713,
+      "wilcoxon_p": 1.9018000132739002e-51,
+      "fold_diffs": [
+       0.023089126203643673,
+       0.019508447385944816,
+       0.014858537344044298,
+       0.01809010221174301,
+       0.016407525232318698
+      ],
+      "folds_model_better": 5,
+      "nb_t": 8.688608657842412,
+      "nb_p": 0.0009659155474343798,
+      "boot95_5000_seed0": [
+       0.016175167642707922,
+       0.020544454441102856
+      ],
+      "boot95": [
+       0.01621329987191428,
+       0.020537694018465866
+      ],
+      "wilcoxon_p_holm": 7.607200053095601e-51,
+      "nb_p_holm": 0.002897746642303139
+     },
+     "KLD": {
+      "mean_diff": -0.023268601928325205,
+      "median_diff": -0.020714097513823873,
+      "dz": -0.4847855909964406,
+      "rank_biserial": -0.5491908091908092,
+      "frac_images_model_better": 0.715,
+      "wilcoxon_p": 3.781884892527002e-51,
+      "fold_diffs": [
+       -0.02486888351335506,
+       -0.02575252100254867,
+       -0.02082952748684437,
+       -0.024367434167346116,
+       -0.020524643471531767
+      ],
+      "folds_model_better": 5,
+      "nb_t": -14.336142182936126,
+      "nb_p": 0.00013755122273381286,
+      "boot95_5000_seed0": [
+       -0.026215155950552443,
+       -0.020320462029666423
+      ],
+      "boot95": [
+       -0.02624194640998262,
+       -0.020298112297392947
+      ],
+      "wilcoxon_p_holm": 1.5127539570108008e-50,
+      "nb_p_holm": 0.0006877561136690643
+     }
+    },
+    "distill_pitt_L": {
+     "CC": {
+      "mean_diff": 0.0102999885011134,
+      "median_diff": 0.009403724881452635,
+      "dz": 0.2945178688096899,
+      "rank_biserial": 0.3492867132867133,
+      "frac_images_model_better": 0.64,
+      "wilcoxon_p": 1.0899311195203555e-21,
+      "fold_diffs": [
+       0.01122695127494322,
+       0.010009689849002745,
+       0.01051473058167518,
+       0.010274655913358077,
+       0.009473914886587664
+      ],
+      "folds_model_better": 5,
+      "nb_t": 23.74396058063747,
+      "nb_p": 1.8656081550820488e-05,
+      "boot95_5000_seed0": [
+       0.008078888017920003,
+       0.012432038317522248
+      ],
+      "boot95": [
+       0.00813336648548248,
+       0.012455819613351788
+      ],
+      "wilcoxon_p_holm": 3.2697933585610663e-21,
+      "nb_p_holm": 0.00010997208319643306
+     },
+     "SIM": {
+      "mean_diff": 0.014174734630391253,
+      "median_diff": 0.01312375964591117,
+      "dz": 0.4378551621147947,
+      "rank_biserial": 0.481958041958042,
+      "frac_images_model_better": 0.69,
+      "wilcoxon_p": 8.513922367402172e-40,
+      "fold_diffs": [
+       0.01712173186148458,
+       0.014275371177633,
+       0.012561949587795884,
+       0.013303367422095924,
+       0.013611253102946419
+      ],
+      "folds_model_better": 5,
+      "nb_t": 12.014477432040133,
+      "nb_p": 0.0002751284534419067,
+      "boot95_5000_seed0": [
+       0.012163227672580074,
+       0.016107318735206714
+      ],
+      "boot95": [
+       0.012172672517754378,
+       0.016172175713735335
+      ],
+      "wilcoxon_p_holm": 2.5541767102206515e-39,
+      "nb_p_holm": 0.0013756422672095336
+     },
+     "KLD": {
+      "mean_diff": -0.017847703714070785,
+      "median_diff": -0.016838435867901548,
+      "dz": -0.4024358871373633,
+      "rank_biserial": -0.4833726273726274,
+      "frac_images_model_better": 0.69,
+      "wilcoxon_p": 5.085890617373487e-40,
+      "fold_diffs": [
+       -0.016541606026223177,
+       -0.02141043092707824,
+       -0.017858879168252337,
+       -0.017050018037035722,
+       -0.016377584411764484
+      ],
+      "folds_model_better": 5,
+      "nb_t": -12.831719626971651,
+      "nb_p": 0.0002126322188650757,
+      "boot95_5000_seed0": [
+       -0.020533424872922736,
+       -0.015098882609013212
+      ],
+      "boot95": [
+       -0.020569022269559936,
+       -0.01516613605957293
+      ],
+      "wilcoxon_p_holm": 1.525767185212046e-39,
+      "nb_p_holm": 0.0006877561136690643
+     }
+    },
+    "sum_ft_head": {
+     "CC": {
+      "mean_diff": 0.05212619694789038,
+      "median_diff": 0.04784276009198396,
+      "dz": 1.0821881739633654,
+      "rank_biserial": 0.9140539460539461,
+      "frac_images_model_better": 0.888,
+      "wilcoxon_p": 2.32073497649756e-138,
+      "fold_diffs": [
+       0.05184337596594546,
+       0.04765202263448509,
+       0.05585159041408927,
+       0.05463595213153938,
+       0.05064804359339248
+      ],
+      "folds_model_better": 5,
+      "nb_t": 23.84991169143086,
+      "nb_p": 1.8328680532738843e-05,
+      "boot95_5000_seed0": [
+       0.049090865398975794,
+       0.05511469875377384
+      ],
+      "boot95": [
+       0.04919835353969939,
+       0.05521893937576932
+      ],
+      "wilcoxon_p_holm": 1.392440985898536e-137,
+      "nb_p_holm": 0.00010997208319643306
+     },
+     "SIM": {
+      "mean_diff": 0.05527248648600592,
+      "median_diff": 0.05776189604272808,
+      "dz": 1.3622347024556842,
+      "rank_biserial": 0.9324515484515484,
+      "frac_images_model_better": 0.915,
+      "wilcoxon_p": 6.632186811366772e-144,
+      "fold_diffs": [
+       0.058231897518335796,
+       0.054796713032965405,
+       0.055612860483467697,
+       0.056167188699379644,
+       0.051553772695880906
+      ],
+      "folds_model_better": 5,
+      "nb_t": 33.828835564065926,
+      "nb_p": 4.5548836842083344e-06,
+      "boot95_5000_seed0": [
+       0.05279108915064138,
+       0.05774184535956833
+      ],
+      "boot95": [
+       0.05279810012312546,
+       0.057807684915863064
+      ],
+      "wilcoxon_p_holm": 3.979312086820063e-143,
+      "nb_p_holm": 2.7329302105250005e-05
+     },
+     "KLD": {
+      "mean_diff": -0.08226955211087517,
+      "median_diff": -0.0793692860602779,
+      "dz": -1.3138960487391602,
+      "rank_biserial": -0.9457382617382617,
+      "frac_images_model_better": 0.93,
+      "wilcoxon_p": 5.6146455405625734e-148,
+      "fold_diffs": [
+       -0.08526976854377719,
+       -0.08020064033913275,
+       -0.08623367413726858,
+       -0.07896300604961905,
+       -0.08068067148457833
+      ],
+      "folds_model_better": 5,
+      "nb_t": -37.64478841827697,
+      "nb_p": 2.973661266572706e-06,
+      "boot95_5000_seed0": [
+       -0.08608053507719281,
+       -0.0784349227493917
+      ],
+      "boot95": [
+       -0.08610976058095263,
+       -0.07836373247871072
+      ],
+      "wilcoxon_p_holm": 3.368787324337544e-147,
+      "nb_p_holm": 1.7841967599436238e-05
+     }
+    },
+    "sum_ft_klcc": {
+     "CC": {
+      "mean_diff": 0.00013407815949349666,
+      "median_diff": 0.00028339859504511455,
+      "dz": 0.024726322949656977,
+      "rank_biserial": 0.04807992007992008,
+      "frac_images_model_better": 0.529,
+      "wilcoxon_p": 0.18782125702402253,
+      "fold_diffs": [
+       0.0002897749759770418,
+       -0.0002795752658610873,
+       0.0004123438227401355,
+       0.0003391962451546604,
+       -9.134898054319329e-05
+      ],
+      "folds_model_better": 3,
+      "nb_t": 0.6610513209630745,
+      "nb_p": 0.5447128129497617,
+      "boot95_5000_seed0": [
+       -0.00020761748195427174,
+       0.00045658324376195847
+      ],
+      "boot95": [
+       -0.00020192751932349054,
+       0.000463230668757409
+      ],
+      "wilcoxon_p_holm": 0.3479616911403305,
+      "nb_p_holm": 0.5447128129497617
+     },
+     "SIM": {
+      "mean_diff": 0.0020464309680754255,
+      "median_diff": 0.0023691598264423686,
+      "dz": 0.2616193257207246,
+      "rank_biserial": 0.33135264735264736,
+      "frac_images_model_better": 0.638,
+      "wilcoxon_p": 1.1188246303604143e-19,
+      "fold_diffs": [
+       0.002588028619506799,
+       0.0019447399386508524,
+       0.0021305843559358273,
+       0.0021243889105968528,
+       0.001444413015686763
+      ],
+      "folds_model_better": 5,
+      "nb_t": 7.4029490108719,
+      "nb_p": 0.0017760934867300452,
+      "boot95_5000_seed0": [
+       0.0015575079396357263,
+       0.0025186662137981187
+      ],
+      "boot95": [
+       0.0015590823935342755,
+       0.0025424231377040372
+      ],
+      "wilcoxon_p_holm": 2.2376492607208285e-19,
+      "nb_p_holm": 0.0035521869734600905
+     },
+     "KLD": {
+      "mean_diff": -0.001244795657597415,
+      "median_diff": -0.0018023006581787265,
+      "dz": -0.12408636308099977,
+      "rank_biserial": -0.24356843156843158,
+      "frac_images_model_better": 0.602,
+      "wilcoxon_p": 2.522326324197787e-11,
+      "fold_diffs": [
+       -0.0014582482755235715,
+       -0.001464302929026065,
+       -0.0019861252837880816,
+       -0.0007135308941419588,
+       -0.0006017709055073928
+      ],
+      "folds_model_better": 5,
+      "nb_t": -3.2071947100623728,
+      "nb_p": 0.03267606255862276,
+      "boot95_5000_seed0": [
+       -0.0018689677808846983,
+       -0.000625736438472527
+      ],
+      "boot95": [
+       -0.0018571511936305253,
+       -0.0006146391519662261
+      ],
+      "wilcoxon_p_holm": 5.044652648395574e-11,
+      "nb_p_holm": 0.06535212511724552
+     }
+    }
+   }
+  },
+  "secondary_seedavg": {
+   "members": [
+    "sum_ft vs msdb_adapt_seedavg"
+   ],
+   "results": {
+    "msdb_adapt_seedavg": {
+     "CC": {
+      "mean_diff": -0.0019085093016587148,
+      "median_diff": -0.0011123620198261741,
+      "dz": -0.059618526325505745,
+      "rank_biserial": -0.04919080919080919,
+      "frac_images_model_better": 0.486,
+      "wilcoxon_p": 0.1778249287203687,
+      "fold_diffs": [
+       -0.0018814545090591883,
+       -0.0015594993473890817,
+       -0.004137352861502297,
+       -0.0032279765917139214,
+       0.0012637368013705963
+      ],
+      "folds_model_better": 1,
+      "nb_t": -1.384351388077975,
+      "nb_p": 0.2384714518147901,
+      "boot95_5000_seed0": [
+       -0.0039814161192662754,
+       3.405212533822888e-05
+      ],
+      "boot95": [
+       -0.0038737093937621977,
+       0.00010952523248024231
+      ],
+      "wilcoxon_p_holm": 0.1778249287203687,
+      "nb_p_holm": 0.2384714518147901
+     },
+     "SIM": {
+      "mean_diff": 0.003568890469220472,
+      "median_diff": 0.003819852247179123,
+      "dz": 0.12570634533585964,
+      "rank_biserial": 0.15036563436563435,
+      "frac_images_model_better": 0.551,
+      "wilcoxon_p": 3.8058400045184825e-05,
+      "fold_diffs": [
+       0.003329244653236141,
+       0.0040723917371858764,
+       0.0017748258453504917,
+       0.0032669775671030354,
+       0.005401012543226447
+      ],
+      "folds_model_better": 5,
+      "nb_t": 4.0281819866820605,
+      "nb_p": 0.01575725964880579,
+      "boot95_5000_seed0": [
+       0.0017729472423445697,
+       0.005302444261431706
+      ],
+      "boot95": [
+       0.0018471713842220438,
+       0.005318307597609005
+      ],
+      "wilcoxon_p_holm": 3.8058400045184825e-05,
+      "nb_p_holm": 0.01575725964880579
+     },
+     "KLD": {
+      "mean_diff": -0.0023252528394512658,
+      "median_diff": -0.004988304393089275,
+      "dz": -0.06099206956333167,
+      "rank_biserial": -0.12366033966033967,
+      "frac_images_model_better": 0.556,
+      "wilcoxon_p": 0.0007055226347347146,
+      "fold_diffs": [
+       7.489208641928147e-05,
+       -0.004113790013087731,
+       -0.0016869291534725717,
+       -0.0015011603067869583,
+       -0.004399276810328381
+      ],
+      "folds_model_better": 4,
+      "nb_t": -1.830216415591482,
+      "nb_p": 0.14119208998145635,
+      "boot95_5000_seed0": [
+       -0.004660343196029832,
+       5.551062550117411e-05
+      ],
+      "boot95": [
+       -0.004632222555510463,
+       -3.3413767913628024e-05
+      ],
+      "wilcoxon_p_holm": 0.0007055226347347146,
+      "nb_p_holm": 0.14119208998145635
+     }
+    }
+   }
+  },
+  "bootstrap": "10000 resamples, fresh numpy default_rng(20261121) per comparison, metric order CC, SIM, KLD; boot95_5000_seed0 = the convention of the older sections",
+  "holm": "primary: 6 comparisons, per metric and per test; secondary: 1 comparison (no correction)",
+  "differences": "sum_ft minus reference (KLD: negative = sum_ft better)"
+ },
+ "paired_tests_sum_ft_crosscheck_main_table": {
+  "CC": {
+   "mean_diff_here": 0.01960462787389605,
+   "minus_mean_diff_main_table": 0.01960462787389605,
+   "wilcoxon_p_here": 5.174349857353189e-47,
+   "wilcoxon_p_main_table": 5.174349857353189e-47,
+   "nb_p_here": 6.0006182197697204e-05,
+   "nb_p_main_table": 6.0006182197697204e-05
+  },
+  "SIM": {
+   "mean_diff_here": 0.02332582285065545,
+   "minus_mean_diff_main_table": 0.02332582285065545,
+   "wilcoxon_p_here": 3.0101407650757094e-69,
+   "wilcoxon_p_main_table": 3.0101407650757094e-69,
+   "nb_p_here": 0.00030840762385471205,
+   "nb_p_main_table": 0.00030840762385471205
+  },
+  "KLD": {
+   "mean_diff_here": -0.03154522731328675,
+   "minus_mean_diff_main_table": -0.03154522731328675,
+   "wilcoxon_p_here": 1.2119464632340965e-72,
+   "wilcoxon_p_main_table": 1.2119464632340965e-72,
+   "nb_p_here": 0.0001621595873364625,
+   "nb_p_main_table": 0.0001621595873364625
+  }
+ },
+ "zero_shot_to_adapted_gain": {
+  "SUM": {
+   "zero_shot_row": "sum_zeroshot_t2",
+   "zero_shot_published_prior_row": null,
+   "calibrated_zero_shot_row": "sum_calibrated",
+   "adapted_row": "sum_ft",
+   "zero_shot": {
+    "CC": {
+     "mean": 0.8363667160671181,
+     "sd_folds_ddof1": 0.00679309366097874
+    },
+    "SIM": {
+     "mean": 0.6928166828655637,
+     "sd_folds_ddof1": 0.005242304645953183
+    },
+    "KLD": {
+     "mean": 0.5144051974567743,
+     "sd_folds_ddof1": 0.019868228682128373
+    }
+   },
+   "adapted": {
+    "CC": {
+     "mean": 0.9170690101622017,
+     "sd_folds_ddof1": 0.003673955117858736
+    },
+    "SIM": {
+     "mean": 0.8284795185286521,
+     "sd_folds_ddof1": 0.0027253364738336707
+    },
+    "KLD": {
+     "mean": 0.11737529557143742,
+     "sd_folds_ddof1": 0.002753106506409829
+    }
+   },
+   "calibrated_zero_shot": {
+    "CC": {
+     "mean": 0.8391386461426942,
+     "sd_folds_ddof1": 0.007074323852603861
+    },
+    "SIM": {
+     "mean": 0.7117804741939919,
+     "sd_folds_ddof1": 0.0023761694770881095
+    },
+    "KLD": {
+     "mean": 0.4358642676707265,
+     "sd_folds_ddof1": 0.012583640021713681
+    }
+   },
+   "gain_from_zero_shot": {
+    "CC": 0.08070229409508356,
+    "SIM": 0.13566283566308834,
+    "KLD": -0.3970299018853368
+   },
+   "gain_from_calibrated_zero_shot": {
+    "CC": 0.07793036401950748,
+    "SIM": 0.11669904433466016,
+    "KLD": -0.31848897209928906
+   }
+  },
+  "DeepGaze MSDB": {
+   "zero_shot_row": "msdb_zeroshot_uniform",
+   "zero_shot_published_prior_row": "msdb_zeroshot_adprior",
+   "calibrated_zero_shot_row": "msdb_zeroshot_foldprior",
+   "adapted_row": "msdb_adapt_s0",
+   "zero_shot": {
+    "CC": {
+     "mean": 0.7097781436323287,
+     "sd_folds_ddof1": 0.006395580856549544
+    },
+    "SIM": {
+     "mean": 0.6700285561319976,
+     "sd_folds_ddof1": 0.002458667559011087
+    },
+    "KLD": {
+     "mean": 0.3721101365251045,
+     "sd_folds_ddof1": 0.00696752371284665
+    }
+   },
+   "adapted": {
+    "CC": {
+     "mean": 0.9189737011586875,
+     "sd_folds_ddof1": 0.0047738065036019425
+    },
+    "SIM": {
+     "mean": 0.8249847864612165,
+     "sd_folds_ddof1": 0.0027705913474040007
+    },
+    "KLD": {
+     "mean": 0.1196810885917671,
+     "sd_folds_ddof1": 0.0031302278051802564
+    }
+   },
+   "calibrated_zero_shot": {
+    "CC": {
+     "mean": 0.8315349553504543,
+     "sd_folds_ddof1": 0.003972952560246329
+    },
+    "SIM": {
+     "mean": 0.759896270103125,
+     "sd_folds_ddof1": 0.00258787495367644
+    },
+    "KLD": {
+     "mean": 0.20653073669844418,
+     "sd_folds_ddof1": 0.0027741778002433382
+    }
+   },
+   "gain_from_zero_shot": {
+    "CC": 0.20919555752635877,
+    "SIM": 0.1549562303292189,
+    "KLD": -0.2524290479333374
+   },
+   "gain_from_calibrated_zero_shot": {
+    "CC": 0.08743874580823319,
+    "SIM": 0.06508851635809154,
+    "KLD": -0.08684964810667709
+   },
+   "zero_shot_published_prior": {
+    "CC": {
+     "mean": 0.7774319020728944,
+     "sd_folds_ddof1": 0.004765356033250628
+    },
+    "SIM": {
+     "mean": 0.7106786705064707,
+     "sd_folds_ddof1": 0.003712958657243515
+    },
+    "KLD": {
+     "mean": 0.3043834427824194,
+     "sd_folds_ddof1": 0.006654240136286894
+    }
+   },
+   "gain_from_published_prior_zero_shot": {
+    "CC": 0.14154179908579312,
+    "SIM": 0.11430611595474582,
+    "KLD": -0.1847023541906523
+   }
+  },
+  "DeepGaze IIE": {
+   "zero_shot_row": "iie_zeroshot_uniform",
+   "zero_shot_published_prior_row": "iie_zeroshot_adprior",
+   "calibrated_zero_shot_row": "iie_zeroshot_foldprior_sigma",
+   "adapted_row": "iie_ft_kl_sigma",
+   "zero_shot": {
+    "CC": {
+     "mean": 0.7496372161582572,
+     "sd_folds_ddof1": 0.008822805087936463
+    },
+    "SIM": {
+     "mean": 0.7051750877698904,
+     "sd_folds_ddof1": 0.005155494585113072
+    },
+    "KLD": {
+     "mean": 0.31957708497044107,
+     "sd_folds_ddof1": 0.01127530294912837
+    }
+   },
+   "adapted": {
+    "CC": {
+     "mean": 0.8550809636321309,
+     "sd_folds_ddof1": 0.004005198351328244
+    },
+    "SIM": {
+     "mean": 0.7768574661323833,
+     "sd_folds_ddof1": 0.0032366190646354607
+    },
+    "KLD": {
+     "mean": 0.1927117970965146,
+     "sd_folds_ddof1": 0.004409996448758885
+    }
+   },
+   "calibrated_zero_shot": {
+    "CC": {
+     "mean": 0.7683609458107176,
+     "sd_folds_ddof1": 0.008868569618120463
+    },
+    "SIM": {
+     "mean": 0.7103525728469308,
+     "sd_folds_ddof1": 0.006870341687445897
+    },
+    "KLD": {
+     "mean": 0.33157744736003647,
+     "sd_folds_ddof1": 0.014439214142298932
+    }
+   },
+   "gain_from_zero_shot": {
+    "CC": 0.10544374747387375,
+    "SIM": 0.07168237836249292,
+    "KLD": -0.12686528787392648
+   },
+   "gain_from_calibrated_zero_shot": {
+    "CC": 0.08672001782141336,
+    "SIM": 0.0665048932854525,
+    "KLD": -0.13886565026352188
+   },
+   "zero_shot_published_prior": {
+    "CC": {
+     "mean": 0.7664700400015808,
+     "sd_folds_ddof1": 0.00868769194131346
+    },
+    "SIM": {
+     "mean": 0.7064126528859807,
+     "sd_folds_ddof1": 0.006691936805323827
+    },
+    "KLD": {
+     "mean": 0.3412260516185978,
+     "sd_folds_ddof1": 0.013856644020996706
+    }
+   },
+   "gain_from_published_prior_zero_shot": {
+    "CC": 0.08861092363055012,
+    "SIM": 0.07044481324640262,
+    "KLD": -0.14851425452208322
+   }
+  },
+  "ours": {
+   "note": "n/a: our readout has no zero-shot version on ADD1000 (the warm-start readout before ADD1000 training exists only at fold level, main_table.json fold_level_only_rows)"
+  }
+ },
+ "zero_shot_vs_adapted_ranking_by_CC": {
+  "zero_shot_no_add1000_maps": [
+   "SUM",
+   "DeepGaze IIE",
+   "DeepGaze MSDB"
+  ],
+  "calibrated_zero_shot_fold_safe": [
+   "SUM",
+   "DeepGaze MSDB",
+   "DeepGaze IIE"
+  ],
+  "adapted": [
+   "DeepGaze MSDB",
+   "SUM",
+   "DeepGaze IIE"
+  ],
+  "zero_shot_published_2fold_prior (MSDB, IIE; SUM t2 has no prior)": [
+   "SUM",
+   "DeepGaze MSDB",
+   "DeepGaze IIE"
+  ]
+ },
+ "training_cost_note": "per-fold training wall-clock as recorded by each row; hardware differs between rows (Apple M4 Pro CPU, Apple M4 Pro GPU via MPS, cloud NVIDIA A10G), so times are not comparable across hardware; ours/MSDB/distill on MPS held the shared MPS lock while the CPU was shared with other tracks",
+ "created": "2026-11-24 06:12:29",
+ "command": "python -I compile_frontier.py"
+}

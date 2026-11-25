@@ -1,0 +1,408 @@
+{
+ "description": "ADD1000 near-duplicate pairs. The earlier record (5 pairs / 4 cross-fold at 26 bits) did not store its hash type or pair list and could not be reproduced with standard perceptual hashes: imagehash-style pHash/dHash/aHash at 64 and 256 bits (and 144/576/1024-bit variants, several resize filters) give either 1 pair (pHash-256 <= 26 bits: 182/761) or tens of thousands of pairs (64-bit hashes at 26 bits). Low-bit hash hits other than 182/761 were visually unrelated layouts (hash collisions). Near-duplicates are therefore defined on frozen DINOv2-base mean patch-token embeddings (448 px), which capture layout and content jointly, and every pair above threshold was visually inspected.",
+ "hash_reproduction_attempt": {
+  "hash": "pHash, imagehash reference algorithm re-implemented (grey, LANCZOS 64x64, 2-D DCT-II, top-left 16x16, bit = coef > median) = 256 bits",
+  "threshold_bits": 26,
+  "pairs": [
+   {
+    "a": "182",
+    "b": "761",
+    "meanpatch_cos": 0.9871,
+    "cls_cos": 0.9752,
+    "phash256_bits": 24,
+    "fold_a": 1,
+    "fold_b": 1,
+    "cross_fold": false,
+    "release_folder_a": "ADD1000_2",
+    "release_folder_b": "ADD1000_7A",
+    "visual": "same creative, pixel-identical (7up)"
+   }
+  ],
+  "n_pairs": 1,
+  "scan_counts_at_26_bits": {
+   "phash8": {
+    "pairs": 73887,
+    "cross_fold": 59235
+   },
+   "phash16": {
+    "pairs": 1,
+    "cross_fold": 0
+   },
+   "dhash8": {
+    "pairs": 80226,
+    "cross_fold": 64396
+   },
+   "dhash16": {
+    "pairs": 1,
+    "cross_fold": 0
+   },
+   "ahash8": {
+    "pairs": 138571,
+    "cross_fold": 110938
+   },
+   "ahash16": {
+    "pairs": 1,
+    "cross_fold": 0
+   }
+  },
+  "reproduced_earlier_count": false
+ },
+ "primary": {
+  "definition": "cosine similarity of L2-normalised mean DINOv2-base patch tokens (448 px) >= 0.94; threshold at the largest gap at the top of the ranking (0.945 -> 0.930)",
+  "n_pairs": 5,
+  "n_cross_fold_seed0": 4,
+  "pairs": [
+   {
+    "a": "182",
+    "b": "761",
+    "meanpatch_cos": 0.9871,
+    "cls_cos": 0.9752,
+    "phash256_bits": 24,
+    "fold_a": 1,
+    "fold_b": 1,
+    "cross_fold": false,
+    "release_folder_a": "ADD1000_2",
+    "release_folder_b": "ADD1000_7A",
+    "visual": "same creative, pixel-identical (7up)"
+   },
+   {
+    "a": "218",
+    "b": "226",
+    "meanpatch_cos": 0.948,
+    "cls_cos": 0.8187,
+    "phash256_bits": 86,
+    "fold_a": 4,
+    "fold_b": 1,
+    "cross_fold": true,
+    "release_folder_a": "ADD1000_2",
+    "release_folder_b": "ADD1000_2",
+    "visual": "same template, different bottle colour (Mizone)"
+   },
+   {
+    "a": "330",
+    "b": "343",
+    "meanpatch_cos": 0.9446,
+    "cls_cos": 0.7974,
+    "phash256_bits": 114,
+    "fold_a": 0,
+    "fold_b": 3,
+    "cross_fold": true,
+    "release_folder_a": "ADD1000_3",
+    "release_folder_b": "ADD1000_3",
+    "visual": "same campaign series and layout (coffee x classical poets)"
+   },
+   {
+    "a": "391",
+    "b": "694",
+    "meanpatch_cos": 0.9791,
+    "cls_cos": 0.9598,
+    "phash256_bits": 122,
+    "fold_a": 4,
+    "fold_b": 2,
+    "cross_fold": true,
+    "release_folder_a": "ADD1000_4",
+    "release_folder_b": "ADD1000_6B",
+    "visual": "same template, different wine brand text"
+   },
+   {
+    "a": "642",
+    "b": "910",
+    "meanpatch_cos": 0.9737,
+    "cls_cos": 0.9815,
+    "phash256_bits": 96,
+    "fold_a": 0,
+    "fold_b": 4,
+    "cross_fold": true,
+    "release_folder_a": "ADD1000_6A",
+    "release_folder_b": "ADD1000_8A",
+    "visual": "same creative re-cropped (Tsingtao)"
+   }
+  ],
+  "note": "count and cross-fold count coincide with the earlier record (5 pairs, 4 cross-fold); all 5 visually confirmed as the same creative or template"
+ },
+ "extended": {
+  "definition": "primary plus pairs with mean-patch cosine >= 0.925 and visually confirmed same-campaign variants found among the top-30 mean-patch and top-20 CLS pairs; used for the pair-safe folds (strictly more conservative)",
+  "n_pairs": 9,
+  "n_cross_fold_seed0": 8,
+  "pairs": [
+   {
+    "a": "182",
+    "b": "761",
+    "meanpatch_cos": 0.9871,
+    "cls_cos": 0.9752,
+    "phash256_bits": 24,
+    "fold_a": 1,
+    "fold_b": 1,
+    "cross_fold": false,
+    "release_folder_a": "ADD1000_2",
+    "release_folder_b": "ADD1000_7A",
+    "visual": "same creative, pixel-identical (7up)"
+   },
+   {
+    "a": "218",
+    "b": "226",
+    "meanpatch_cos": 0.948,
+    "cls_cos": 0.8187,
+    "phash256_bits": 86,
+    "fold_a": 4,
+    "fold_b": 1,
+    "cross_fold": true,
+    "release_folder_a": "ADD1000_2",
+    "release_folder_b": "ADD1000_2",
+    "visual": "same template, different bottle colour (Mizone)"
+   },
+   {
+    "a": "256",
+    "b": "530",
+    "meanpatch_cos": 0.9144,
+    "cls_cos": 0.6711,
+    "phash256_bits": 108,
+    "fold_a": 3,
+    "fold_b": 1,
+    "cross_fold": true,
+    "release_folder_a": "ADD1000_3",
+    "release_folder_b": "ADD1000_5A",
+    "visual": "same campaign series and layout (vivo phone)"
+   },
+   {
+    "a": "312",
+    "b": "330",
+    "meanpatch_cos": 0.93,
+    "cls_cos": 0.598,
+    "phash256_bits": 120,
+    "fold_a": 2,
+    "fold_b": 0,
+    "cross_fold": true,
+    "release_folder_a": "ADD1000_3",
+    "release_folder_b": "ADD1000_3",
+    "visual": "same campaign series and layout (coffee x classical poets)"
+   },
+   {
+    "a": "312",
+    "b": "343",
+    "meanpatch_cos": 0.9014,
+    "cls_cos": 0.4622,
+    "phash256_bits": 130,
+    "fold_a": 2,
+    "fold_b": 3,
+    "cross_fold": true,
+    "release_folder_a": "ADD1000_3",
+    "release_folder_b": "ADD1000_3",
+    "visual": "same campaign series and layout (coffee x classical poets)"
+   },
+   {
+    "a": "330",
+    "b": "343",
+    "meanpatch_cos": 0.9446,
+    "cls_cos": 0.7974,
+    "phash256_bits": 114,
+    "fold_a": 0,
+    "fold_b": 3,
+    "cross_fold": true,
+    "release_folder_a": "ADD1000_3",
+    "release_folder_b": "ADD1000_3",
+    "visual": "same campaign series and layout (coffee x classical poets)"
+   },
+   {
+    "a": "351",
+    "b": "698",
+    "meanpatch_cos": 0.929,
+    "cls_cos": 0.7441,
+    "phash256_bits": 136,
+    "fold_a": 0,
+    "fold_b": 1,
+    "cross_fold": true,
+    "release_folder_a": "ADD1000_3",
+    "release_folder_b": "ADD1000_6B",
+    "visual": "same creative, different aspect-ratio crop (black sesame paste)"
+   },
+   {
+    "a": "391",
+    "b": "694",
+    "meanpatch_cos": 0.9791,
+    "cls_cos": 0.9598,
+    "phash256_bits": 122,
+    "fold_a": 4,
+    "fold_b": 2,
+    "cross_fold": true,
+    "release_folder_a": "ADD1000_4",
+    "release_folder_b": "ADD1000_6B",
+    "visual": "same template, different wine brand text"
+   },
+   {
+    "a": "642",
+    "b": "910",
+    "meanpatch_cos": 0.9737,
+    "cls_cos": 0.9815,
+    "phash256_bits": 96,
+    "fold_a": 0,
+    "fold_b": 4,
+    "cross_fold": true,
+    "release_folder_a": "ADD1000_6A",
+    "release_folder_b": "ADD1000_8A",
+    "visual": "same creative re-cropped (Tsingtao)"
+   }
+  ],
+  "components": [
+   [
+    "182",
+    "761"
+   ],
+   [
+    "218",
+    "226"
+   ],
+   [
+    "256",
+    "530"
+   ],
+   [
+    "312",
+    "330",
+    "343"
+   ],
+   [
+    "351",
+    "698"
+   ],
+   [
+    "391",
+    "694"
+   ],
+   [
+    "642",
+    "910"
+   ]
+  ]
+ },
+ "rejected_after_visual_check": [
+  {
+   "a": "495",
+   "b": "945",
+   "meanpatch_cos": 0.917,
+   "cls_cos": 0.8685,
+   "phash256_bits": 118,
+   "fold_a": 0,
+   "fold_b": 2,
+   "cross_fold": true,
+   "release_folder_a": "ADD1000_4",
+   "release_folder_b": "ADD1000_8B",
+   "visual": "not inspected",
+   "verdict": "same product category (canned drink), different brand/design"
+  },
+  {
+   "a": "335",
+   "b": "340",
+   "meanpatch_cos": 0.913,
+   "cls_cos": 0.5969,
+   "phash256_bits": 110,
+   "fold_a": 0,
+   "fold_b": 2,
+   "cross_fold": true,
+   "release_folder_a": "ADD1000_3",
+   "release_folder_b": "ADD1000_3",
+   "visual": "not inspected",
+   "verdict": "two phone ads with similar white layout, different brands"
+  },
+  {
+   "a": "378",
+   "b": "608",
+   "meanpatch_cos": 0.9094,
+   "cls_cos": 0.8248,
+   "phash256_bits": 130,
+   "fold_a": 4,
+   "fold_b": 4,
+   "cross_fold": false,
+   "release_folder_a": "ADD1000_4",
+   "release_folder_b": "ADD1000_5B",
+   "visual": "not inspected",
+   "verdict": "two shoe ads, different brands"
+  },
+  {
+   "a": "4",
+   "b": "969",
+   "meanpatch_cos": 0.9068,
+   "cls_cos": 0.7646,
+   "phash256_bits": 142,
+   "fold_a": 4,
+   "fold_b": 0,
+   "cross_fold": true,
+   "release_folder_a": "ADD1000_1",
+   "release_folder_b": "ADD1000_8B",
+   "visual": "not inspected",
+   "verdict": "same brand (Tsingtao), different creatives; brand-level, not near-duplicate"
+  },
+  {
+   "a": "190",
+   "b": "335",
+   "meanpatch_cos": 0.5919,
+   "cls_cos": 0.0523,
+   "phash256_bits": 112,
+   "fold_a": 0,
+   "fold_b": 0,
+   "cross_fold": false,
+   "release_folder_a": "ADD1000_2",
+   "release_folder_b": "ADD1000_3",
+   "visual": "not inspected",
+   "verdict": "hash collision (pHash-64 = 6 bits): unrelated layouts"
+  },
+  {
+   "a": "523",
+   "b": "535",
+   "meanpatch_cos": 0.6247,
+   "cls_cos": 0.0317,
+   "phash256_bits": 92,
+   "fold_a": 0,
+   "fold_b": 0,
+   "cross_fold": false,
+   "release_folder_a": "ADD1000_5A",
+   "release_folder_b": "ADD1000_5A",
+   "visual": "not inspected",
+   "verdict": "hash collision (pHash-64 = 8 bits): unrelated"
+  },
+  {
+   "a": "383",
+   "b": "778",
+   "meanpatch_cos": 0.4576,
+   "cls_cos": 0.1191,
+   "phash256_bits": 114,
+   "fold_a": 2,
+   "fold_b": 2,
+   "cross_fold": false,
+   "release_folder_a": "ADD1000_4",
+   "release_folder_b": "ADD1000_7A",
+   "visual": "not inspected",
+   "verdict": "hash collision (aHash-256 = 23 bits): unrelated"
+  },
+  {
+   "a": "226",
+   "b": "782",
+   "meanpatch_cos": 0.4855,
+   "cls_cos": 0.0638,
+   "phash256_bits": 120,
+   "fold_a": 1,
+   "fold_b": 1,
+   "cross_fold": false,
+   "release_folder_a": "ADD1000_2",
+   "release_folder_b": "ADD1000_7A",
+   "visual": "not inspected",
+   "verdict": "hash collision (dHash-64 = 7 bits): unrelated"
+  },
+  {
+   "a": "457",
+   "b": "807",
+   "meanpatch_cos": 0.6089,
+   "cls_cos": 0.0585,
+   "phash256_bits": 102,
+   "fold_a": 3,
+   "fold_b": 4,
+   "cross_fold": true,
+   "release_folder_a": "ADD1000_4",
+   "release_folder_b": "ADD1000_7A",
+   "visual": "not inspected",
+   "verdict": "hash collision (pHash-64 = 12 bits): two tourism posters, different designs"
+  }
+ ],
+ "release_folders_of_pairs": "pixel-identical pair 182/761 sits in release folders ADD1000_2 and ADD1000_7; see groups.json",
+ "script": "scripts/ours/make_splits.py"
+}

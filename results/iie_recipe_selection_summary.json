@@ -1,0 +1,36 @@
+{
+ "recipes": {
+  "kl384_e20": {
+   "inner_val_CC_sigma": 0.8506656361507303,
+   "inner_val_CC_nosigma": 0.8457268342875878,
+   "inner_val_SIM_sigma": 0.777523230692247,
+   "inner_val_KLD_sigma": 0.1928168376838912,
+   "sigma": 6,
+   "steps": 1500,
+   "t_train_s": 1206.827348947525
+  },
+  "klcc64_e60": {
+   "inner_val_CC_sigma": 0.8465203847669385,
+   "inner_val_CC_nosigma": 0.8457485980009365,
+   "inner_val_SIM_sigma": 0.7731419757434503,
+   "inner_val_KLD_sigma": 0.2037401674317276,
+   "sigma": 2,
+   "steps": 4500,
+   "t_train_s": 3185.8814010620117
+  },
+  "klcc64_e20": {
+   "inner_val_CC_sigma": 0.8525578184148256,
+   "inner_val_CC_nosigma": 0.8501956175927251,
+   "inner_val_SIM_sigma": 0.7786416793499745,
+   "inner_val_KLD_sigma": 0.19089958685850864,
+   "sigma": 4,
+   "steps": 1500,
+   "t_train_s": 1070.1922991275787
+  }
+ },
+ "chosen": "klcc64_e20",
+ "inner_train_n": 600,
+ "inner_val_n": 200,
+ "rule": "fold-0 training ids only; choose by inner-validation CC with the sigma finalizer",
+ "command": "python -I scripts/iie/select_recipe.py --recipes none"
+}

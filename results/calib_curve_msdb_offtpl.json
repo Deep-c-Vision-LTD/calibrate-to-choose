@@ -1,0 +1,211 @@
+{
+ "model": "msdb",
+ "rule": "fold-0 test (200 images); subsets = splits/curve_subsets_seed0.json train_ids (n = 800 once: the pool); prior (MSDB, IIE) or token (SUM) from the n maps; blur from the grid 0..32 (step 2) chosen by mean CC on the first min(n, 200) of the n maps; no weights trained; n = 0: zero-shot (MIT1003 template for MSDB and IIE, token 2 for SUM)",
+ "grid": [
+  0,
+  2,
+  4,
+  6,
+  8,
+  10,
+  12,
+  14,
+  16,
+  18,
+  20,
+  22,
+  24,
+  26,
+  28,
+  30,
+  32
+ ],
+ "by_n": {
+  "0": {
+   "CC": 0.7874401315101697,
+   "SIM": 0.7094441023840551,
+   "KLD": 0.3248444524191067
+  },
+  "25": {
+   "CC": 0.8325766403589148,
+   "SIM": 0.7615389574359139,
+   "KLD": 0.199565995443265,
+   "CC_sd_resamples_ddof1": 0.007082869543993827,
+   "runs": [
+    {
+     "resample": 0,
+     "sigma": 20,
+     "token": null,
+     "CC": 0.8255970558635489,
+     "SIM": 0.7575644030567459,
+     "KLD": 0.2052547806196221
+    },
+    {
+     "resample": 1,
+     "sigma": 16,
+     "token": null,
+     "CC": 0.8323744018400315,
+     "SIM": 0.7621875406034738,
+     "KLD": 0.19981361612784582
+    },
+    {
+     "resample": 2,
+     "sigma": 20,
+     "token": null,
+     "CC": 0.839758463373164,
+     "SIM": 0.7648649286475222,
+     "KLD": 0.1936295895823271
+    }
+   ]
+  },
+  "50": {
+   "CC": 0.83400557431004,
+   "SIM": 0.762867084382556,
+   "KLD": 0.19656682248008162,
+   "CC_sd_resamples_ddof1": 0.00793918393850799,
+   "runs": [
+    {
+     "resample": 0,
+     "sigma": 18,
+     "token": null,
+     "CC": 0.8377092344836887,
+     "SIM": 0.764811598490657,
+     "KLD": 0.1933026704760896
+    },
+    {
+     "resample": 1,
+     "sigma": 20,
+     "token": null,
+     "CC": 0.8394161692726091,
+     "SIM": 0.7664420684538151,
+     "KLD": 0.19164804081317974
+    },
+    {
+     "resample": 2,
+     "sigma": 16,
+     "token": null,
+     "CC": 0.824891319173822,
+     "SIM": 0.7573475862031959,
+     "KLD": 0.2047497561509755
+    }
+   ]
+  },
+  "100": {
+   "CC": 0.8373479362484941,
+   "SIM": 0.7649685091060006,
+   "KLD": 0.1937088021758527,
+   "CC_sd_resamples_ddof1": 0.006779323116412455,
+   "runs": [
+    {
+     "resample": 0,
+     "sigma": 18,
+     "token": null,
+     "CC": 0.8430442940611141,
+     "SIM": 0.7684851741380695,
+     "KLD": 0.18837722789084693
+    },
+    {
+     "resample": 1,
+     "sigma": 18,
+     "token": null,
+     "CC": 0.8298497194208682,
+     "SIM": 0.7600902990252771,
+     "KLD": 0.20067076590935684
+    },
+    {
+     "resample": 2,
+     "sigma": 18,
+     "token": null,
+     "CC": 0.8391497952635001,
+     "SIM": 0.766330054154655,
+     "KLD": 0.19207841272735426
+    }
+   ]
+  },
+  "200": {
+   "CC": 0.8425052429751055,
+   "SIM": 0.768274606729916,
+   "KLD": 0.18836088190533729,
+   "CC_sd_resamples_ddof1": 0.0012153051915770646,
+   "runs": [
+    {
+     "resample": 0,
+     "sigma": 18,
+     "token": null,
+     "CC": 0.8416730668317949,
+     "SIM": 0.7675633151833167,
+     "KLD": 0.18987470079987312
+    },
+    {
+     "resample": 1,
+     "sigma": 18,
+     "token": null,
+     "CC": 0.8419427714632134,
+     "SIM": 0.76794720140246,
+     "KLD": 0.1886415940731547
+    },
+    {
+     "resample": 2,
+     "sigma": 18,
+     "token": null,
+     "CC": 0.8438998906303083,
+     "SIM": 0.7693133036039714,
+     "KLD": 0.186566350842984
+    }
+   ]
+  },
+  "400": {
+   "CC": 0.8400564564308745,
+   "SIM": 0.7666232615218368,
+   "KLD": 0.1907481336949551,
+   "CC_sd_resamples_ddof1": 0.0012850091352909988,
+   "runs": [
+    {
+     "resample": 0,
+     "sigma": 18,
+     "token": null,
+     "CC": 0.8411632927818399,
+     "SIM": 0.7675592423963675,
+     "KLD": 0.1894132749733567
+    },
+    {
+     "resample": 1,
+     "sigma": 18,
+     "token": null,
+     "CC": 0.8386472149985696,
+     "SIM": 0.7654874100026927,
+     "KLD": 0.19237821180700818
+    },
+    {
+     "resample": 2,
+     "sigma": 18,
+     "token": null,
+     "CC": 0.8403588615122135,
+     "SIM": 0.7668231321664501,
+     "KLD": 0.1904529143045004
+    }
+   ]
+  },
+  "800": {
+   "CC": 0.8407020048250367,
+   "SIM": 0.7670623589016847,
+   "KLD": 0.19006218427382707,
+   "CC_sd_resamples_ddof1": null,
+   "runs": [
+    {
+     "resample": 0,
+     "sigma": 18,
+     "token": null,
+     "CC": 0.8407020048250367,
+     "SIM": 0.7670623589016847,
+     "KLD": 0.19006218427382707
+    }
+   ]
+  }
+ },
+ "command": "python -I scripts/revision/calib_rows.py --part msdb --threads 2 --tpl official",
+ "wall_s": 944.6391501426697,
+ "template_file": "cache/revision/deepgaze_template/centerbias_mit1003.npy",
+ "template": "official DeepGaze centerbias_mit1003.npy (v1.0.0 release)",
+ "file_suffix": "_offtpl"
+}

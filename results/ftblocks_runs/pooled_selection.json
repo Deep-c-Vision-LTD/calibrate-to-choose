@@ -1,0 +1,17 @@
+{
+ "pooled_inner_val_CC": {
+  "N0": 0.8933278488095893,
+  "N2_lr3e-05": 0.9228952258947519,
+  "N4_lr3e-05": 0.936566693019989
+ },
+ "best_CC": 0.936566693019989,
+ "selected": "N4_lr3e-05",
+ "fallback_order": [
+  "N4_lr3e-05",
+  "N2_lr3e-05",
+  "N0"
+ ],
+ "rule": "same rule on the inner-val CC averaged over the 5 folds (equal 160-image inner-val sets = pooled image mean); a config that diverged in any fold's inner run has pooled CC = -inf",
+ "nesting": "NOT nested (amendment M1): the pooled choice uses every fold's inner-val set, and those lie in the other folds' test sets",
+ "written": "2026-11-24 15:30:11 GMT"
+}

@@ -1,0 +1,310 @@
+{
+ "title": "ftblocks: fine-tune the last N DINOv2-base blocks + readout per fold (nested selection)",
+ "frozen_utc": "2026-11-24T08:34:23Z",
+ "frozen_local": "2026-11-24 08:34:23 GMT",
+ "status": "frozen BEFORE any grid run; only smoke tests (fold-0 N=0 reproduction, 20-step N=4/N=2 runs scored on the fold-0 INNER-VAL set, never on a test fold) and the timing bench have been run",
+ "question": "Does fine-tuning the last N transformer blocks of frozen-DINOv2-base (+ final LayerNorm + our ASPP readout) on each fold's 800 maps close the gap from ours_scratch_s0 (CC 0.8975) towards msdb_adapt / sum_ft (~0.92) at unchanged inference cost (same graph, 221 GFLOPs)?",
+ "base_readout_inputs": {
+  "checkpoint": "facebook/dinov2-base (HF transformers AutoModel, sdpa attention, no register tokens)",
+  "input": "PIL RGB, bilinear resize 448x448, /255, ImageNet mean (0.485,0.456,0.406) / std (0.229,0.224,0.225), interpolate_pos_encoding=True",
+  "tokens": "last_hidden_state = final LayerNorm(output of block 12); CLS dropped; 1024 patch tokens -> 768x32x32",
+  "stored": "cache/ours/feats_dinov2b_448_fp16.npy (fp16, ids_sorted order)",
+  "readout": "ours_lib.ReadoutHead('full'): ASPP 768->128 (dilations 1,3,6,12 + GAP) + 1x1 head + learned 16x16 centre bias; 3,721,089 params"
+ },
+ "block_cache": {
+  "files": {
+   "8": "/Users/hamitsoyel/Downloads/attention_research/kbs_letter/cache/ftblocks/add_b08_fp32.npy",
+   "10": "/Users/hamitsoyel/Downloads/attention_research/kbs_letter/cache/ftblocks/add_b10_fp32.npy"
+  },
+  "dtype": "float32",
+  "shape": [
+   1000,
+   1025,
+   768
+  ],
+  "why_two_depths": "N=4 starts from block 8, N=2 from block 10; caching both avoids a frozen forward of blocks 9-10 in every N=2 step (6.3 GB total)",
+  "verification": {
+   "all_1000_images_cpu": {
+    "8": {
+     "replay_max_abs_vs_last_hidden": 0.0,
+     "fp16_mismatch_elems_vs_existing_cache": 0,
+     "fp16_max_abs_vs_existing_cache": 0.0
+    },
+    "10": {
+     "replay_max_abs_vs_last_hidden": 0.0,
+     "fp16_mismatch_elems_vs_existing_cache": 0,
+     "fp16_max_abs_vs_existing_cache": 0.0
+    }
+   },
+   "reread_check": {
+    "images": [
+     "578",
+     "623",
+     "683",
+     "776",
+     "896",
+     "941"
+    ],
+    "8": {
+     "cpu_replay_max_abs_vs_full_forward": 0.0,
+     "cpu_fp16_mismatch_elems": 0,
+     "mps_replay_max_abs_vs_cpu": 0.00020813941955566406,
+     "mps_fp16_mismatch_elems": 93125,
+     "mps_fp16_max_abs_vs_existing_cache": 0.0078125,
+     "elems_checked_fp16": 4718592
+    },
+    "10": {
+     "cpu_replay_max_abs_vs_full_forward": 0.0,
+     "cpu_fp16_mismatch_elems": 0,
+     "mps_replay_max_abs_vs_cpu": 0.00016355514526367188,
+     "mps_fp16_mismatch_elems": 77311,
+     "mps_fp16_max_abs_vs_existing_cache": 0.0078125,
+     "elems_checked_fp16": 4718592
+    }
+   },
+   "summary": "CPU replay of the remaining frozen blocks + final norm on the cached block outputs reproduces last_hidden_state bit-for-bit (max abs diff 0.0) and the fp16 cast equals the existing readout cache in every element for all 1000 images at both depths; on MPS the replay deviates from the CPU by <= 2.1e-4 absolute (features up to |19.6|, i.e. ~1e-5 relative)"
+  }
+ },
+ "protocol": {
+  "outer_split": "splits/kfold_seed0.json, 5 folds x 200 test ids; train = the other 4 folds in run_row.py order",
+  "seeds": "fold k: torch.manual_seed(k) immediately before the readout is built (all configs: same readout init); data-order rng numpy default_rng(k), including the base recipe's start-of-training 200-image draw",
+  "N0": "the unchanged base recipe: ours_lib.train on the fp16 feature cache (AdamW lr 3e-4 wd 1e-4 constant, 60 epochs, batch 16, KL + (1 - CC) at 64x64)",
+  "N_gt_0": "cached frozen block-(12-N) output -> trainable blocks 12-N+1..12 -> trainable final LayerNorm -> readout. One AdamW: readout lr 3e-4 wd 1e-4 constant; backbone blocks + final norm lr_bb, wd 0.05 (all their parameters), linear warmup lr_bb*(s+1)/W for s < W = round(0.05 * total steps), then constant (the readout's schedule). Same loss, batch 16, data order, 60 epochs (inner 2400 steps, outer 3000 steps)",
+  "precision": "fp32 everywhere (no autocast; bf16 was timed for information only and is NOT used)",
+  "augmentation": "none (horizontal flip is NOT in the pre-registered grid and is therefore not used)",
+  "finalizer": "Gaussian sigma from {0,2,4,6,8,10,12} by mean CC on a random 200-image subset of the run's training ids (inner: of inner-train; final: of the 800 outer training ids), drawn from the data-order rng after training",
+  "scoring": "ours_lib.score (unified 384 protocol: CC / SIM / KLD)",
+  "per_run_checkpoint": "cache/ftblocks/runs/<run>.json written atomically after each run; existing runs are skipped (a crash loses at most the run in progress); nested final models saved to cache/ftblocks/models/"
+ },
+ "inner_split": {
+  "rule": "perm = numpy default_rng(100 + k).permutation(800) over the outer training ids in run_row order; inner_train = tr[perm[:640]], inner_val = tr[perm[640:]]",
+  "file": "/Users/hamitsoyel/Downloads/attention_research/kbs_letter/scripts/ftblocks/inner_splits.json",
+  "sha256": "a5131be46ed3e6a38fe6662cda7273fc02882c282b84cad22ff1dd154a88a367"
+ },
+ "full_grid": [
+  {
+   "name": "N0",
+   "N": 0,
+   "lr_bb": null
+  },
+  {
+   "name": "N2_lr1e-05",
+   "N": 2,
+   "lr_bb": 1e-05
+  },
+  {
+   "name": "N2_lr3e-05",
+   "N": 2,
+   "lr_bb": 3e-05
+  },
+  {
+   "name": "N4_lr1e-05",
+   "N": 4,
+   "lr_bb": 1e-05
+  },
+  {
+   "name": "N4_lr3e-05",
+   "N": 4,
+   "lr_bb": 3e-05
+  }
+ ],
+ "fallback_grid": [
+  {
+   "name": "N0",
+   "N": 0,
+   "lr_bb": null
+  },
+  {
+   "name": "N2_lr3e-05",
+   "N": 2,
+   "lr_bb": 3e-05
+  },
+  {
+   "name": "N4_lr3e-05",
+   "N": 4,
+   "lr_bb": 3e-05
+  }
+ ],
+ "mode": "fallback_drop_lr1e-5",
+ "active_grid": [
+  {
+   "name": "N0",
+   "N": 0,
+   "lr_bb": null
+  },
+  {
+   "name": "N2_lr3e-05",
+   "N": 2,
+   "lr_bb": 3e-05
+  },
+  {
+   "name": "N4_lr3e-05",
+   "N": 4,
+   "lr_bb": 3e-05
+  }
+ ],
+ "selection": {
+  "metric": "mean inner-val CC (160 images) after the inner-train sigma",
+  "tie_cc": 0.001,
+  "rule": "best = max mean inner-val CC; every config with CC >= best - 0.001 is tied; select the first tied config in simplicity order = grid order (smaller N first, then lower lr_bb)",
+  "final": "retrain the selected config on all 800 outer training ids (3000 steps), sigma on 200 of them, score the 200 outer test ids ONCE"
+ },
+ "rows": {
+  "ours_ftblocks_nested": "PRIMARY. Per-fold selected config (recorded per fold).",
+  "ours_ftblocks_global": "SECONDARY, transparency only: one config chosen by the same rule on the inner-val CC averaged over the 5 folds; run on all 5 outer folds; final runs are shared with the nested row where the config coincides (identical code, seeds and data).",
+  "ours_ftblocks_distill": "OPTIONAL SECONDARY, see optional_distill."
+ },
+ "optional_distill": {
+  "trigger_min_folds": 4,
+  "trigger": "run ONLY if in >= 4 of 5 folds the nested selection beats the N0 control on inner validation, i.e. the selected config is not N0 (by the tie rule this implies its inner-val CC exceeds N0's by more than 0.001)",
+  "recipe": "fold-k nested config + the distill_pitt recipe of scripts/distill/train_students.py: each step the base 16 ADD1000 training ids with GT + 16 Pitt pool images (2,499) with teacher-k targets (cache/distill/targets/pitt_t64.npy, MSDB head adapted on fold k's 800 training maps), one forward of 32, loss = L(GT) + 1.0 L(Pitt); Pitt stream Cycler(default_rng(100000 + k)); 3000 steps; sigma by the base rule on ADD1000 training images",
+  "pitt_cache": "frozen block outputs of the 2,499 Pitt pool images computed exactly like the ADD1000 cache (cache_blocks.py --set pitt) in fp16 (3.9 GB per depth) at depth 12-N of the selected N; if folds select both N=2 and N=4 only depth 8 is cached and N=2 folds apply frozen blocks 9-10 on the fly for BOTH streams (ADD1000 then also starts from block 8; mathematically identical model)",
+  "no_selection": "no further tuning; the row is scored once per test fold"
+ },
+ "statistics": {
+  "code": "scripts/ftblocks/stats_ftblocks.py; holm, nb_test, rank_biserial, compare, vec, fold_means, describe, seed_avg executed verbatim from scripts/compile/compile_results.py (ast extraction)",
+  "tests": "paired bootstrap 95% CI (5000) of the mean per-image difference, per-image Wilcoxon signed-rank, fold-level Nadeau-Bengio corrected t (df 4), fold SD ddof 1; differences = ftblocks row minus reference",
+  "primary_family": [
+   "ours_ftblocks_nested - ours_scratch_s0",
+   "ours_ftblocks_nested - ours_scratch_seedavg",
+   "ours_ftblocks_nested - distill_pitt",
+   "ours_ftblocks_nested - ours_L448_s0",
+   "ours_ftblocks_nested - ours_ms_B_s0",
+   "ours_ftblocks_nested - msdb_adapt_s0",
+   "ours_ftblocks_nested - sum_ft"
+  ],
+  "secondary_family": "each existing secondary row (global, distill) vs the same 7 references; Holm within the family",
+  "holm": "within each family, separately per metric (CC, SIM, KLD) and test (Wilcoxon, NB)",
+  "headline": "ours_ftblocks_nested - ours_scratch_s0 on CC (primary comparison)"
+ },
+ "timing": {
+  "bench_file": "/Users/hamitsoyel/Downloads/attention_research/kbs_letter/cache/ftblocks/bench.json",
+  "s_per_step_fp32_batch16_mps": {
+   "0": 0.04772304693857829,
+   "2": 0.6101622740427654,
+   "4": 1.1317611853281657
+  },
+  "eval_s_per_image": {
+   "0": 0.0014862608909606933,
+   "2": 0.015538254976272583,
+   "4": 0.028817988634109497
+  },
+  "bf16_s_per_step_info_only": {
+   "2": "RuntimeError: view size is not compatible with input tensor's size and stride (at least one dimension spans across two contiguous subspaces). Use .reshape(...) instead.",
+   "4": "RuntimeError: view size is not compatible with input tensor's size and stride (at least one dimension spans across two contiguous subspaces). Use .reshape(...) instead."
+  },
+  "n0_run_wall_s_fold0_final_smoke": 150.0465431213379,
+  "eval_s_per_run_measured_smoke": {
+   "4": 13.238101959228516,
+   "2": 9.164780139923096
+  },
+  "estimate_full_grid_h": {
+   "inner": 12.16,
+   "finals_worst_case": 4.81,
+   "finals_best_case": 2.63,
+   "total": 16.97,
+   "total_best_case": 14.79
+  },
+  "estimate_fallback_grid_h": {
+   "inner": 6.18,
+   "finals_worst_case": 4.81,
+   "finals_best_case": 2.63,
+   "total": 10.99,
+   "total_best_case": 8.81
+  },
+  "budget_h": 10.0,
+  "courtesy_gap_s_per_run": 30,
+  "global_row_extra_h_worst": 4.73,
+  "optional_distill_h_approx": {
+   "all_folds_N2": 5.1,
+   "all_folds_N4": 9.4,
+   "note": "not measured: assumes a 32-image step costs 2x the measured 16-image step"
+  },
+  "mps_memory_gib_driver_alloc": {
+   "0": 3.6,
+   "2": 18.3,
+   "4": 17.8
+  },
+  "note": "estimates exclude time spent waiting for the shared MPS lock"
+ },
+ "fallback": {
+  "rule": "if the full-grid estimate exceeds 10.0 h, run the fallback grid (N0, N2_lr3e-05, N4_lr3e-05): lr_bb = 1e-5 is dropped; everything else (nesting, seeds, selection rule, final retrain, rows, statistics) is unchanged",
+  "why_not_select_on_fold0_only": "selecting once on fold 0's inner split and applying the config to folds 1-4 would use images of folds 1-4's test sets (they are fold 0's training ids) for a choice made for those folds, violating the mandatory nesting; rejected",
+  "why_drop_lr1e-5": "keeps both depths N=2 and N=4 (the question) and strict nesting; at 2400-3000 steps lr 1e-5 moves the blocks least, so it is the least likely to change the answer",
+  "applied": true
+ },
+ "smoke": {
+  "n0_fold0_vs_ours_scratch_s0": {
+   "ours_scratch_s0_fold0": {
+    "sigma": 4,
+    "CC": 0.9010515516988788,
+    "SIM": 0.8053298963992381,
+    "KLD": 0.14713332833193904
+   },
+   "smoke_fold0": {
+    "sigma": 4,
+    "CC": 0.9010515516988788,
+    "SIM": 0.8053298963992381,
+    "KLD": 0.14713332833193904
+   },
+   "max_abs_per_image_diff_CC": 0.0,
+   "max_abs_per_image_diff_SIM": 0.0,
+   "max_abs_per_image_diff_KLD": 0.0,
+   "mean_diff_CC": 0.0,
+   "mean_diff_SIM": 0.0,
+   "mean_diff_KLD": 0.0,
+   "n_images_identical_CC": 200,
+   "wall_s": 150.0465431213379
+  },
+  "ft_20_steps": {
+   "4": {
+    "steps": 20,
+    "epoch_loss": [
+     0.633684566617012
+    ],
+    "finite": true,
+    "inner_val_CC_after_20_steps": 0.7679057376684273,
+    "s_per_step_incl_first_steps": 1.142265748977661
+   },
+   "2": {
+    "steps": 20,
+    "epoch_loss": [
+     0.6361622631549835
+    ],
+    "finite": true,
+    "inner_val_CC_after_20_steps": 0.7649166914479545,
+    "s_per_step_incl_first_steps": 0.6177868008613586
+   }
+  }
+ },
+ "commands": {
+  "env": "export OMP_NUM_THREADS=6 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1; cd /private/tmp",
+  "nested (PRIMARY, the long run; resumable, per-run MPS lock)": "nohup /Users/hamitsoyel/Downloads/saliency_research/.venv/bin/python -I /Users/hamitsoyel/Downloads/attention_research/kbs_letter/scripts/ftblocks/train_ftblocks.py nested > /Users/hamitsoyel/Downloads/attention_research/kbs_letter/logs/ftblocks_nested.log 2>&1 &",
+  "global (SECONDARY, after nested)": "nohup /Users/hamitsoyel/Downloads/saliency_research/.venv/bin/python -I /Users/hamitsoyel/Downloads/attention_research/kbs_letter/scripts/ftblocks/train_ftblocks.py global > /Users/hamitsoyel/Downloads/attention_research/kbs_letter/logs/ftblocks_global.log 2>&1 &",
+  "optional distill: trigger check + run (refuses unless triggered; Pitt cache first)": "/Users/hamitsoyel/Downloads/saliency_research/.venv/bin/python -I /Users/hamitsoyel/Downloads/attention_research/kbs_letter/scripts/ftblocks/cache_blocks.py --set pitt --depths <8 if any fold selected N=4 else 10> --dtype fp16 ; nohup /Users/hamitsoyel/Downloads/saliency_research/.venv/bin/python -I /Users/hamitsoyel/Downloads/attention_research/kbs_letter/scripts/ftblocks/train_ftblocks.py distill > /Users/hamitsoyel/Downloads/attention_research/kbs_letter/logs/ftblocks_distill.log 2>&1 &",
+  "assemble result files": "/Users/hamitsoyel/Downloads/saliency_research/.venv/bin/python -I /Users/hamitsoyel/Downloads/attention_research/kbs_letter/scripts/ftblocks/train_ftblocks.py assemble",
+  "statistics": "/Users/hamitsoyel/Downloads/saliency_research/.venv/bin/python -I /Users/hamitsoyel/Downloads/attention_research/kbs_letter/scripts/ftblocks/stats_ftblocks.py"
+ },
+ "outputs": {
+  "runs": "/Users/hamitsoyel/Downloads/attention_research/kbs_letter/cache/ftblocks/runs",
+  "models": "/Users/hamitsoyel/Downloads/attention_research/kbs_letter/cache/ftblocks/models",
+  "results": [
+   "results/ours_ftblocks_nested_per_image.json",
+   "results/ours_ftblocks_nested_summary.json",
+   "results/ours_ftblocks_global_*",
+   "results/ours_ftblocks_distill_* (only if triggered)",
+   "results/ftblocks_stats.json"
+  ]
+ },
+ "code_sha256": {
+  "ft_common.py": "fbf2559f9c4a5a8266f8ebf7b056dee1fe1087bbbd6d25135000bc3c7d5d3e0c",
+  "train_ftblocks.py": "55486d7ae552c4088efad33b7e8058f2d8de13ddfc7624b1794e61debcc8f84e",
+  "cache_blocks.py": "482c1066a28a01bea41046531936d9dd6557d3410cd48b90a128417bb0ce248b"
+ },
+ "aux_code_sha256": {
+  "stats_ftblocks.py": "a0f26244b1bf1e67585cddc8daec4849342be484e761a3dbaba28a1a058390c9",
+  "bench_ftblocks.py": "161792233e464fa734a527cf65b22ceec78a264485e7071d0e67d59c1fabfc3f",
+  "write_plan.py": "3232916438a8b3db29a189e5c0133d34357da46189ac8060d5241dbc97eb7e8a"
+ },
+ "deviations_log": "any deviation from this plan must be appended to PLAN_DEVIATIONS.md with time and reason; PLAN.json is not edited"
+}

@@ -1,0 +1,25 @@
+{
+ "total": 57501196,
+ "encoder(patch_embed+layers)": 43646880,
+ "decoder(layers_up)": 13817379,
+ "head(final_up+final_conv)": 36937,
+ "other": 0,
+ "config": {
+  "depths": [
+   2,
+   2,
+   27,
+   2
+  ],
+  "depths_decoder": [
+   2,
+   2,
+   2,
+   1
+  ],
+  "drop_path_rate": 0.3,
+  "input_channels": 3,
+  "load_ckpt_path": null,
+  "num_classes": 1
+ }
+}

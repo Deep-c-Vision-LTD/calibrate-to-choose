@@ -1,0 +1,8 @@
+{
+ "part": "iie",
+ "validation_protocol_grid_max_abs_diff": 6.565733512431393e-10,
+ "command": "python -I scripts/revision/calib_rows.py --part iie --threads 2 --tpl official",
+ "wall_s": 5194.4496557712555,
+ "template_file": "cache/revision/deepgaze_template/centerbias_mit1003.npy",
+ "template": "official DeepGaze centerbias_mit1003.npy (v1.0.0 release)"
+}

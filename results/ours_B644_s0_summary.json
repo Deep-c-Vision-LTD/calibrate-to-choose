@@ -1,0 +1,164 @@
+{
+ "row": "ours_B644_s0",
+ "kind": "kfold",
+ "init": "scratch",
+ "seed": 0,
+ "mode": "full",
+ "folds_file": "splits/kfold_seed0.json",
+ "per_fold": [
+  {
+   "fold": 0,
+   "n": 200,
+   "CC": 0.9014748860721172,
+   "SIM": 0.8051548400135025,
+   "KLD": 0.1445585894673669
+  },
+  {
+   "fold": 1,
+   "n": 200,
+   "CC": 0.9016927854027336,
+   "SIM": 0.8048514823066809,
+   "KLD": 0.14792637014310048
+  },
+  {
+   "fold": 2,
+   "n": 200,
+   "CC": 0.8965556620963926,
+   "SIM": 0.8050296104176519,
+   "KLD": 0.14962878831117263
+  },
+  {
+   "fold": 3,
+   "n": 200,
+   "CC": 0.8997354984081026,
+   "SIM": 0.8061312562306223,
+   "KLD": 0.15021232960913933
+  },
+  {
+   "fold": 4,
+   "n": 200,
+   "CC": 0.8981659601889205,
+   "SIM": 0.8090908496156594,
+   "KLD": 0.14309307038680116
+  }
+ ],
+ "mean_CC": 0.8995249584336532,
+ "sd_CC_ddof0": 0.0019600824274308027,
+ "sd_CC_ddof1": 0.0021914387746190364,
+ "pooled_image_mean_CC": 0.8995249584336533,
+ "mean_SIM": 0.8060516077168233,
+ "sd_SIM_ddof0": 0.0015831807855512575,
+ "sd_SIM_ddof1": 0.0017700499285820642,
+ "pooled_image_mean_SIM": 0.8060516077168234,
+ "mean_KLD": 0.14708382958351612,
+ "sd_KLD_ddof0": 0.0028027557346553926,
+ "sd_KLD_ddof1": 0.0031335761735084107,
+ "pooled_image_mean_KLD": 0.1470838295835161,
+ "folds_detail": [
+  {
+   "fold": 0,
+   "n_train": 800,
+   "n_test": 200,
+   "start_sigma": 0,
+   "start_CC": -0.1304114207601385,
+   "sigma": 4,
+   "CC": 0.9014748860721172,
+   "SIM": 0.8051548400135025,
+   "KLD": 0.1445585894673669,
+   "wall_s": 329.80744099617004
+  },
+  {
+   "fold": 1,
+   "n_train": 800,
+   "n_test": 200,
+   "start_sigma": 12,
+   "start_CC": 0.08587676228521285,
+   "sigma": 4,
+   "CC": 0.9016927854027336,
+   "SIM": 0.8048514823066809,
+   "KLD": 0.14792637014310048,
+   "wall_s": 327.47908091545105
+  },
+  {
+   "fold": 2,
+   "n_train": 800,
+   "n_test": 200,
+   "start_sigma": 0,
+   "start_CC": -0.04463573724871505,
+   "sigma": 4,
+   "CC": 0.8965556620963926,
+   "SIM": 0.8050296104176519,
+   "KLD": 0.14962878831117263,
+   "wall_s": 324.53459310531616
+  },
+  {
+   "fold": 3,
+   "n_train": 800,
+   "n_test": 200,
+   "start_sigma": 12,
+   "start_CC": 0.21390902915242033,
+   "sigma": 4,
+   "CC": 0.8997354984081026,
+   "SIM": 0.8061312562306223,
+   "KLD": 0.15021232960913933,
+   "wall_s": 326.21901297569275
+  },
+  {
+   "fold": 4,
+   "n_train": 800,
+   "n_test": 200,
+   "start_sigma": 0,
+   "start_CC": -0.16374140029121778,
+   "sigma": 4,
+   "CC": 0.8981659601889205,
+   "SIM": 0.8090908496156594,
+   "KLD": 0.14309307038680116,
+   "wall_s": 324.38077306747437
+  }
+ ],
+ "calibration_and_training_data": {
+  "sigma_selection_maps_per_fold": 200,
+  "sigma_selection_maps_are_subset_of_training_maps": true,
+  "train_weight_maps_per_fold": 800,
+  "centre_prior": "learned 16x16 centre-bias logit map, trained jointly with the readout on the same training maps",
+  "warm_start_source": "random init"
+ },
+ "trainable_params": 3721089,
+ "features": {
+  "files": [
+   "trackA/feats_dinov2b_644_fp16.npy"
+  ],
+  "shapes": [
+   [
+    1000,
+    768,
+    46,
+    46
+   ]
+  ],
+  "in_ch": 768,
+  "grid": [
+   46,
+   46
+  ],
+  "description": "frozen facebook/dinov2-base, 644x644 input, patch tokens 46x46x768 cached fp16 (cache/trackA); readout runs on the 46x46 grid"
+ },
+ "protocol": {
+  "backbone": "frozen facebook/dinov2-base, 644x644 input, patch tokens 46x46x768 cached fp16 (cache/trackA); readout runs on the 46x46 grid",
+  "recipe": "scripts/ours kfold v3 (ours_lib.train/select_sigma_subset/score unchanged); only the input features differ",
+  "epochs": 60,
+  "lr": 0.0003,
+  "batch": 16,
+  "optimizer": "AdamW wd 1e-4",
+  "loss": "KL + (1 - CC) at 64x64",
+  "finalizer": "Gaussian sigma from {0,2,4,6,8,10,12} chosen by mean CC on a random 200-image subset of the training fold",
+  "scoring": "unified: 384x384, GT bilinear to 384, clip at 0 and divide by sum; CC/SIM/KLD (eps 1e-8)",
+  "init_seed_rule": "torch.manual_seed(1000*seed + fold); data-order rng default_rng(fold + 1000*seed)"
+ },
+ "wall_clock_s": 1645.048800945282,
+ "feature_load_s": 12.422776937484741,
+ "device": "mps",
+ "torch": "2.12.0",
+ "machine": "macOS-26.6.2-arm64-arm-64bit",
+ "command": "python -I scripts/trackA/run_row_a.py --row ours_B644_s0 --feats trackA/feats_dinov2b_644_fp16.npy --seed 0 --desc frozen facebook/dinov2-base, 644x644 input, patch tokens 46x46x768 cached fp16 (cache/trackA); readout runs on the 46x46 grid --device mps --save-heads"
+}

@@ -1,0 +1,213 @@
+{
+ "row": "abl_no_aspp_s2",
+ "kind": "abl",
+ "init": "warm",
+ "seed": 2,
+ "mode": "no_aspp",
+ "n": null,
+ "r": null,
+ "folds_file": "splits/kfold_seed0.json",
+ "per_fold": [
+  {
+   "fold": 0,
+   "n": 200,
+   "CC": 0.8960804636569959,
+   "SIM": 0.8009387532222145,
+   "KLD": 0.15636521820922536
+  },
+  {
+   "fold": 1,
+   "n": 200,
+   "CC": 0.895018718126932,
+   "SIM": 0.798690930887835,
+   "KLD": 0.16120339154837993
+  },
+  {
+   "fold": 2,
+   "n": 200,
+   "CC": 0.8895342468573206,
+   "SIM": 0.7975422579575954,
+   "KLD": 0.16277047147277363
+  },
+  {
+   "fold": 3,
+   "n": 200,
+   "CC": 0.8921823503440851,
+   "SIM": 0.798367818100953,
+   "KLD": 0.16123132789999478
+  },
+  {
+   "fold": 4,
+   "n": 200,
+   "CC": 0.8888591203693541,
+   "SIM": 0.7984873300586192,
+   "KLD": 0.15909882589296787
+  }
+ ],
+ "mean_CC": 0.8923349798709375,
+ "sd_CC_ddof0": 0.0028698466955254932,
+ "sd_CC_ddof1": 0.0032085861480990723,
+ "pooled_image_mean_CC": 0.8923349798709376,
+ "mean_SIM": 0.7988054180454435,
+ "sd_SIM_ddof0": 0.0011359994165507706,
+ "sd_SIM_ddof1": 0.0012700859589038114,
+ "pooled_image_mean_SIM": 0.7988054180454435,
+ "mean_KLD": 0.16013384700466832,
+ "sd_KLD_ddof0": 0.0022169352778964447,
+ "sd_KLD_ddof1": 0.0024786089915469186,
+ "pooled_image_mean_KLD": 0.16013384700466832,
+ "folds_detail": [
+  {
+   "fold": 0,
+   "n_train": 800,
+   "n_test": 200,
+   "warm_load": {
+    "missing_keys": [
+     "aspp.net.0.weight",
+     "aspp.net.1.weight",
+     "aspp.net.1.bias",
+     "aspp.net.1.running_mean",
+     "aspp.net.1.running_var",
+     "aspp.net.3.weight",
+     "aspp.net.4.weight",
+     "aspp.net.4.bias",
+     "aspp.net.4.running_mean",
+     "aspp.net.4.running_var"
+    ],
+    "n_unexpected_keys": 36
+   },
+   "sigma": 4,
+   "CC": 0.8960804636569959,
+   "SIM": 0.8009387532222145,
+   "KLD": 0.15636521820922536,
+   "wall_s": 46.9532368183136
+  },
+  {
+   "fold": 1,
+   "n_train": 800,
+   "n_test": 200,
+   "warm_load": {
+    "missing_keys": [
+     "aspp.net.0.weight",
+     "aspp.net.1.weight",
+     "aspp.net.1.bias",
+     "aspp.net.1.running_mean",
+     "aspp.net.1.running_var",
+     "aspp.net.3.weight",
+     "aspp.net.4.weight",
+     "aspp.net.4.bias",
+     "aspp.net.4.running_mean",
+     "aspp.net.4.running_var"
+    ],
+    "n_unexpected_keys": 36
+   },
+   "sigma": 4,
+   "CC": 0.895018718126932,
+   "SIM": 0.798690930887835,
+   "KLD": 0.16120339154837993,
+   "wall_s": 46.641804933547974
+  },
+  {
+   "fold": 2,
+   "n_train": 800,
+   "n_test": 200,
+   "warm_load": {
+    "missing_keys": [
+     "aspp.net.0.weight",
+     "aspp.net.1.weight",
+     "aspp.net.1.bias",
+     "aspp.net.1.running_mean",
+     "aspp.net.1.running_var",
+     "aspp.net.3.weight",
+     "aspp.net.4.weight",
+     "aspp.net.4.bias",
+     "aspp.net.4.running_mean",
+     "aspp.net.4.running_var"
+    ],
+    "n_unexpected_keys": 36
+   },
+   "sigma": 4,
+   "CC": 0.8895342468573206,
+   "SIM": 0.7975422579575954,
+   "KLD": 0.16277047147277363,
+   "wall_s": 46.69652986526489
+  },
+  {
+   "fold": 3,
+   "n_train": 800,
+   "n_test": 200,
+   "warm_load": {
+    "missing_keys": [
+     "aspp.net.0.weight",
+     "aspp.net.1.weight",
+     "aspp.net.1.bias",
+     "aspp.net.1.running_mean",
+     "aspp.net.1.running_var",
+     "aspp.net.3.weight",
+     "aspp.net.4.weight",
+     "aspp.net.4.bias",
+     "aspp.net.4.running_mean",
+     "aspp.net.4.running_var"
+    ],
+    "n_unexpected_keys": 36
+   },
+   "sigma": 4,
+   "CC": 0.8921823503440851,
+   "SIM": 0.798367818100953,
+   "KLD": 0.16123132789999478,
+   "wall_s": 46.56013512611389
+  },
+  {
+   "fold": 4,
+   "n_train": 800,
+   "n_test": 200,
+   "warm_load": {
+    "missing_keys": [
+     "aspp.net.0.weight",
+     "aspp.net.1.weight",
+     "aspp.net.1.bias",
+     "aspp.net.1.running_mean",
+     "aspp.net.1.running_var",
+     "aspp.net.3.weight",
+     "aspp.net.4.weight",
+     "aspp.net.4.bias",
+     "aspp.net.4.running_mean",
+     "aspp.net.4.running_var"
+    ],
+    "n_unexpected_keys": 36
+   },
+   "sigma": 4,
+   "CC": 0.8888591203693541,
+   "SIM": 0.7984873300586192,
+   "KLD": 0.15909882589296787,
+   "wall_s": 46.72523903846741
+  }
+ ],
+ "calibration_and_training_data": {
+  "sigma_selection_maps_per_fold": 200,
+  "sigma_selection_maps_are_subset_of_training_maps": true,
+  "train_weight_maps_per_fold": 800,
+  "centre_prior": "learned 16x16 centre-bias logit map, trained jointly with the readout on the same training maps (no separately fitted prior)",
+  "warm_start_source": "readout initialised from a UEyes-trained checkpoint (0 ADD1000 maps)"
+ },
+ "trainable_params": 1033089,
+ "protocol": {
+  "backbone": "frozen facebook/dinov2-base, 448x448 input, patch tokens cached fp16 (cache/ours)",
+  "epochs": 60,
+  "lr": 0.0003,
+  "batch": 16,
+  "optimizer": "AdamW wd 1e-4",
+  "loss": "KL + (1 - CC) at 64x64",
+  "finalizer": "Gaussian sigma from {0,2,4,6,8,10,12} chosen by mean CC on training images",
+  "scoring": "unified: 384x384, GT bilinear to 384, clip at 0 and divide by sum; CC/SIM/KLD (eps 1e-8)",
+  "native_resolution": "the readout's 32x32 logits are bilinearly upsampled to 384 inside the model, so the native score is the 384 score",
+  "init_seed_rule": "torch.manual_seed(1000*seed + fold) [curves: 1000*n + r]; data-order rng default_rng(fold + 1000*seed) [curves: default_rng(r)]",
+  "gt_note": "training targets use the published load_gt (min subtracted); evaluation GT uses the unified clip/sum rule (differs from the published scorer only for SIM/KLD on the 1 map whose resized minimum is above 0)"
+ },
+ "wall_clock_s": 238.2945909500122,
+ "feature_load_s": 4.7108330726623535,
+ "device": "mps",
+ "torch": "2.12.0",
+ "machine": "macOS-26.6.2-arm64-arm-64bit",
+ "command": "python -I scripts/ours/run_row.py --row abl_no_aspp_s2 --kind abl --init warm --mode no_aspp --seed 2 --device mps"
+}

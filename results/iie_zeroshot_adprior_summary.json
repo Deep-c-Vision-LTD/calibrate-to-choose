@@ -1,0 +1,95 @@
+{
+ "row": "iie_zeroshot_adprior",
+ "per_fold": [
+  {
+   "fold": 0,
+   "n": 200,
+   "CC": 0.7537691371072904,
+   "SIM": 0.6974537766589941,
+   "KLD": 0.3643664592826106
+  },
+  {
+   "fold": 1,
+   "n": 200,
+   "CC": 0.7775142637360642,
+   "SIM": 0.7155107590095028,
+   "KLD": 0.32911675176476407
+  },
+  {
+   "fold": 2,
+   "n": 200,
+   "CC": 0.7682470143938513,
+   "SIM": 0.7093374386678044,
+   "KLD": 0.33205547451372425
+  },
+  {
+   "fold": 3,
+   "n": 200,
+   "CC": 0.7691893958822766,
+   "SIM": 0.7036884607841384,
+   "KLD": 0.3400927436563616
+  },
+  {
+   "fold": 4,
+   "n": 200,
+   "CC": 0.7636303888884209,
+   "SIM": 0.7060728293094636,
+   "KLD": 0.34049882887552857
+  }
+ ],
+ "CC_mean": 0.7664700400015808,
+ "CC_sd_over_folds": 0.007770507899341603,
+ "CC_sd_over_folds_ddof1": 0.00868769194131346,
+ "CC_mean_over_images": 0.7664700400015807,
+ "SIM_mean": 0.7064126528859807,
+ "SIM_sd_over_folds": 0.005985450239134741,
+ "SIM_sd_over_folds_ddof1": 0.006691936805323827,
+ "SIM_mean_over_images": 0.7064126528859807,
+ "KLD_mean": 0.3412260516185978,
+ "KLD_sd_over_folds": 0.012393759188385863,
+ "KLD_sd_over_folds_ddof1": 0.013856644020996706,
+ "KLD_mean_over_images": 0.3412260516185978,
+ "n_images": 1000,
+ "protocol": "zero-shot DeepGaze IIE + published 2-fold ADD1000 centre prior (eval_deepgaze_iie.py): prior for an image is fit on the 500 GT maps of the other half (halves = even/odd positions in numerically sorted ids); 'fold' in per-image rows is the 5-fold id (for pairing), 'prior_half' the 2-fold half",
+ "calibration_maps": 500,
+ "training_maps": 0,
+ "trainable_params_trained": 0,
+ "native_resolution": "DeepGaze IIE predicts at its input resolution (384 x 384 here), so the native and unified scores are identical",
+ "wall_clock_s_total_script": 457.46644496917725,
+ "command": "python -I scripts/iie/zeroshot_iie.py --device cpu --threads 6",
+ "wall_clock_s_row": 219.8457431793213,
+ "two_fold_halves": {
+  "A": {
+   "CC": 0.7661896488979386,
+   "SIM": 0.7047165619330091,
+   "KLD": 0.34618500266190255
+  },
+  "B": {
+   "CC": 0.7667504311052228,
+   "SIM": 0.7081087438389521,
+   "KLD": 0.3362671005752931
+  }
+ },
+ "published": {
+  "CC": 0.7664700386019698,
+  "SIM": 0.7064126547240921,
+  "KLD": 0.34122604082945374,
+  "per_fold": {
+   "A": {
+    "CC": 0.7661896488421283,
+    "SIM": 0.7047165651199007,
+    "KLD": 0.3461849910602996
+   },
+   "B": {
+    "CC": 0.7667504283618114,
+    "SIM": 0.7081087443282837,
+    "KLD": 0.3362670905986078
+   }
+  }
+ },
+ "reproduction_abs_diff": {
+  "CC": 1.3996108716440858e-09,
+  "SIM": 1.8381114408327903e-09,
+  "KLD": 1.0789144078149349e-08
+ }
+}

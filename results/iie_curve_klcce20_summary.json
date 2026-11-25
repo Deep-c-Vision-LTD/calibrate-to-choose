@@ -1,0 +1,441 @@
+{
+ "row": "iie_curve_klcce20",
+ "test_set": "fold 0 of splits/kfold_seed0.json (= sample_efficiency.py held-out 200)",
+ "per_n": [
+  {
+   "n": 25,
+   "n_runs": 3,
+   "calibration_maps": {
+    "prior_maps": 25,
+    "sigma_selection_maps": 25
+   },
+   "training_maps": 25,
+   "steps_per_run": [
+    80,
+    80,
+    80
+   ],
+   "t_train_s_per_run": [
+    45.1020827293396,
+    45.289409160614014,
+    45.795230865478516
+   ],
+   "sigma_per_run": [
+    6,
+    6,
+    6
+   ],
+   "sigma_CC_runs": [
+    0.8050491680521314,
+    0.7880322973762631,
+    0.8067671193455783
+   ],
+   "sigma_CC_mean": 0.7999495282579909,
+   "sigma_CC_sd": 0.008455890770264625,
+   "sigma_SIM_runs": [
+    0.7398244984020735,
+    0.7330579860164803,
+    0.7434725304350566
+   ],
+   "sigma_SIM_mean": 0.7387850049512035,
+   "sigma_SIM_sd": 0.004314788047125511,
+   "sigma_KLD_runs": [
+    0.2501002422383284,
+    0.26308974831048637,
+    0.24939235883451655
+   ],
+   "sigma_KLD_mean": 0.2541941164611104,
+   "sigma_KLD_sd": 0.006296796763861856,
+   "nosigma_CC_runs": [
+    0.8046375158186723,
+    0.7858350350004208,
+    0.8060499793186138
+   ],
+   "nosigma_CC_mean": 0.7988408433792357,
+   "nosigma_CC_sd": 0.009214555586118568,
+   "nosigma_SIM_runs": [
+    0.7396557735277903,
+    0.7313920465936072,
+    0.7429327476616979
+   ],
+   "nosigma_SIM_mean": 0.7379935225943651,
+   "nosigma_SIM_sd": 0.0048558730014977396,
+   "nosigma_KLD_runs": [
+    0.2507556235103127,
+    0.26641337560798706,
+    0.25111981123711796
+   ],
+   "nosigma_KLD_mean": 0.2560962701184726,
+   "nosigma_KLD_sd": 0.007296810144915663
+  },
+  {
+   "n": 50,
+   "n_runs": 3,
+   "calibration_maps": {
+    "prior_maps": 50,
+    "sigma_selection_maps": 50
+   },
+   "training_maps": 50,
+   "steps_per_run": [
+    140,
+    140,
+    140
+   ],
+   "t_train_s_per_run": [
+    85.25720119476318,
+    85.09314012527466,
+    84.57332420349121
+   ],
+   "sigma_per_run": [
+    8,
+    6,
+    6
+   ],
+   "sigma_CC_runs": [
+    0.8173837599068922,
+    0.8273336562545791,
+    0.820618775235471
+   ],
+   "sigma_CC_mean": 0.8217787304656475,
+   "sigma_CC_sd": 0.00414401025050524,
+   "sigma_SIM_runs": [
+    0.7507385882838417,
+    0.755281150458649,
+    0.7520907422277173
+   ],
+   "sigma_SIM_mean": 0.752703493656736,
+   "sigma_SIM_sd": 0.001904436226869749,
+   "sigma_KLD_runs": [
+    0.23301935715483413,
+    0.22330073008876,
+    0.229394354041342
+   ],
+   "sigma_KLD_mean": 0.22857148042831202,
+   "sigma_KLD_sd": 0.004010051433554012,
+   "nosigma_CC_runs": [
+    0.8143186061284828,
+    0.8264315276964973,
+    0.819193336804135
+   ],
+   "nosigma_CC_mean": 0.8199811568763717,
+   "nosigma_CC_sd": 0.0049763582787604715,
+   "nosigma_SIM_runs": [
+    0.7490514075457925,
+    0.7552124809316548,
+    0.7512374248332016
+   ],
+   "nosigma_SIM_mean": 0.7518337711035495,
+   "nosigma_SIM_sd": 0.0025503500376894547,
+   "nosigma_KLD_runs": [
+    0.23661322803381254,
+    0.22437404175583184,
+    0.23121277978392876
+   ],
+   "nosigma_KLD_mean": 0.23073334985785773,
+   "nosigma_KLD_sd": 0.005008114081320909
+  },
+  {
+   "n": 100,
+   "n_runs": 3,
+   "calibration_maps": {
+    "prior_maps": 100,
+    "sigma_selection_maps": 100
+   },
+   "training_maps": 100,
+   "steps_per_run": [
+    260,
+    260,
+    260
+   ],
+   "t_train_s_per_run": [
+    128.41259121894836,
+    147.46620106697083,
+    162.14204692840576
+   ],
+   "sigma_per_run": [
+    6,
+    6,
+    6
+   ],
+   "sigma_CC_runs": [
+    0.8378799828181801,
+    0.8311402690261278,
+    0.8298616415232593
+   ],
+   "sigma_CC_mean": 0.8329606311225223,
+   "sigma_CC_sd": 0.0035174553209150875,
+   "sigma_SIM_runs": [
+    0.7630498743432179,
+    0.7600602440292434,
+    0.7590969245684026
+   ],
+   "sigma_SIM_mean": 0.760735680980288,
+   "sigma_SIM_sd": 0.0016829763885609257,
+   "sigma_KLD_runs": [
+    0.21231535996089793,
+    0.21954236817716377,
+    0.21823836803211663
+   ],
+   "sigma_KLD_mean": 0.21669869872339276,
+   "sigma_KLD_sd": 0.003144873937554377,
+   "nosigma_CC_runs": [
+    0.8349142674644767,
+    0.8287915069153746,
+    0.8273553449104089
+   ],
+   "nosigma_CC_mean": 0.8303537064300867,
+   "nosigma_CC_sd": 0.0032776697044723762,
+   "nosigma_SIM_runs": [
+    0.7613872046605841,
+    0.7583472779913193,
+    0.7578040143255906
+   ],
+   "nosigma_SIM_mean": 0.759179498992498,
+   "nosigma_SIM_sd": 0.0015767597767361947,
+   "nosigma_KLD_runs": [
+    0.21590238122197206,
+    0.22309961505153553,
+    0.22139661440484307
+   ],
+   "nosigma_KLD_mean": 0.22013287022611686,
+   "nosigma_KLD_sd": 0.0030711377599950862
+  },
+  {
+   "n": 200,
+   "n_runs": 3,
+   "calibration_maps": {
+    "prior_maps": 200,
+    "sigma_selection_maps": 200
+   },
+   "training_maps": 200,
+   "steps_per_run": [
+    500,
+    500,
+    500
+   ],
+   "t_train_s_per_run": [
+    272.7396936416626,
+    264.51162028312683,
+    264.1107041835785
+   ],
+   "sigma_per_run": [
+    6,
+    4,
+    6
+   ],
+   "sigma_CC_runs": [
+    0.8405086866627687,
+    0.8422896286586676,
+    0.837809830801101
+   ],
+   "sigma_CC_mean": 0.8402027153741791,
+   "sigma_CC_sd": 0.0018416226600918002,
+   "sigma_SIM_runs": [
+    0.7671107377457296,
+    0.7657163867002109,
+    0.7645741088030968
+   ],
+   "sigma_SIM_mean": 0.7658004110830124,
+   "sigma_SIM_sd": 0.001037277420567709,
+   "sigma_KLD_runs": [
+    0.2077130438395398,
+    0.20917364413879747,
+    0.21360238806583048
+   ],
+   "sigma_KLD_mean": 0.2101630253480559,
+   "sigma_KLD_sd": 0.0025040301165469383,
+   "nosigma_CC_runs": [
+    0.8361069691258571,
+    0.840377206653588,
+    0.8342611466190722
+   ],
+   "nosigma_CC_mean": 0.8369151074661724,
+   "nosigma_CC_sd": 0.002561427111236461,
+   "nosigma_SIM_runs": [
+    0.7641311420963774,
+    0.764615156836371,
+    0.7624069116126643
+   ],
+   "nosigma_SIM_mean": 0.7637177368484709,
+   "nosigma_SIM_sd": 0.0009477217124076861,
+   "nosigma_KLD_runs": [
+    0.2138720510031641,
+    0.21143927285205236,
+    0.21854973244470513
+   ],
+   "nosigma_KLD_mean": 0.21462035209997385,
+   "nosigma_KLD_sd": 0.0029506637449114156
+  },
+  {
+   "n": 400,
+   "n_runs": 3,
+   "calibration_maps": {
+    "prior_maps": 400,
+    "sigma_selection_maps": 400
+   },
+   "training_maps": 400,
+   "steps_per_run": [
+    1000,
+    1000,
+    1000
+   ],
+   "t_train_s_per_run": [
+    509.53457522392273,
+    246.23965883255005,
+    261.78062415122986
+   ],
+   "sigma_per_run": [
+    4,
+    4,
+    4
+   ],
+   "sigma_CC_runs": [
+    0.8482517220890026,
+    0.8470473908172599,
+    0.8511620750373032
+   ],
+   "sigma_CC_mean": 0.8488203959811885,
+   "sigma_CC_sd": 0.0017272712688725567,
+   "sigma_SIM_runs": [
+    0.7708740392544959,
+    0.769945419472758,
+    0.7714435656576576
+   ],
+   "sigma_SIM_mean": 0.7707543414616372,
+   "sigma_SIM_sd": 0.0006174442857693178,
+   "sigma_KLD_runs": [
+    0.2007221727540575,
+    0.20198885979420006,
+    0.20075867273212197
+   ],
+   "sigma_KLD_mean": 0.2011565684267932,
+   "sigma_KLD_sd": 0.0005887074838404866,
+   "nosigma_CC_runs": [
+    0.8459796357481255,
+    0.8448099151177026,
+    0.8488525777637025
+   ],
+   "nosigma_CC_mean": 0.8465473762098435,
+   "nosigma_CC_sd": 0.0016985341211849829,
+   "nosigma_SIM_runs": [
+    0.7694473065260894,
+    0.7685090529005074,
+    0.7699402269899878
+   ],
+   "nosigma_SIM_mean": 0.7692988621388616,
+   "nosigma_SIM_sd": 0.0005936281780568079,
+   "nosigma_KLD_runs": [
+    0.20372218477474807,
+    0.20489569403208094,
+    0.20391810026100024
+   ],
+   "nosigma_KLD_mean": 0.2041786596892764,
+   "nosigma_KLD_sd": 0.000513289655723543
+  },
+  {
+   "n": 800,
+   "n_runs": 3,
+   "calibration_maps": {
+    "prior_maps": 800,
+    "sigma_selection_maps": 800
+   },
+   "training_maps": 800,
+   "steps_per_run": [
+    2000,
+    2000,
+    2000
+   ],
+   "t_train_s_per_run": [
+    1229.267399072647,
+    1192.5208492279053,
+    523.9722566604614
+   ],
+   "sigma_per_run": [
+    4,
+    4,
+    4
+   ],
+   "sigma_CC_runs": [
+    0.8565833118618101,
+    0.8558012456308881,
+    0.8556054199064883
+   ],
+   "sigma_CC_mean": 0.8559966591330622,
+   "sigma_CC_sd": 0.00042245946290324024,
+   "sigma_SIM_runs": [
+    0.7761622004991386,
+    0.7758386421214272,
+    0.7760244624585977
+   ],
+   "sigma_SIM_mean": 0.7760084350263878,
+   "sigma_SIM_sd": 0.00013257743620051244,
+   "sigma_KLD_runs": [
+    0.19348513832006786,
+    0.19245474134526128,
+    0.19285097224455888
+   ],
+   "sigma_KLD_mean": 0.1929302839699627,
+   "sigma_KLD_sd": 0.000424379738569547,
+   "nosigma_CC_runs": [
+    0.8542946225468347,
+    0.8536270291970101,
+    0.8532958801059146
+   ],
+   "nosigma_CC_mean": 0.8537391772832531,
+   "nosigma_CC_sd": 0.0004153749396707869,
+   "nosigma_SIM_runs": [
+    0.7745732813224245,
+    0.7743405026549997,
+    0.7743989781241436
+   ],
+   "nosigma_SIM_mean": 0.7744375873671893,
+   "nosigma_SIM_sd": 9.887528251437168e-05,
+   "nosigma_KLD_runs": [
+    0.19661846764205296,
+    0.1953911765643427,
+    0.1960899546504477
+   ],
+   "nosigma_KLD_mean": 0.1960331996189478,
+   "nosigma_KLD_sd": 0.0005026441402272663
+  }
+ ],
+ "recipe_loss": "klcc64",
+ "epochs": 20,
+ "lr": 0.001,
+ "batch": "min(8, n)",
+ "training_policy_small_n": "fixed epochs (20 at every n, as our sample_efficiency.py curve), so steps = epochs x ceil(n/batch); not matched steps",
+ "subset_rule": "sample_efficiency.py: default_rng(1000*n + r).choice(pool, n, replace=False), pool = default_rng(0).permutation(1000)[200:]",
+ "shuffle": "default_rng(r), fresh copy of the training list shuffled every epoch",
+ "centre_prior": "from the n training maps only (log(to_prob(sum of min-subtracted 384 maps)) + 1e-8)",
+ "sigma_rule": "selected on all n training maps (sample_efficiency.py rule), grid [0,2,...,12]",
+ "primary_metric_variant": "sigma (with finalizer); nosigma also stored",
+ "n0_reference_fold0": {
+  "iie_zeroshot_uniform": {
+   "CC": 0.7376224666495844,
+   "SIM": 0.696886310260713,
+   "KLD": 0.3390653755044488
+  },
+  "iie_zeroshot_foldprior": {
+   "CC": 0.75393895485459,
+   "SIM": 0.6976822345414649,
+   "KLD": 0.3641810959127205
+  },
+  "iie_zeroshot_foldprior_sigma": {
+   "CC": 0.7559830390948713,
+   "SIM": 0.7012252372886333,
+   "KLD": 0.3556528798399091
+  },
+  "iie_zeroshot_adprior": {
+   "CC": 0.7537691371072904,
+   "SIM": 0.6974537766589941,
+   "KLD": 0.3643664592826106
+  }
+ },
+ "trainable_params_trained": 3059160,
+ "command": "python -I scripts/iie/ft_curves.py --row iie_curve_klcce20 --loss klcc64 --epochs 20 --aggregate_only --note recipe chosen on fold-0 training data only (results/iie_recipe_selection_summary.json): our loss KL+(1-CC) at 64x64, 20 epochs, Adam 1e-3; trained by pool workers (CPU/MPS), FinalMix custom backward",
+ "note": "recipe chosen on fold-0 training data only (results/iie_recipe_selection_summary.json): our loss KL+(1-CC) at 64x64, 20 epochs, Adam 1e-3; trained by pool workers (CPU/MPS), FinalMix custom backward",
+ "per_image_files": {
+  "sigma": "iie_curve_klcce20_per_image.json",
+  "nosigma": "iie_curve_klcce20_nosigma_per_image.json"
+ }
+}

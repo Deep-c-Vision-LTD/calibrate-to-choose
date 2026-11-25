@@ -1,0 +1,292 @@
+{
+ "row": "ours_ftblocks_global",
+ "kind": "ftblocks",
+ "init": "scratch readout + pretrained DINOv2-base blocks",
+ "seed": 0,
+ "mode": "full",
+ "folds_file": "splits/kfold_seed0.json",
+ "per_fold": [
+  {
+   "fold": 0,
+   "n": 200,
+   "CC": 0.9411264766382746,
+   "SIM": 0.8530939087323566,
+   "KLD": 0.08931808028182192
+  },
+  {
+   "fold": 1,
+   "n": 200,
+   "CC": 0.9422291275718035,
+   "SIM": 0.8518181778508365,
+   "KLD": 0.09135116814594035
+  },
+  {
+   "fold": 2,
+   "n": 200,
+   "CC": 0.9392142726828214,
+   "SIM": 0.8510434069279168,
+   "KLD": 0.09106164475522861
+  },
+  {
+   "fold": 3,
+   "n": 200,
+   "CC": 0.9407824772984498,
+   "SIM": 0.8532701514728417,
+   "KLD": 0.09156226947313996
+  },
+  {
+   "fold": 4,
+   "n": 200,
+   "CC": 0.9368445820759475,
+   "SIM": 0.8504237954440343,
+   "KLD": 0.09224927486677154
+  }
+ ],
+ "mean_CC": 0.9400393872534594,
+ "sd_CC_ddof0": 0.0018663602537698852,
+ "sd_CC_ddof1": 0.0020866541989666104,
+ "pooled_image_mean_CC": 0.9400393872534594,
+ "mean_SIM": 0.851929888085597,
+ "sd_SIM_ddof0": 0.0011151585607179484,
+ "sd_SIM_ddof1": 0.0012467851737280797,
+ "pooled_image_mean_SIM": 0.8519298880855972,
+ "mean_KLD": 0.09110848750458048,
+ "sd_KLD_ddof0": 0.0009771345906156674,
+ "sd_KLD_ddof1": 0.0010924696838915302,
+ "pooled_image_mean_KLD": 0.09110848750458046,
+ "folds_detail": [
+  {
+   "fold": 0,
+   "config": {
+    "name": "N4_lr3e-05",
+    "N": 4,
+    "lr_bb": 3e-05,
+    "source": 8,
+    "trained_blocks": [
+     9,
+     10,
+     11,
+     12
+    ]
+   },
+   "run": "final_k0_N4_lr3e-05",
+   "n_train": 800,
+   "n_test": 200,
+   "sigma": 2,
+   "CC": 0.9411264766382746,
+   "SIM": 0.8530939087323566,
+   "KLD": 0.08931808028182192,
+   "steps": 3000,
+   "s_per_step": 1.104652821302414,
+   "wall_s": 3328.03289437294,
+   "trainable_params": 32080257,
+   "device": "mps",
+   "model_file": "cache/ftblocks/models/final_k0_N4_lr3e-05.pt"
+  },
+  {
+   "fold": 1,
+   "config": {
+    "name": "N4_lr3e-05",
+    "N": 4,
+    "lr_bb": 3e-05,
+    "source": 8,
+    "trained_blocks": [
+     9,
+     10,
+     11,
+     12
+    ]
+   },
+   "run": "final_k1_N4_lr3e-05",
+   "n_train": 800,
+   "n_test": 200,
+   "sigma": 2,
+   "CC": 0.9422291275718035,
+   "SIM": 0.8518181778508365,
+   "KLD": 0.09135116814594035,
+   "steps": 3000,
+   "s_per_step": 1.0865436873435974,
+   "wall_s": 3273.7332220077515,
+   "trainable_params": 32080257,
+   "device": "mps",
+   "model_file": "cache/ftblocks/models/final_k1_N4_lr3e-05.pt"
+  },
+  {
+   "fold": 2,
+   "config": {
+    "name": "N4_lr3e-05",
+    "N": 4,
+    "lr_bb": 3e-05,
+    "source": 8,
+    "trained_blocks": [
+     9,
+     10,
+     11,
+     12
+    ]
+   },
+   "run": "final_k2_N4_lr3e-05",
+   "n_train": 800,
+   "n_test": 200,
+   "sigma": 4,
+   "CC": 0.9392142726828214,
+   "SIM": 0.8510434069279168,
+   "KLD": 0.09106164475522861,
+   "steps": 3000,
+   "s_per_step": 1.1152934510707855,
+   "wall_s": 3364.711124897003,
+   "trainable_params": 32080257,
+   "device": "mps",
+   "model_file": "cache/ftblocks/models/final_k2_N4_lr3e-05.pt"
+  },
+  {
+   "fold": 3,
+   "config": {
+    "name": "N4_lr3e-05",
+    "N": 4,
+    "lr_bb": 3e-05,
+    "source": 8,
+    "trained_blocks": [
+     9,
+     10,
+     11,
+     12
+    ]
+   },
+   "run": "final_k3_N4_lr3e-05",
+   "n_train": 800,
+   "n_test": 200,
+   "sigma": 2,
+   "CC": 0.9407824772984498,
+   "SIM": 0.8532701514728417,
+   "KLD": 0.09156226947313996,
+   "steps": 3000,
+   "s_per_step": 1.2390213466485342,
+   "wall_s": 3738.770533800125,
+   "trainable_params": 32080257,
+   "device": "mps",
+   "model_file": "cache/ftblocks/models/final_k3_N4_lr3e-05.pt"
+  },
+  {
+   "fold": 4,
+   "config": {
+    "name": "N4_lr3e-05",
+    "N": 4,
+    "lr_bb": 3e-05,
+    "source": 8,
+    "trained_blocks": [
+     9,
+     10,
+     11,
+     12
+    ]
+   },
+   "run": "final_k4_N4_lr3e-05",
+   "n_train": 800,
+   "n_test": 200,
+   "sigma": 2,
+   "CC": 0.9368445820759475,
+   "SIM": 0.8504237954440343,
+   "KLD": 0.09224927486677154,
+   "steps": 3000,
+   "s_per_step": 1.237136877377828,
+   "wall_s": 3729.4538538455963,
+   "trainable_params": 32080257,
+   "device": "mps",
+   "model_file": "cache/ftblocks/models/final_k4_N4_lr3e-05.pt"
+  }
+ ],
+ "status": "SECONDARY, NOT NESTED (transparency only): one config for all folds, chosen by the nested rule on the inner-val CC pooled over the 5 folds. The pooled choice uses each fold's own test images through the other folds' inner-val sets: 117/124/115/124/122 distinct test images of 200 for folds 0-4 (155/160/157/165/163 counted with multiplicity). This is NOT a held-out result and must never be cited as a test result.",
+ "nested": false,
+ "test_ids_in_other_folds_inner_val_distinct": [
+  117,
+  124,
+  115,
+  124,
+  122
+ ],
+ "test_ids_in_other_folds_inner_val_with_multiplicity": [
+  155,
+  160,
+  157,
+  165,
+  163
+ ],
+ "pooled_selection": {
+  "pooled_inner_val_CC": {
+   "N0": 0.8933278488095893,
+   "N2_lr3e-05": 0.9228952258947519,
+   "N4_lr3e-05": 0.936566693019989
+  },
+  "best_CC": 0.936566693019989,
+  "selected": "N4_lr3e-05",
+  "fallback_order": [
+   "N4_lr3e-05",
+   "N2_lr3e-05",
+   "N0"
+  ],
+  "rule": "same rule on the inner-val CC averaged over the 5 folds (equal 160-image inner-val sets = pooled image mean); a config that diverged in any fold's inner run has pooled CC = -inf",
+  "nesting": "NOT nested (amendment M1): the pooled choice uses every fold's inner-val set, and those lie in the other folds' test sets"
+ },
+ "final_chain_per_fold": [
+  [
+   {
+    "config": "N4_lr3e-05",
+    "run": "final_k0_N4_lr3e-05",
+    "status": "ok"
+   }
+  ],
+  [
+   {
+    "config": "N4_lr3e-05",
+    "run": "final_k1_N4_lr3e-05",
+    "status": "ok"
+   }
+  ],
+  [
+   {
+    "config": "N4_lr3e-05",
+    "run": "final_k2_N4_lr3e-05",
+    "status": "ok"
+   }
+  ],
+  [
+   {
+    "config": "N4_lr3e-05",
+    "run": "final_k3_N4_lr3e-05",
+    "status": "ok"
+   }
+  ],
+  [
+   {
+    "config": "N4_lr3e-05",
+    "run": "final_k4_N4_lr3e-05",
+    "status": "ok"
+   }
+  ]
+ ],
+ "plan_file": "scripts/ftblocks/PLAN.json",
+ "plan_sha256": "328283eb61bde0686e874f453f07d6394b401808e69fe78fd1d10dc728d9d7a9",
+ "plan_mode": "fallback_drop_lr1e-5",
+ "amendment_file": "scripts/ftblocks/PLAN_AMENDMENT_1.json",
+ "amendment_sha256": "778a2aea17f9fae28aa48d4cd7ef841855466ab2150c7f194921c1e47a2a2da4",
+ "protocol": {
+  "backbone": "facebook/dinov2-base, 448x448; blocks 1..12-N frozen (outputs cached, cache/ftblocks), blocks 12-N+1..12 + final LayerNorm fine-tuned with the readout; N = 0 is the base recipe (frozen backbone, fp16 feature cache)",
+  "readout": "ours_lib.ReadoutHead('full'), 3,721,089 params, scratch init torch.manual_seed(k)",
+  "epochs": 60,
+  "batch": 16,
+  "steps_outer": 3000,
+  "steps_inner": 2400,
+  "optimizer": "AdamW; readout lr 3e-4 wd 1e-4 constant; backbone blocks + final norm lr_bb wd 0.05, linear warmup over the first 5% of steps then constant (N = 0: the base single-group AdamW)",
+  "precision": "fp32",
+  "loss": "KL + (1 - CC) at 64x64",
+  "finalizer": "Gaussian sigma from {0,2,4,6,8,10,12} by mean CC on a random 200-image subset of the training ids",
+  "scoring": "unified: 384x384, GT bilinear to 384, clip at 0 and divide by sum; CC/SIM/KLD (eps 1e-8)",
+  "data_order_rng": "default_rng(k), incl. the base start-of-training 200-image draw",
+  "inference_cost": "identical to ours: the same DINOv2-base 448 + readout graph (221 GFLOPs); only weights of the last N blocks, the final norm and the readout differ"
+ },
+ "torch": "2.12.0",
+ "machine": "macOS-26.6.2-arm64-arm-64bit",
+ "command": "python -I scripts/ftblocks/train_ftblocks.py nested",
+ "assembled": "2026-11-24 20:23:19 GMT"
+}

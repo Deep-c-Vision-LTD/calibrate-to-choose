@@ -1,0 +1,54 @@
+{
+ "row": "msdb_zeroshot_mit1003",
+ "n_images": 1000,
+ "per_fold": [
+  {
+   "CC": 0.7874401315101697,
+   "SIM": 0.7094441023840551,
+   "KLD": 0.3248444524191067,
+   "fold": 0
+  },
+  {
+   "CC": 0.7964972829607941,
+   "SIM": 0.7142671277032008,
+   "KLD": 0.3168868651209566,
+   "fold": 1
+  },
+  {
+   "CC": 0.7867418167520422,
+   "SIM": 0.7157258423488813,
+   "KLD": 0.3137131904766371,
+   "fold": 2
+  },
+  {
+   "CC": 0.794979695822307,
+   "SIM": 0.7129570225032544,
+   "KLD": 0.320043135560242,
+   "fold": 3
+  },
+  {
+   "CC": 0.7863872955544187,
+   "SIM": 0.7153085186897203,
+   "KLD": 0.31648242393378084,
+   "fold": 4
+  }
+ ],
+ "CC_mean": 0.7904092445199463,
+ "CC_sd_folds_ddof1": 0.004909046983463767,
+ "CC_mean_over_images": 0.7904092445199462,
+ "SIM_mean": 0.7135405227258225,
+ "SIM_sd_folds_ddof1": 0.0025273760356651744,
+ "SIM_mean_over_images": 0.7135405227258225,
+ "KLD_mean": 0.3183940135021447,
+ "KLD_sd_folds_ddof1": 0.004247456324109719,
+ "KLD_mean_over_images": 0.31839401350214463,
+ "protocol": "DeepGazeMSDB released weights, generalisation mode (dataset=None), pixel_per_dva 21.7, 512x512 input; MIT1003 centre-bias template (official DeepGaze centerbias_mit1003.npy (v1.0.0 release)) zoomed (order 0) to 512, logsumexp-renormalised, downscaled by the model's own nearest rule; no post-hoc blur; no ADD1000 data",
+ "command": "python -I scripts/revision/calib_rows.py --part msdb --threads 2 --tpl official",
+ "wall_s_script_so_far": 16.780762910842896,
+ "scoring": "CC/SIM/KLD on 384x384 vs GT PIL-bilinear to 384, clip at 0 and divide by sum",
+ "template_file": "cache/revision/deepgaze_template/centerbias_mit1003.npy",
+ "template": "official DeepGaze centerbias_mit1003.npy (v1.0.0 release)",
+ "file_suffix": "_offtpl",
+ "calibration_maps": 0,
+ "training_maps": 0
+}

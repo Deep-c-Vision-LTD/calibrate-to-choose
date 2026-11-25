@@ -1,0 +1,45 @@
+{
+ "model_file": "cache/ftblocks/models/final_k0_N4_lr3e-05.pt",
+ "config": {
+  "name": "N4_lr3e-05",
+  "N": 4,
+  "lr_bb": 3e-05,
+  "source": 8,
+  "trained_blocks": [
+   9,
+   10,
+   11,
+   12
+  ]
+ },
+ "params_total": 90301569,
+ "params_total_ours": 90301569,
+ "same_param_count_as_ours": true,
+ "state_dict_keys_replaced": 113,
+ "torch": "2.12.0",
+ "machine": "macOS-26.6.2-arm64-arm-64bit",
+ "threads": 4,
+ "GFLOPs": 221.187117056,
+ "flops_by_op_global": {
+  "aten.convolution": 8.340832256,
+  "aten.addmm": 174.1160448,
+  "aten.bmm": 38.73024
+ },
+ "flops_convention": "cost_bench.py: 2 x MACs of convolution and matmul ops, FlopCounterMode, SDPA math backend, batch 1, 448x448",
+ "end_to_end_check": {
+  "images": [
+   "460",
+   "207",
+   "223",
+   "163"
+  ],
+  "max_abs_diff_sigmoid_384": [
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "note": "full pixel pipeline vs the training path from the cached frozen block output (n_ft = 0: fp16 feature cache, so differences up to fp16 rounding are expected), CPU"
+ },
+ "cpu_latency_s": "not measured (machine not quiet)"
+}

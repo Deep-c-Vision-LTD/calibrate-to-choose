@@ -1,0 +1,739 @@
+{
+ "rows": [
+  {
+   "row": "msdb_zeroshot_adprior",
+   "CC_mean": 0.7774319020728944,
+   "CC_sd_folds_ddof1": 0.004765356033250628,
+   "SIM_mean": 0.7106786705064707,
+   "KLD_mean": 0.3043834427824194,
+   "CC_512_mean": 0.7771996009569666,
+   "SIM_512_mean": 0.7105102187809869,
+   "KLD_512_mean": 0.30379468746628036,
+   "per_fold_CC": [
+    0.7739785398364165,
+    0.7816928617156109,
+    0.7761904886781039,
+    0.7830856188420232,
+    0.7722120012923174
+   ],
+   "trainable_params": 0,
+   "calibration_maps": "500 ADD1000 maps per prior half (the complementary half); none from the test image",
+   "training_maps": 0,
+   "split": "splits/kfold_seed0.json",
+   "seeds_CC": {},
+   "summary_file": "results/msdb_zeroshot_adprior_summary.json",
+   "per_image_file": "results/msdb_zeroshot_adprior_per_image.json"
+  },
+  {
+   "row": "msdb_zeroshot_uniform",
+   "CC_mean": 0.7097781436323287,
+   "CC_sd_folds_ddof1": 0.006395580856549544,
+   "SIM_mean": 0.6700285561319976,
+   "KLD_mean": 0.3721101365251045,
+   "CC_512_mean": 0.7095623037819861,
+   "SIM_512_mean": 0.669891058995453,
+   "KLD_512_mean": 0.3716539874249807,
+   "per_fold_CC": [
+    0.7115970824107438,
+    0.7091669600559123,
+    0.7083157277751243,
+    0.7187869335292504,
+    0.7010240143906127
+   ],
+   "trainable_params": 0,
+   "calibration_maps": 0,
+   "training_maps": 0,
+   "split": "splits/kfold_seed0.json",
+   "seeds_CC": {},
+   "summary_file": "results/msdb_zeroshot_uniform_summary.json",
+   "per_image_file": "results/msdb_zeroshot_uniform_per_image.json"
+  },
+  {
+   "row": "msdb_zeroshot_foldprior",
+   "CC_mean": 0.8315349553504543,
+   "CC_sd_folds_ddof1": 0.003972952560246329,
+   "SIM_mean": 0.759896270103125,
+   "KLD_mean": 0.20653073669844418,
+   "CC_512_mean": 0.83152100516875,
+   "SIM_512_mean": 0.7598922094488529,
+   "KLD_512_mean": 0.20609318146876482,
+   "per_fold_CC": [
+    0.8295634452102724,
+    0.8356441492588952,
+    0.828482717655871,
+    0.8360314600855767,
+    0.8279530045416561
+   ],
+   "trainable_params": 0,
+   "calibration_maps": "800 training maps per fold (prior); sigma selected on 200 of them",
+   "training_maps": 0,
+   "split": "splits/kfold_seed0.json",
+   "seeds_CC": {},
+   "summary_file": "results/msdb_zeroshot_foldprior_summary.json",
+   "per_image_file": "results/msdb_zeroshot_foldprior_per_image.json"
+  },
+  {
+   "row": "msdb_adapt",
+   "CC_mean": 0.9189737011586875,
+   "CC_sd_folds_ddof1": 0.0047738065036019425,
+   "SIM_mean": 0.8249847864612165,
+   "KLD_mean": 0.1196810885917671,
+   "CC_512_mean": 0.918978676279381,
+   "SIM_512_mean": 0.8250135337480202,
+   "KLD_512_mean": 0.11950037371702331,
+   "per_fold_CC": [
+    0.92220251559267,
+    0.9221207611438901,
+    0.9186125236015894,
+    0.9210951414022055,
+    0.9108375640530825
+   ],
+   "trainable_params": 26463,
+   "calibration_maps": "per fold: the fold's training maps fit the centre prior; post-hoc sigma selected on 200 of them",
+   "training_maps": "per fold: all training-fold maps (800,800,800,800,800)",
+   "split": "splits/kfold_seed0.json",
+   "seeds_CC": {
+    "seed0": 0.9189737011586875,
+    "seed1": 0.9189568947880897,
+    "seed2": 0.9190019624448034
+   },
+   "summary_file": "results/msdb_adapt_summary.json",
+   "per_image_file": "results/msdb_adapt_per_image.json"
+  },
+  {
+   "row": "msdb_adapt_kl",
+   "CC_mean": 0.9177914076018372,
+   "CC_sd_folds_ddof1": 0.004834010301921874,
+   "SIM_mean": 0.825094971250057,
+   "KLD_mean": 0.1186141156359291,
+   "CC_512_mean": 0.9177972577893245,
+   "SIM_512_mean": 0.8251243883644749,
+   "KLD_512_mean": 0.11842873170825423,
+   "per_fold_CC": [
+    0.9203190116221333,
+    0.9209062893445713,
+    0.9173929904806815,
+    0.9208027775748829,
+    0.9095359689869167
+   ],
+   "trainable_params": 26463,
+   "calibration_maps": "per fold: the fold's training maps fit the centre prior; post-hoc sigma selected on 200 of them",
+   "training_maps": "per fold: all training-fold maps (800,800,800,800,800)",
+   "split": "splits/kfold_seed0.json",
+   "seeds_CC": {
+    "seed0": 0.9177914076018372
+   },
+   "summary_file": "results/msdb_adapt_kl_summary.json",
+   "per_image_file": "results/msdb_adapt_kl_per_image.json"
+  },
+  {
+   "row": "msdb_adapt_dsp",
+   "CC_mean": 0.8620802387510083,
+   "CC_sd_folds_ddof1": 0.003681501055648023,
+   "SIM_mean": 0.7726089290409891,
+   "KLD_mean": 0.18813494535209926,
+   "CC_512_mean": 0.8620886776392289,
+   "SIM_512_mean": 0.7726416655629745,
+   "KLD_512_mean": 0.18808060119897563,
+   "per_fold_CC": [
+    0.8613196524239148,
+    0.8671703652920784,
+    0.8578508752772993,
+    0.8642475122416781,
+    0.8598127885200707
+   ],
+   "trainable_params": 13,
+   "calibration_maps": "per fold: the fold's training maps fit the centre prior; post-hoc sigma selected on 200 of them",
+   "training_maps": "per fold: all training-fold maps (800,800,800,800,800)",
+   "split": "splits/kfold_seed0.json",
+   "seeds_CC": {
+    "seed0": 0.8620802387510083
+   },
+   "summary_file": "results/msdb_adapt_dsp_summary.json",
+   "per_image_file": "results/msdb_adapt_dsp_per_image.json"
+  },
+  {
+   "row": "msdb_adapt_grouped",
+   "CC_mean": 0.9175787874150805,
+   "CC_sd_folds_ddof1": 0.002889951546841598,
+   "SIM_mean": 0.8237770976792589,
+   "KLD_mean": 0.12096540022354565,
+   "CC_512_mean": 0.9175846028459418,
+   "SIM_512_mean": 0.8238060143535364,
+   "KLD_512_mean": 0.12077765964317635,
+   "per_fold_CC": [
+    0.9187482559562525,
+    0.9158918029111266,
+    0.9147799750258676,
+    0.9164208071764687,
+    0.9220530960056864
+   ],
+   "trainable_params": 26463,
+   "calibration_maps": "per fold: the fold's training maps fit the centre prior; post-hoc sigma selected on 200 of them",
+   "training_maps": "per fold: all training-fold maps (800,800,799,801,800)",
+   "split": "splits/groups.json",
+   "seeds_CC": {
+    "seed0": 0.9175787874150805
+   },
+   "summary_file": "results/msdb_adapt_grouped_summary.json",
+   "per_image_file": "results/msdb_adapt_grouped_per_image.json"
+  },
+  {
+   "row": "msdb_adapt_pairsafe",
+   "CC_mean": 0.9189817516277383,
+   "CC_sd_folds_ddof1": 0.004792359021348841,
+   "SIM_mean": 0.8246814501786354,
+   "KLD_mean": 0.11998793555749324,
+   "CC_512_mean": 0.9189867492382661,
+   "SIM_512_mean": 0.8247107052375622,
+   "KLD_512_mean": 0.11981392648627702,
+   "per_fold_CC": [
+    0.9226486726617975,
+    0.9217019383164756,
+    0.9183842713571806,
+    0.9212784800027124,
+    0.9108953958005261
+   ],
+   "trainable_params": 26463,
+   "calibration_maps": "per fold: the fold's training maps fit the centre prior; post-hoc sigma selected on 200 of them",
+   "training_maps": "per fold: all training-fold maps (800,800,800,800,800)",
+   "split": "splits/kfold_seed0_pairsafe.json",
+   "seeds_CC": {
+    "seed0": 0.9189817516277383
+   },
+   "summary_file": "results/msdb_adapt_pairsafe_summary.json",
+   "per_image_file": "results/msdb_adapt_pairsafe_per_image.json"
+  }
+ ],
+ "curves": {
+  "msdb_adapt_curves": {
+   "points": [
+    {
+     "n": 0,
+     "mean_CC": 0.7115970824107438,
+     "note": "zero-shot released MSDB, uniform prior, no post-hoc sigma, fold-0 test set (no ADD1000 maps used)"
+    },
+    {
+     "n": 25,
+     "mean_CC": 0.8732918239301727,
+     "sd_CC": 0.007656413423543997,
+     "runs_CC": [
+      0.8693512355331896,
+      0.8665279998513276,
+      0.8839962364060011
+     ],
+     "mean_SIM": 0.7808286833404968,
+     "mean_KLD": 0.1785929948373138
+    },
+    {
+     "n": 50,
+     "mean_CC": 0.8874040111373324,
+     "sd_CC": 0.0021095333492672096,
+     "runs_CC": [
+      0.8882812565092931,
+      0.8894348067726446,
+      0.8844959701300593
+     ],
+     "mean_SIM": 0.7921691400158508,
+     "mean_KLD": 0.16143649731130272
+    },
+    {
+     "n": 100,
+     "mean_CC": 0.9007532730685094,
+     "sd_CC": 0.002423208139646057,
+     "runs_CC": [
+      0.9040369376932348,
+      0.8982622844063998,
+      0.8999605971058935
+     ],
+     "mean_SIM": 0.804559153256753,
+     "mean_KLD": 0.14384827226476912
+    },
+    {
+     "n": 200,
+     "mean_CC": 0.910452908002887,
+     "sd_CC": 0.0006506794605092626,
+     "runs_CC": [
+      0.9096546254404296,
+      0.9104556475266145,
+      0.9112484510416172
+     ],
+     "mean_SIM": 0.8141120185457348,
+     "mean_KLD": 0.13207910938674525
+    },
+    {
+     "n": 400,
+     "mean_CC": 0.9170054930224465,
+     "sd_CC": 0.00041255910480519345,
+     "runs_CC": [
+      0.9164421241377386,
+      0.9171557653373399,
+      0.9174185895922611
+     ],
+     "mean_SIM": 0.8211298434198214,
+     "mean_KLD": 0.12353144401905265
+    },
+    {
+     "n": 800,
+     "mean_CC": 0.9222948304658142,
+     "sd_CC": 5.655051591453989e-05,
+     "runs_CC": [
+      0.9222587238045264,
+      0.9223746832546538,
+      0.9222510843382622
+     ],
+     "mean_SIM": 0.8283185865722048,
+     "mean_KLD": 0.1157771521140724
+    }
+   ],
+   "summary_file": "results/msdb_adapt_curves_summary.json",
+   "per_image_file": "results/msdb_adapt_curves_per_image.json"
+  },
+  "msdb_adapt_dsp_curves": {
+   "points": [
+    {
+     "n": 0,
+     "mean_CC": 0.7115970824107438,
+     "note": "zero-shot released MSDB, uniform prior, no post-hoc sigma, fold-0 test set (no ADD1000 maps used)"
+    },
+    {
+     "n": 25,
+     "mean_CC": 0.8482790844504399,
+     "sd_CC": 0.004863504463687095,
+     "runs_CC": [
+      0.8417081159924688,
+      0.8498046557140441,
+      0.8533244816448069
+     ],
+     "mean_SIM": 0.7615497649687883,
+     "mean_KLD": 0.20714541571751288
+    },
+    {
+     "n": 50,
+     "mean_CC": 0.8524071513547242,
+     "sd_CC": 0.0038741900396644514,
+     "runs_CC": [
+      0.8545920882723261,
+      0.8556659540544157,
+      0.8469634117374308
+     ],
+     "mean_SIM": 0.7641922843598635,
+     "mean_KLD": 0.2018982971495196
+    },
+    {
+     "n": 100,
+     "mean_CC": 0.8555986905987579,
+     "sd_CC": 0.004763193981457974,
+     "runs_CC": [
+      0.8611421339314309,
+      0.8495126511488378,
+      0.856141286716005
+     ],
+     "mean_SIM": 0.7671737193378078,
+     "mean_KLD": 0.19721651329744902
+    },
+    {
+     "n": 200,
+     "mean_CC": 0.8607053748398958,
+     "sd_CC": 0.0009281270905934525,
+     "runs_CC": [
+      0.8604156883455838,
+      0.8597415291560618,
+      0.8619589070180421
+     ],
+     "mean_SIM": 0.7703665550476898,
+     "mean_KLD": 0.19143231330843546
+    },
+    {
+     "n": 400,
+     "mean_CC": 0.8609308651081845,
+     "sd_CC": 0.00020921178405801442,
+     "runs_CC": [
+      0.8608673614956481,
+      0.8607123574005894,
+      0.8612128764283165
+     ],
+     "mean_SIM": 0.7694952722210492,
+     "mean_KLD": 0.1928299304639375
+    },
+    {
+     "n": 800,
+     "mean_CC": 0.8611171373714807,
+     "sd_CC": 0.00012164842058067163,
+     "runs_CC": [
+      0.8612840618177038,
+      0.8610697262133258,
+      0.8609976240834126
+     ],
+     "mean_SIM": 0.7705651950971338,
+     "mean_KLD": 0.1911449943812039
+    }
+   ],
+   "summary_file": "results/msdb_adapt_dsp_curves_summary.json",
+   "per_image_file": "results/msdb_adapt_dsp_curves_per_image.json"
+  }
+ },
+ "paired_tests": [
+  {
+   "a": "msdb_adapt",
+   "b": "msdb_zeroshot_foldprior",
+   "metric": "CC",
+   "n": 1000,
+   "mean_a": 0.9189737011586875,
+   "mean_b": 0.8315349553504543,
+   "mean_diff": 0.08743874580823319,
+   "frac_images_a_better": 0.941,
+   "wilcoxon_p": 1.3384020846530674e-156,
+   "paired_t_p": 4.188762986095363e-208
+  },
+  {
+   "a": "msdb_adapt",
+   "b": "msdb_zeroshot_foldprior",
+   "metric": "SIM",
+   "n": 1000,
+   "mean_a": 0.8249847864612165,
+   "mean_b": 0.759896270103125,
+   "mean_diff": 0.0650885163580916,
+   "frac_images_a_better": 0.921,
+   "wilcoxon_p": 5.933849406163602e-152,
+   "paired_t_p": 7.725678678633478e-229
+  },
+  {
+   "a": "msdb_adapt",
+   "b": "msdb_zeroshot_foldprior",
+   "metric": "KLD",
+   "n": 1000,
+   "mean_a": 0.1196810885917671,
+   "mean_b": 0.20653073669844418,
+   "mean_diff": -0.08684964810667709,
+   "frac_images_a_better": 0.075,
+   "wilcoxon_p": 1.1734098467669484e-151,
+   "paired_t_p": 9.704484623315742e-202
+  },
+  {
+   "a": "msdb_adapt",
+   "b": "msdb_zeroshot_adprior",
+   "metric": "CC",
+   "n": 1000,
+   "mean_a": 0.9189737011586875,
+   "mean_b": 0.7774319020728945,
+   "mean_diff": 0.14154179908579312,
+   "frac_images_a_better": 0.984,
+   "wilcoxon_p": 1.0092865847696982e-164,
+   "paired_t_p": 0.0
+  },
+  {
+   "a": "msdb_adapt",
+   "b": "msdb_zeroshot_adprior",
+   "metric": "SIM",
+   "n": 1000,
+   "mean_a": 0.8249847864612165,
+   "mean_b": 0.7106786705064707,
+   "mean_diff": 0.11430611595474582,
+   "frac_images_a_better": 0.978,
+   "wilcoxon_p": 6.013226355223799e-164,
+   "paired_t_p": 0.0
+  },
+  {
+   "a": "msdb_adapt",
+   "b": "msdb_zeroshot_adprior",
+   "metric": "KLD",
+   "n": 1000,
+   "mean_a": 0.1196810885917671,
+   "mean_b": 0.3043834427824194,
+   "mean_diff": -0.18470235419065234,
+   "frac_images_a_better": 0.015,
+   "wilcoxon_p": 1.8881106080709375e-164,
+   "paired_t_p": 0.0
+  },
+  {
+   "a": "msdb_adapt",
+   "b": "msdb_adapt_kl",
+   "metric": "CC",
+   "n": 1000,
+   "mean_a": 0.9189737011586875,
+   "mean_b": 0.9177914076018371,
+   "mean_diff": 0.0011822935568504148,
+   "frac_images_a_better": 0.626,
+   "wilcoxon_p": 1.543376748247795e-20,
+   "paired_t_p": 6.659674853752907e-19
+  },
+  {
+   "a": "msdb_adapt",
+   "b": "msdb_adapt_kl",
+   "metric": "SIM",
+   "n": 1000,
+   "mean_a": 0.8249847864612165,
+   "mean_b": 0.825094971250057,
+   "mean_diff": -0.00011018478884051319,
+   "frac_images_a_better": 0.506,
+   "wilcoxon_p": 0.42902220784078204,
+   "paired_t_p": 0.35726639518512077
+  },
+  {
+   "a": "msdb_adapt",
+   "b": "msdb_adapt_kl",
+   "metric": "KLD",
+   "n": 1000,
+   "mean_a": 0.1196810885917671,
+   "mean_b": 0.11861411563592908,
+   "mean_diff": 0.001066972955838006,
+   "frac_images_a_better": 0.612,
+   "wilcoxon_p": 4.2854155876109057e-16,
+   "paired_t_p": 1.9578072375111306e-14
+  },
+  {
+   "a": "msdb_adapt",
+   "b": "msdb_adapt_dsp",
+   "metric": "CC",
+   "n": 1000,
+   "mean_a": 0.9189737011586875,
+   "mean_b": 0.8620802387510083,
+   "mean_diff": 0.056893462407679285,
+   "frac_images_a_better": 0.922,
+   "wilcoxon_p": 1.4927721442565692e-148,
+   "paired_t_p": 1.2601891055497329e-180
+  },
+  {
+   "a": "msdb_adapt",
+   "b": "msdb_adapt_dsp",
+   "metric": "SIM",
+   "n": 1000,
+   "mean_a": 0.8249847864612165,
+   "mean_b": 0.7726089290409891,
+   "mean_diff": 0.05237585742022738,
+   "frac_images_a_better": 0.953,
+   "wilcoxon_p": 3.415588324570738e-158,
+   "paired_t_p": 1.024242788114696e-282
+  },
+  {
+   "a": "msdb_adapt",
+   "b": "msdb_adapt_dsp",
+   "metric": "KLD",
+   "n": 1000,
+   "mean_a": 0.1196810885917671,
+   "mean_b": 0.1881349453520993,
+   "mean_diff": -0.06845385676033217,
+   "frac_images_a_better": 0.039,
+   "wilcoxon_p": 6.001682785457062e-156,
+   "paired_t_p": 6.733486418147593e-258
+  },
+  {
+   "a": "msdb_zeroshot_foldprior",
+   "b": "msdb_zeroshot_adprior",
+   "metric": "CC",
+   "n": 1000,
+   "mean_a": 0.8315349553504543,
+   "mean_b": 0.7774319020728945,
+   "mean_diff": 0.05410305327755995,
+   "frac_images_a_better": 0.993,
+   "wilcoxon_p": 4.4768313725638065e-165,
+   "paired_t_p": 0.0
+  },
+  {
+   "a": "msdb_zeroshot_foldprior",
+   "b": "msdb_zeroshot_adprior",
+   "metric": "SIM",
+   "n": 1000,
+   "mean_a": 0.759896270103125,
+   "mean_b": 0.7106786705064707,
+   "mean_diff": 0.049217599596654234,
+   "frac_images_a_better": 0.987,
+   "wilcoxon_p": 1.4724153359346752e-164,
+   "paired_t_p": 0.0
+  },
+  {
+   "a": "msdb_zeroshot_foldprior",
+   "b": "msdb_zeroshot_adprior",
+   "metric": "KLD",
+   "n": 1000,
+   "mean_a": 0.20653073669844418,
+   "mean_b": 0.3043834427824194,
+   "mean_diff": -0.09785270608397525,
+   "frac_images_a_better": 0.01,
+   "wilcoxon_p": 4.423406990323188e-165,
+   "paired_t_p": 0.0
+  },
+  {
+   "a": "msdb_zeroshot_adprior",
+   "b": "msdb_zeroshot_uniform",
+   "metric": "CC",
+   "n": 1000,
+   "mean_a": 0.7774319020728945,
+   "mean_b": 0.7097781436323287,
+   "mean_diff": 0.06765375844056574,
+   "frac_images_a_better": 0.9,
+   "wilcoxon_p": 7.216589450881594e-143,
+   "paired_t_p": 1.1950573606167036e-180
+  },
+  {
+   "a": "msdb_zeroshot_adprior",
+   "b": "msdb_zeroshot_uniform",
+   "metric": "SIM",
+   "n": 1000,
+   "mean_a": 0.7106786705064707,
+   "mean_b": 0.6700285561319975,
+   "mean_diff": 0.0406501143744731,
+   "frac_images_a_better": 0.904,
+   "wilcoxon_p": 2.899458254081859e-142,
+   "paired_t_p": 5.947984244493382e-185
+  },
+  {
+   "a": "msdb_zeroshot_adprior",
+   "b": "msdb_zeroshot_uniform",
+   "metric": "KLD",
+   "n": 1000,
+   "mean_a": 0.3043834427824194,
+   "mean_b": 0.3721101365251045,
+   "mean_diff": -0.06772669374268508,
+   "frac_images_a_better": 0.14,
+   "wilcoxon_p": 2.7122908731972713e-128,
+   "paired_t_p": 1.8396413433755331e-149
+  },
+  {
+   "a": "msdb_adapt_dsp",
+   "b": "msdb_zeroshot_foldprior",
+   "metric": "CC",
+   "n": 1000,
+   "mean_a": 0.8620802387510083,
+   "mean_b": 0.8315349553504543,
+   "mean_diff": 0.0305452834005539,
+   "frac_images_a_better": 0.745,
+   "wilcoxon_p": 9.658341656914473e-78,
+   "paired_t_p": 3.022907080268641e-87
+  },
+  {
+   "a": "msdb_adapt_dsp",
+   "b": "msdb_zeroshot_foldprior",
+   "metric": "SIM",
+   "n": 1000,
+   "mean_a": 0.7726089290409891,
+   "mean_b": 0.759896270103125,
+   "mean_diff": 0.012712658937864215,
+   "frac_images_a_better": 0.585,
+   "wilcoxon_p": 5.451589370364504e-16,
+   "paired_t_p": 2.2281730666010943e-19
+  },
+  {
+   "a": "msdb_adapt_dsp",
+   "b": "msdb_zeroshot_foldprior",
+   "metric": "KLD",
+   "n": 1000,
+   "mean_a": 0.1881349453520993,
+   "mean_b": 0.20653073669844418,
+   "mean_diff": -0.0183957913463449,
+   "frac_images_a_better": 0.443,
+   "wilcoxon_p": 8.847945518712904e-11,
+   "paired_t_p": 7.168749630535244e-17
+  },
+  {
+   "a": "msdb_adapt",
+   "b": "msdb_adapt_grouped",
+   "metric": "CC",
+   "n": 1000,
+   "mean_a": 0.9189737011586875,
+   "mean_b": 0.9175771465829298,
+   "mean_diff": 0.001396554575757791,
+   "frac_images_a_better": 0.579,
+   "wilcoxon_p": 5.669499766747125e-11,
+   "paired_t_p": 7.438511460696886e-12
+  },
+  {
+   "a": "msdb_adapt",
+   "b": "msdb_adapt_grouped",
+   "metric": "SIM",
+   "n": 1000,
+   "mean_a": 0.8249847864612165,
+   "mean_b": 0.8237706649825678,
+   "mean_diff": 0.0012141214786487548,
+   "frac_images_a_better": 0.576,
+   "wilcoxon_p": 4.754857683539508e-10,
+   "paired_t_p": 1.373987145301504e-10
+  },
+  {
+   "a": "msdb_adapt",
+   "b": "msdb_adapt_grouped",
+   "metric": "KLD",
+   "n": 1000,
+   "mean_a": 0.1196810885917671,
+   "mean_b": 0.12097196300387728,
+   "mean_diff": -0.0012908744121101917,
+   "frac_images_a_better": 0.419,
+   "wilcoxon_p": 1.5232154083818263e-09,
+   "paired_t_p": 8.173342312563674e-10
+  },
+  {
+   "a": "msdb_adapt",
+   "b": "msdb_adapt_pairsafe",
+   "metric": "CC",
+   "n": 1000,
+   "mean_a": 0.9189737011586875,
+   "mean_b": 0.9189817516277385,
+   "mean_diff": -8.050469050913223e-06,
+   "frac_images_a_better": 0.496,
+   "wilcoxon_p": 0.676240236580462,
+   "paired_t_p": 0.8865454360078879
+  },
+  {
+   "a": "msdb_adapt",
+   "b": "msdb_adapt_pairsafe",
+   "metric": "SIM",
+   "n": 1000,
+   "mean_a": 0.8249847864612165,
+   "mean_b": 0.8246814501786354,
+   "mean_diff": 0.0003033362825812295,
+   "frac_images_a_better": 0.54,
+   "wilcoxon_p": 0.0002864490897022637,
+   "paired_t_p": 9.043692602670987e-06
+  },
+  {
+   "a": "msdb_adapt",
+   "b": "msdb_adapt_pairsafe",
+   "metric": "KLD",
+   "n": 1000,
+   "mean_a": 0.1196810885917671,
+   "mean_b": 0.11998793555749325,
+   "mean_diff": -0.0003068469657261439,
+   "frac_images_a_better": 0.48,
+   "wilcoxon_p": 0.0021914662189085675,
+   "paired_t_p": 0.0001804391421874322
+  },
+  {
+   "a": "msdb_adapt_grouped",
+   "b": "msdb_zeroshot_adprior",
+   "metric": "CC",
+   "n": 1000,
+   "mean_a": 0.9175771465829298,
+   "mean_b": 0.7774319020728945,
+   "mean_diff": 0.14014524451003535,
+   "frac_images_a_better": 0.983,
+   "wilcoxon_p": 1.0431256632418272e-164,
+   "paired_t_p": 0.0
+  },
+  {
+   "a": "msdb_adapt_grouped",
+   "b": "msdb_zeroshot_adprior",
+   "metric": "SIM",
+   "n": 1000,
+   "mean_a": 0.8237706649825678,
+   "mean_b": 0.7106786705064707,
+   "mean_diff": 0.11309199447609707,
+   "frac_images_a_better": 0.979,
+   "wilcoxon_p": 8.660439453151902e-164,
+   "paired_t_p": 0.0
+  },
+  {
+   "a": "msdb_adapt_grouped",
+   "b": "msdb_zeroshot_adprior",
+   "metric": "KLD",
+   "n": 1000,
+   "mean_a": 0.12097196300387728,
+   "mean_b": 0.3043834427824194,
+   "mean_diff": -0.18341147977854216,
+   "frac_images_a_better": 0.017,
+   "wilcoxon_p": 2.2598277157223617e-164,
+   "paired_t_p": 3.000253636799971e-308
+  }
+ ],
+ "costs_file": "results/msdb_costs.json"
+}
